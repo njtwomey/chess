@@ -65,7 +65,10 @@ export type Role = "board" | "reserve" | "standby" | "withdrawn" | "unavailable"
 export const ROLE_LABEL: Record<Role, string> = {
   board: "Playing",
   reserve: "Reserve",
-  standby: "Not needed",
+  // Not "Not needed": these people offered, and the reason they are here is
+  // that other people had played fewer games. Saying they were not needed
+  // reads as a judgement on them rather than as arithmetic.
+  standby: "Not this time",
   withdrawn: "Dropped out",
   unavailable: "Unavailable",
 };
@@ -282,7 +285,7 @@ export function explain(selection: Selection, nameOf: (playerId: string) => stri
   if (selection.reservePlayers.length > 0) lines.push(`Reserves, in this order: ${list(selection.reservePlayers)}.`);
 
   if (selection.standby.length > 0) {
-    lines.push(`Not needed this time: ${list(selection.standby)}. You go to the front of the queue next match.`);
+    lines.push(`Not this time: ${list(selection.standby)}. You go to the front of the queue next match.`);
   }
 
   // The one comparison anybody actually argues about: who got the last board,

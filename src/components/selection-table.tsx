@@ -1,12 +1,11 @@
-import { ArrowUp, Check, ClipboardCopy, TriangleAlert } from "lucide-react";
+import { ArrowUp, TriangleAlert } from "lucide-react";
+import { MessageButtons } from "@/components/message-buttons";
 import { ReplyBadge, RoleBadge } from "@/components/reply-badge";
-import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useCopy } from "@/hooks/use-copy";
 import { playerName } from "@/lib/data";
 import type { Season } from "@/lib/schema";
 import { replyOf } from "@/lib/season";
-import { decidingKey, explain, KEY_LABEL, type Ranked, type Reply, type Selection } from "@/lib/selection";
+import { decidingKey, KEY_LABEL, type Ranked, type Reply, type Selection } from "@/lib/selection";
 import { cn } from "@/lib/utils";
 import type { Match } from "@/lib/schema";
 
@@ -80,10 +79,13 @@ function AvailabilityTable({ season, match, selection }: { season: Season; match
         </Table>
       </div>
 
-      <p className="text-muted-foreground text-xs/5">
-        These are the replies so far, {replied} of {season.players.length}, and nothing more. Nobody has been picked
-        yet: the team is settled nearer the match, and this page will show it then.
-      </p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-muted-foreground max-w-md text-xs/5">
+          These are the replies so far, {replied} of {season.players.length}, and nothing more. Nobody has been picked
+          yet: the team is settled nearer the match, and this page will show it then.
+        </p>
+        <MessageButtons season={season} match={match} selection={selection} settled={false} />
+      </div>
     </div>
   );
 }
@@ -99,9 +101,7 @@ export function SelectionTable({
   selection: Selection;
   settled: boolean;
 }) {
-  const { copied, copy } = useCopy();
   const name = (id: string) => playerName(season, id);
-  const message = explain(selection, name).join("\n\n");
 
   /**
    * Was anybody actually turned away?
@@ -232,10 +232,7 @@ export function SelectionTable({
             ? "Ties are broken by a hash of the season seed, this match and the player id, so the order is the same every time this page is opened and different in every match."
             : "Everybody who said they can play is playing, so nobody was turned away and there was nothing to decide."}
         </p>
-        <Button variant="outline" size="sm" onClick={() => copy(message)}>
-          {copied ? <Check className="size-3.5" /> : <ClipboardCopy className="size-3.5" />}
-          {copied ? "Copied" : "Copy for the group chat"}
-        </Button>
+        <MessageButtons season={season} match={match} selection={selection} settled />
       </div>
     </div>
   );

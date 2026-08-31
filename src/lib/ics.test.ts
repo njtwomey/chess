@@ -43,11 +43,12 @@ describe("the fixture calendar", () => {
     expect(unfolded).toContain("LOCATION:Bristol & Clifton Chess Club\\, 99 Oldfield Road\\, Hotwells\\, BS8 4QQ");
   });
 
-  it("falls back to a name search for a venue with no pasted map link", () => {
-    // Bristol Grendel has an address but nobody has pasted a Maps link for it,
-    // so the description searches by name rather than inventing a place id.
-    expect(unfolded).toContain("LOCATION:Bristol Grendel Chess Club");
-    expect(unfolded).toContain("google.com/maps/search/");
+  it("carries a map for every event, whatever kind the venue has", () => {
+    // Not asserting which kind: a pasted link is preferred and a name search is
+    // the fallback, and which venues have which is data that changes.
+    const maps = [...unfolded.matchAll(/Map: (\S+)/g)].map((match) => match[1]);
+    expect(maps).toHaveLength(7);
+    for (const url of maps) expect(url).toMatch(/^https:\/\//);
   });
 
   it("escapes the separators rather than splitting a field on them", () => {
