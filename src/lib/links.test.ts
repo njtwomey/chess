@@ -64,7 +64,7 @@ describe("exporting a PGN", () => {
     time: "19:30",
     status: "played",
     availability: [],
-    confirmed: null,
+    settled: false,
     result: null,
   };
 

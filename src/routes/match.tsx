@@ -1,4 +1,5 @@
-import { ArrowLeft, CircleAlert, Clock3, ExternalLink, MapPin, Timer } from "lucide-react";
+import { ArrowLeft, Clock3, Eye, EyeOff, ExternalLink, MapPin, Timer } from "lucide-react";
+import * as React from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { AnalysisIcons } from "@/components/analysis-links";
 import { seasonPath } from "@/components/season-context";
@@ -9,7 +10,7 @@ import { VenueMap } from "@/components/venue-map";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { assignBoards, clockFor, expectedColour, formatClock } from "@/lib/boards";
+import { assignBoards, expectedColour, formatClock } from "@/lib/boards";
 import { findMatch, playerById, venueById } from "@/lib/data";
 import { mapsUrl, taggedPgn } from "@/lib/links";
 import { GAME_RESULT_LABEL, type Match, type Season } from "@/lib/schema";
@@ -88,30 +89,13 @@ function Where({ match }: { match: Match }) {
  */
 function BoardOrder({ season, match }: { season: Season; match: Match }) {
   const selection = selectionFor(season, match);
-
-  /**
-   * A confirmed order wins outright.
-   *
-   * `confirmed.boards` is an ordered list with board one first, and it is the
-   * captain's call. The proposal is only a starting point: with several unrated
-   * players it is mostly alphabetical, which is a convention rather than a
-   * judgement about anybody's strength.
-   */
-  const confirmed = match.confirmed?.boards ?? null;
-  const chosen = (confirmed ?? selection.boardPlayers.map((player) => player.playerId))
-    .map((id) => playerById(season, id))
+  const chosen = selection.boardPlayers
+    .map((player) => playerById(season, player.playerId))
     .filter((player) => player !== undefined);
 
   if (chosen.length === 0) return <Empty>Nobody is selected yet, so there is no board order to propose.</Empty>;
 
-  const boards = confirmed
-    ? chosen.map((player, index) => ({
-        board: index + 1,
-        player,
-        rating: ratingOn(player, match.date),
-        clock: clockFor(season.timeControl, player.junior, null),
-      }))
-    : assignBoards(chosen, { timeControl: season.timeControl, onDate: match.date });
+  const boards = assignBoards(chosen, { timeControl: season.timeControl, onDate: match.date });
   const anyJunior = boards.some((entry) => entry.clock.junior);
 
   return (
@@ -254,6 +238,34 @@ export function MatchPage() {
 
   const { season, match } = found;
   const score = matchScore(match);
+  /**
+   * Settled by the flag, or by having been played.
+   *
+   * The second one matters: a match with a result is history, and hiding how
+   * that team was picked would defeat the point of keeping the working.
+   */
+  const settled = match.settled || match.result !== null;
+
+  /**
+   * The captain can always see the proposal locally.
+   *
+   * Deciding whether to settle a match means looking at what settling would
+   * publish, and that is impossible if the thing is hidden until published.
+   * `import.meta.env.DEV` is false in every built bundle, so this cannot leak
+   * to the deployed site; the banner below makes sure it is never mistaken for
+   * something the team can see.
+   */
+  /**
+   * Locally, the proposal can be forced into view on an unsettled match.
+   *
+   * Written as `DEV && ...` so the bundler folds it to a constant false and
+   * drops the whole branch, rather than shipping a dead banner. There is
+   * nothing to force on a settled match, so the control does not appear there:
+   * what you see is already what the team sees.
+   */
+  const canForce = import.meta.env.DEV && !settled;
+  const [forced, setForced] = React.useState(true);
+  const showProposal = settled || (canForce && forced);
   const selection = selectionFor(season, match);
   const home = match.home ? season.team.name : match.opponent;
   const away = match.home ? match.opponent : season.team.name;
@@ -303,6 +315,31 @@ export function MatchPage() {
         </Section>
       )}
 
+      {/* Unmistakable, because the whole risk of a local-only view is telling
+          somebody a team that the site is not actually showing them. */}
+      {canForce && (
+        <div className="border-reply-unsure/40 bg-reply-unsure-soft/40 text-reply-unsure mt-6 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 rounded-lg border px-4 py-3 text-sm">
+          <p>
+            {forced ? (
+              <>
+                <strong className="font-semibold">Not settled, so this is only visible to you.</strong> The published
+                site shows the replies alone. Set <code className="font-mono text-xs">"settled": true</code> on the
+                match to publish it.
+              </>
+            ) : (
+              <>
+                <strong className="font-semibold">This is what the team sees.</strong> The match is not settled, so the
+                published site shows the replies and nothing else.
+              </>
+            )}
+          </p>
+          <Button variant="outline" size="sm" onClick={() => setForced((value) => !value)} className="shrink-0">
+            {forced ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
+            {forced ? "View as published" : "Show the proposal"}
+          </Button>
+        </div>
+      )}
+
       {season.players.length === 0 ? (
         <Section title="Selection" className="mt-8">
           <Empty>No squad has been entered for {season.name} yet, so there is nobody to pick from.</Empty>
@@ -310,47 +347,35 @@ export function MatchPage() {
       ) : (
         <>
           <Section
-            title={match.result ? "How this team was picked" : "Selection"}
+            title={match.result ? "How this team was picked" : showProposal ? "Selection" : "Availability"}
             description={
               match.result
                 ? "What the rule produced from the replies at the time. Where the team that took the field differed, it is recorded below."
-                : "The order below is what the rule produces from the replies. It is a proposal: the captain fields the team."
+                : showProposal
+                  ? "The order below is what the rule produces from the replies. It is a proposal: the captain fields the team."
+                  : "Who has said what so far. The team is picked nearer the match."
             }
             className="mt-8"
           >
-            <SelectionTable season={season} match={match} selection={selection} />
+            <SelectionTable season={season} match={match} selection={selection} settled={showProposal} />
           </Section>
 
-          {!match.result && (
-            <Section
-              title="Proposed board order"
-              description="Once the four are settled, the league decides where they sit."
-            >
-              <BoardOrder season={season} match={match} />
-            </Section>
-          )}
-        </>
-      )}
-
-      {match.confirmed && (
-        <Section title="What the captain actually fielded">
-          <div className="rounded-lg border p-4">
-            <p className="flex items-start gap-2 text-sm">
-              <CircleAlert className="text-muted-foreground mt-0.5 size-4 shrink-0" />
-              <span>{match.confirmed.why}</span>
-            </p>
-            <p className="mt-3 text-sm">
-              <span className="text-muted-foreground">Boards: </span>
-              {match.confirmed.boards.map((id) => playerById(season, id)?.name ?? id).join(", ")}
-            </p>
-            {match.confirmed.reserves.length > 0 && (
-              <p className="mt-1 text-sm">
-                <span className="text-muted-foreground">Reserves: </span>
-                {match.confirmed.reserves.map((id) => playerById(season, id)?.name ?? id).join(", ")}
+          {/* Until the captain settles it the order exists but stays off the
+              page: a running order shared mid-week is one that will change. */}
+          {!match.result &&
+            (showProposal ? (
+              <Section
+                title="Proposed board order"
+                description="Now the four are settled, the league decides where they sit."
+              >
+                <BoardOrder season={season} match={match} />
+              </Section>
+            ) : (
+              <p className="text-muted-foreground mt-6 text-sm">
+                The board order is not settled yet, so it is not shown.
               </p>
-            )}
-          </div>
-        </Section>
+            ))}
+        </>
       )}
     </Page>
   );

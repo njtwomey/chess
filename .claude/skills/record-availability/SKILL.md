@@ -63,9 +63,24 @@ somebody on a board after they had been told they were not playing.
 `withdrawn` on a reply of `unsure` or `no` is rejected by the loader, because you
 cannot drop out of something you never offered to do.
 
+## Settling the team
+
+The board order is computed from the moment four people are picked, but it is
+**not shown** until the match says so:
+
+```json
+"settled": true
+```
+
+Leave it off while the replies are still arriving. A running order shared
+mid-week is one that is going to change, and the point of sharing a match early
+is to show who has replied, not to publish a lineup. Until it is settled the
+page shows the replies alone: no position, no outcome, no reasoning. A played
+match is settled automatically.
+
 ## How to do it
 
-1. Ask which match if it is not obvious. Match ids look like `test-season-r5`.
+1. Ask which match if it is not obvious. Match ids look like `demo-r5`.
 2. Match each name to a `playerId` from that season's `players.json`. Never
    invent a player to fit a message. A name you cannot place is something to ask
    about, and the answer might be that they need adding first.

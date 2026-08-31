@@ -36,7 +36,7 @@ const matchFiles = import.meta.glob("/content/seasons/*/matches.json", { eager: 
 const venueFiles = import.meta.glob("/content/venues.json", { eager: true, import: "default" }) as RawFiles;
 const teamFiles = import.meta.glob("/content/teams.json", { eager: true, import: "default" }) as RawFiles;
 
-/** `/content/seasons/test-season/players.json` to `test-season`. */
+/** `/content/seasons/demo/players.json` to `demo`. */
 function directoryOf(path: string): string {
   return path.split("/").at(-2) ?? path;
 }
@@ -172,17 +172,6 @@ function checkSeason(season: Season): string[] {
 
     if (match.status === "played" && match.result === null) note(`${at} is marked played but has no result`);
     if (match.status !== "played" && match.result !== null) note(`${at} is not played but carries a result`);
-
-    if (match.confirmed) {
-      const named = [...match.confirmed.boards, ...match.confirmed.reserves];
-      for (const id of named) {
-        if (!known(id)) note(`${at} confirms "${id}", who is not on the roster`);
-      }
-      if (new Set(named).size !== named.length) note(`${at} names the same player twice in its confirmed team`);
-      if (match.confirmed.boards.length > season.boards) {
-        note(`${at} confirms ${match.confirmed.boards.length} boards but the season plays ${season.boards}`);
-      }
-    }
 
     if (match.result) {
       const boards = new Set<number>();

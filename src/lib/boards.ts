@@ -54,8 +54,7 @@ export interface BoardAssignment {
  * Unrated players go below every rated one. That is an assumption and it is the
  * conservative one: an unrated player cannot be shown to belong above a graded
  * player, and a board order that overstates someone is the kind that gets
- * challenged. Where it is wrong, the captain overrides it: `confirmed.boards`
- * in the match file is an ordered list and board one is its first entry.
+ * challenged, and where it is wrong the order is set by hand in the data.
  *
  * Ties break alphabetically, and deliberately not on the seeded value the
  * selection uses. A coin toss is the right answer to "who gets a game", because

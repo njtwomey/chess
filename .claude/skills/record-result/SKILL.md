@@ -47,9 +47,6 @@ conversion; do not pre-convert.
 - **Record who actually played, not who was selected.** If a reserve stepped in,
   the reserve is in `games`. Their game count follows from this entry, so
   crediting the wrong person quietly corrupts every later selection.
-- **If the team that took the field differed from the rule's proposal, fill in
-  `confirmed`** with `boards`, `reserves` and a one-line `why`. That records the
-  override honestly instead of making the algorithm look like it predicted it.
 - **`opponentJunior` matters** even when our player is an adult: one junior on
   either side makes that board the shorter clock.
 - **PGN is optional.** `null` is the honest value for a game nobody wrote up.

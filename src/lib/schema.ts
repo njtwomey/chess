@@ -141,17 +141,15 @@ export const MatchSchema = z.strictObject({
   status: z.enum(["scheduled", "played", "cancelled"]),
   availability: z.array(AvailabilitySchema).default([]),
   /**
-   * What the captain actually fielded, when it differs from the rule.
+   * Whether the board order has been settled and can be shown.
    *
-   * The rule is a proposal, not a straitjacket: someone drops out on the day and
-   * a reserve steps in. Recording the override with a reason keeps the site
-   * honest about the difference instead of quietly restating the algorithm's
-   * answer as history.
+   * Off until the captain says so. The order is computed either way; this only
+   * decides whether it is on the page. Sharing a match while the replies are
+   * still coming in should show who is available and who the rule picks,
+   * without publishing a running order that is going to change. A played match
+   * settles itself, so this is only ever set on a fixture still to come.
    */
-  confirmed: z
-    .strictObject({ boards: z.array(ID), reserves: z.array(ID).default([]), why: z.string().min(1) })
-    .nullable()
-    .default(null),
+  settled: z.boolean().default(false),
   result: ResultSchema.nullable().default(null),
 });
 

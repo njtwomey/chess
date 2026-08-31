@@ -73,9 +73,14 @@
         "playerId": "will",
         "reply": "unsure",
         "at": "2026-08-31"
+      },
+      {
+        "playerId": "mukhtar",
+        "reply": "yes",
+        "at": "2026-08-31"
       }
     ],
-    "confirmed": null,
+    "settled": false,
     "result": null
   },
   {
@@ -88,7 +93,7 @@
     "time": "19:30",
     "status": "scheduled",
     "availability": [],
-    "confirmed": null,
+    "settled": false,
     "result": null
   },
   {
@@ -101,7 +106,7 @@
     "time": "19:30",
     "status": "scheduled",
     "availability": [],
-    "confirmed": null,
+    "settled": false,
     "result": null
   },
   {
@@ -114,7 +119,7 @@
     "time": "19:30",
     "status": "scheduled",
     "availability": [],
-    "confirmed": null,
+    "settled": false,
     "result": null
   },
   {
@@ -127,7 +132,7 @@
     "time": "19:30",
     "status": "scheduled",
     "availability": [],
-    "confirmed": null,
+    "settled": false,
     "result": null
   },
   {
@@ -140,7 +145,7 @@
     "time": "19:30",
     "status": "scheduled",
     "availability": [],
-    "confirmed": null,
+    "settled": false,
     "result": null
   },
   {
@@ -153,7 +158,7 @@
     "time": "19:30",
     "status": "scheduled",
     "availability": [],
-    "confirmed": null,
+    "settled": false,
     "result": null
   }
 ]

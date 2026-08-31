@@ -50,7 +50,7 @@ The league publishes a table like `Bristol & Clifton G | 0 - 0 | South Bristol D
 - `round` is the position in the list, 1 upward, and must be unique.
 - `date` must fall inside the season's `start` and `end`.
 - Ids must be unique across every season, so prefix them: `2027-jan-apr-r1`.
-- Start with `status: "scheduled"`, empty `availability`, null `confirmed` and
+- Start with `status: "scheduled"`, empty `availability`, `settled: false` and
   null `result`.
 
 **Check the weekdays.** The league writes "Tue 8 Sep 26"; if your date does not

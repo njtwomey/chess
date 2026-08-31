@@ -62,7 +62,7 @@ content/teams.json                  the sides we enter
 ```
 
 Two are present. **`2026-autumn-g`** holds the real seven-fixture autumn season and is waiting for its
-roster. **`test-season`** is entirely invented and badged as a prototype throughout the UI; it exists
+roster. **`demo`** is entirely invented and badged as a prototype throughout the UI; it exists
 so the site can be tried end to end. To switch which one the site opens on, move `"active": true`.
 
 Schemas in `src/lib/schema.ts` are the contract. Files are validated on load and cross-checked

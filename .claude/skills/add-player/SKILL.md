@@ -71,4 +71,4 @@ the night was the right one, and the recorded games hold their own
 - Delete a player who has played. Their games are referenced by results, and the
   loader will refuse to start. If somebody has left, leave them on the roster;
   they simply never appear as available.
-- Add a real person to `test-season`, which is invented data.
+- Add a real person to `demo`, which is invented data.

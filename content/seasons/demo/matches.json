@@ -9,14 +9,38 @@
     "time": "19:30",
     "status": "played",
     "availability": [
-      { "playerId": "ada-mercer", "reply": "yes", "at": "2026-03-01" },
-      { "playerId": "bruno-halliday", "reply": "yes", "at": "2026-03-01" },
-      { "playerId": "cass-oyelaran", "reply": "yes", "at": "2026-03-02" },
-      { "playerId": "dermot-kavanagh", "reply": "yes", "at": "2026-03-02" },
-      { "playerId": "elin-pryce", "reply": "no", "at": "2026-03-01" },
-      { "playerId": "farid-nassar", "reply": "reserve", "at": "2026-03-03" }
+      {
+        "playerId": "ada-mercer",
+        "reply": "yes",
+        "at": "2026-03-01"
+      },
+      {
+        "playerId": "bruno-halliday",
+        "reply": "yes",
+        "at": "2026-03-01"
+      },
+      {
+        "playerId": "cass-oyelaran",
+        "reply": "yes",
+        "at": "2026-03-02"
+      },
+      {
+        "playerId": "dermot-kavanagh",
+        "reply": "yes",
+        "at": "2026-03-02"
+      },
+      {
+        "playerId": "elin-pryce",
+        "reply": "no",
+        "at": "2026-03-01"
+      },
+      {
+        "playerId": "farid-nassar",
+        "reply": "reserve",
+        "at": "2026-03-03"
+      }
     ],
-    "confirmed": null,
+    "settled": false,
     "result": {
       "ourScore": 2.5,
       "theirScore": 1.5,
@@ -74,13 +98,33 @@
     "time": "19:30",
     "status": "played",
     "availability": [
-      { "playerId": "ada-mercer", "reply": "yes", "at": "2026-03-15" },
-      { "playerId": "bruno-halliday", "reply": "yes", "at": "2026-03-15" },
-      { "playerId": "elin-pryce", "reply": "yes", "at": "2026-03-16" },
-      { "playerId": "farid-nassar", "reply": "yes", "at": "2026-03-16" },
-      { "playerId": "cass-oyelaran", "reply": "no", "at": "2026-03-15" }
+      {
+        "playerId": "ada-mercer",
+        "reply": "yes",
+        "at": "2026-03-15"
+      },
+      {
+        "playerId": "bruno-halliday",
+        "reply": "yes",
+        "at": "2026-03-15"
+      },
+      {
+        "playerId": "elin-pryce",
+        "reply": "yes",
+        "at": "2026-03-16"
+      },
+      {
+        "playerId": "farid-nassar",
+        "reply": "yes",
+        "at": "2026-03-16"
+      },
+      {
+        "playerId": "cass-oyelaran",
+        "reply": "no",
+        "at": "2026-03-15"
+      }
     ],
-    "confirmed": null,
+    "settled": false,
     "result": {
       "ourScore": 1.5,
       "theirScore": 2.5,
@@ -138,13 +182,33 @@
     "time": "19:30",
     "status": "played",
     "availability": [
-      { "playerId": "ada-mercer", "reply": "yes", "at": "2026-04-10" },
-      { "playerId": "cass-oyelaran", "reply": "yes", "at": "2026-04-10" },
-      { "playerId": "gwen-tsai", "reply": "yes", "at": "2026-04-11" },
-      { "playerId": "hollis-barr", "reply": "yes", "at": "2026-04-11" },
-      { "playerId": "bruno-halliday", "reply": "unsure", "at": "2026-04-10" }
+      {
+        "playerId": "ada-mercer",
+        "reply": "yes",
+        "at": "2026-04-10"
+      },
+      {
+        "playerId": "cass-oyelaran",
+        "reply": "yes",
+        "at": "2026-04-10"
+      },
+      {
+        "playerId": "gwen-tsai",
+        "reply": "yes",
+        "at": "2026-04-11"
+      },
+      {
+        "playerId": "hollis-barr",
+        "reply": "yes",
+        "at": "2026-04-11"
+      },
+      {
+        "playerId": "bruno-halliday",
+        "reply": "unsure",
+        "at": "2026-04-10"
+      }
     ],
-    "confirmed": null,
+    "settled": false,
     "result": {
       "ourScore": 2.5,
       "theirScore": 1.5,
@@ -202,13 +266,33 @@
     "time": "19:30",
     "status": "played",
     "availability": [
-      { "playerId": "bruno-halliday", "reply": "yes", "at": "2026-05-01" },
-      { "playerId": "dermot-kavanagh", "reply": "yes", "at": "2026-05-01" },
-      { "playerId": "imre-solt", "reply": "yes", "at": "2026-05-02" },
-      { "playerId": "jonah-kestrel", "reply": "yes", "at": "2026-05-02" },
-      { "playerId": "keeley-monrove", "reply": "reserve", "at": "2026-05-03" }
+      {
+        "playerId": "bruno-halliday",
+        "reply": "yes",
+        "at": "2026-05-01"
+      },
+      {
+        "playerId": "dermot-kavanagh",
+        "reply": "yes",
+        "at": "2026-05-01"
+      },
+      {
+        "playerId": "imre-solt",
+        "reply": "yes",
+        "at": "2026-05-02"
+      },
+      {
+        "playerId": "jonah-kestrel",
+        "reply": "yes",
+        "at": "2026-05-02"
+      },
+      {
+        "playerId": "keeley-monrove",
+        "reply": "reserve",
+        "at": "2026-05-03"
+      }
     ],
-    "confirmed": null,
+    "settled": false,
     "result": {
       "ourScore": 2.5,
       "theirScore": 1.5,
@@ -266,32 +350,84 @@
     "time": "19:30",
     "status": "scheduled",
     "availability": [
-      { "playerId": "keeley-monrove", "reply": "yes", "at": "2026-09-02" },
+      {
+        "playerId": "keeley-monrove",
+        "reply": "yes",
+        "at": "2026-09-02"
+      },
       {
         "playerId": "mira-vance",
         "reply": "yes",
         "at": "2026-09-02",
-        "withdrawn": { "at": "2026-09-14", "note": "Called away for work." }
+        "withdrawn": {
+          "at": "2026-09-14",
+          "note": "Called away for work."
+        }
       },
-      { "playerId": "noor-abadi", "reply": "reserve", "at": "2026-09-03", "note": "Can play if you are short." },
+      {
+        "playerId": "noor-abadi",
+        "reply": "reserve",
+        "at": "2026-09-03",
+        "note": "Can play if you are short."
+      },
       {
         "playerId": "liam-ferrers",
         "reply": "unsure",
         "at": "2026-09-03",
         "note": "Waiting to hear about a work trip."
       },
-      { "playerId": "elin-pryce", "reply": "yes", "at": "2026-09-02" },
-      { "playerId": "farid-nassar", "reply": "yes", "at": "2026-09-04" },
-      { "playerId": "gwen-tsai", "reply": "yes", "at": "2026-09-04" },
-      { "playerId": "jonah-kestrel", "reply": "yes", "at": "2026-09-05" },
-      { "playerId": "hollis-barr", "reply": "reserve", "at": "2026-09-05" },
-      { "playerId": "dermot-kavanagh", "reply": "reserve", "at": "2026-09-06" },
-      { "playerId": "imre-solt", "reply": "no", "at": "2026-09-02" },
-      { "playerId": "cass-oyelaran", "reply": "no", "at": "2026-09-03" },
-      { "playerId": "ada-mercer", "reply": "yes", "at": "2026-09-02" },
-      { "playerId": "bruno-halliday", "reply": "yes", "at": "2026-09-02" }
+      {
+        "playerId": "elin-pryce",
+        "reply": "yes",
+        "at": "2026-09-02"
+      },
+      {
+        "playerId": "farid-nassar",
+        "reply": "yes",
+        "at": "2026-09-04"
+      },
+      {
+        "playerId": "gwen-tsai",
+        "reply": "yes",
+        "at": "2026-09-04"
+      },
+      {
+        "playerId": "jonah-kestrel",
+        "reply": "yes",
+        "at": "2026-09-05"
+      },
+      {
+        "playerId": "hollis-barr",
+        "reply": "reserve",
+        "at": "2026-09-05"
+      },
+      {
+        "playerId": "dermot-kavanagh",
+        "reply": "reserve",
+        "at": "2026-09-06"
+      },
+      {
+        "playerId": "imre-solt",
+        "reply": "no",
+        "at": "2026-09-02"
+      },
+      {
+        "playerId": "cass-oyelaran",
+        "reply": "no",
+        "at": "2026-09-03"
+      },
+      {
+        "playerId": "ada-mercer",
+        "reply": "yes",
+        "at": "2026-09-02"
+      },
+      {
+        "playerId": "bruno-halliday",
+        "reply": "yes",
+        "at": "2026-09-02"
+      }
     ],
-    "confirmed": null,
+    "settled": true,
     "result": null
   },
   {
@@ -304,13 +440,33 @@
     "time": "19:30",
     "status": "scheduled",
     "availability": [
-      { "playerId": "ada-mercer", "reply": "yes", "at": "2026-09-28" },
-      { "playerId": "liam-ferrers", "reply": "yes", "at": "2026-09-28" },
-      { "playerId": "gwen-tsai", "reply": "reserve", "at": "2026-09-29" },
-      { "playerId": "keeley-monrove", "reply": "unsure", "at": "2026-09-29" },
-      { "playerId": "noor-abadi", "reply": "no", "at": "2026-09-30" }
+      {
+        "playerId": "ada-mercer",
+        "reply": "yes",
+        "at": "2026-09-28"
+      },
+      {
+        "playerId": "liam-ferrers",
+        "reply": "yes",
+        "at": "2026-09-28"
+      },
+      {
+        "playerId": "gwen-tsai",
+        "reply": "reserve",
+        "at": "2026-09-29"
+      },
+      {
+        "playerId": "keeley-monrove",
+        "reply": "unsure",
+        "at": "2026-09-29"
+      },
+      {
+        "playerId": "noor-abadi",
+        "reply": "no",
+        "at": "2026-09-30"
+      }
     ],
-    "confirmed": null,
+    "settled": false,
     "result": null
   },
   {
@@ -323,7 +479,7 @@
     "time": "19:30",
     "status": "scheduled",
     "availability": [],
-    "confirmed": null,
+    "settled": false,
     "result": null
   }
 ]

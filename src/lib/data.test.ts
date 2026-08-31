@@ -14,7 +14,7 @@ import { select } from "@/lib/selection";
 
 describe("the season files load", () => {
   it("finds both seasons and one active one", () => {
-    expect(seasons.map((season) => season.id).sort()).toEqual(["2026-autumn-g", "test-season"]);
+    expect(seasons.map((season) => season.id).sort()).toEqual(["2026-autumn-g", "demo"]);
     expect(seasons.filter((season) => season.active)).toHaveLength(1);
     expect(activeSeason.id).toBe("2026-autumn-g");
   });
@@ -32,7 +32,7 @@ describe("the season files load", () => {
       if (season.prototype) continue;
       for (const player of season.players) expect(invented.has(player.id)).toBe(false);
     }
-    expect(seasonById.get("test-season")!.prototype).toBe(true);
+    expect(seasonById.get("demo")!.prototype).toBe(true);
   });
 
   it("has a squad for the real season, some of it rated and some not", () => {
@@ -83,6 +83,13 @@ describe("the season files load", () => {
     }
   });
 
+  it("keeps the board order off a match until it is settled", () => {
+    // The default matters: a running order shared while replies are still
+    // arriving is one that is going to change, so it stays off until asked for.
+    const real = seasonById.get("2026-autumn-g")!;
+    for (const match of real.matches) expect(match.settled).toBe(false);
+  });
+
   it("gives every recorded ECF code the shape the ECF uses", () => {
     for (const season of seasons) {
       for (const player of season.players) {
@@ -129,7 +136,7 @@ describe("the real fixture list", () => {
     expect(season.team.id).toBe("bristol-clifton-g");
     expect(season.team.name).toBe("Bristol & Clifton G");
     // Both seasons are the same side, so they resolve to the same record.
-    expect(seasonById.get("test-season")!.team).toBe(season.team);
+    expect(seasonById.get("demo")!.team).toBe(season.team);
   });
 
   it("comes to 28 places, which is the arithmetic the whole system is for", () => {
@@ -156,7 +163,7 @@ describe("every recorded PGN is a game a board can replay", () => {
 });
 
 describe("the worked example on the organisation page", () => {
-  const season = seasonById.get("test-season")!;
+  const season = seasonById.get("demo")!;
   const match = season.matches.find((candidate) => candidate.id === "r5")!;
 
   it("has the game counts the four played matches produced", () => {

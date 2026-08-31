@@ -6,7 +6,7 @@ import { useCopy } from "@/hooks/use-copy";
 import { playerName } from "@/lib/data";
 import type { Season } from "@/lib/schema";
 import { replyOf } from "@/lib/season";
-import { decidingKey, explain, KEY_LABEL, type Ranked, type Selection } from "@/lib/selection";
+import { decidingKey, explain, KEY_LABEL, type Ranked, type Reply, type Selection } from "@/lib/selection";
 import { cn } from "@/lib/utils";
 import type { Match } from "@/lib/schema";
 
@@ -24,7 +24,81 @@ function reason(player: Ranked, next: Ranked | undefined): string {
   return KEY_LABEL[decidingKey(player, next)];
 }
 
-export function SelectionTable({ season, match, selection }: { season: Season; match: Match; selection: Selection }) {
+/**
+ * Least available last: can play, then can reserve, then not sure, then the
+ * people who have not answered, then the people who cannot come.
+ *
+ * A silent player sits between "not sure" and "cannot play" because that is
+ * roughly what silence is worth: still worth a message, but less promising than
+ * somebody who has actually engaged with the question.
+ */
+const REPLY_ORDER: (Reply | null)[] = ["yes", "reserve", "unsure", null, "no"];
+
+/**
+ * The replies so far, with nothing decided.
+ *
+ * Before a team is settled this shows who has answered and no more: no
+ * position, no outcome, no reasoning. Those are all the rule's proposal, and
+ * publishing them mid-week presents a lineup as though it were fixed when the
+ * replies are still arriving. The rule has still run, and the captain can see
+ * it by settling the match.
+ */
+function AvailabilityTable({ season, match, selection }: { season: Season; match: Match; selection: Selection }) {
+  const played = new Map(
+    [...selection.standing, ...selection.unavailable].map((player) => [player.playerId, player.gamesPlayed]),
+  );
+
+  const rows = [...season.players].sort((a, b) => {
+    const rank = (id: string) => REPLY_ORDER.indexOf(replyOf(match, id));
+    return rank(a.id) - rank(b.id) || a.name.localeCompare(b.name);
+  });
+
+  const replied = match.availability.length;
+
+  return (
+    <div className="space-y-4">
+      <div className="overflow-x-auto rounded-lg border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Player</TableHead>
+              <TableHead>Replied</TableHead>
+              <TableHead className="w-24 text-right">Games</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {rows.map((player) => (
+              <TableRow key={player.id}>
+                <TableCell className="font-medium">{player.name}</TableCell>
+                <TableCell>
+                  <ReplyBadge reply={replyOf(match, player.id)} />
+                </TableCell>
+                <TableCell className="tabular text-right">{played.get(player.id) ?? 0}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <p className="text-muted-foreground text-xs/5">
+        These are the replies so far, {replied} of {season.players.length}, and nothing more. Nobody has been picked
+        yet: the team is settled nearer the match, and this page will show it then.
+      </p>
+    </div>
+  );
+}
+
+export function SelectionTable({
+  season,
+  match,
+  selection,
+  settled,
+}: {
+  season: Season;
+  match: Match;
+  selection: Selection;
+  settled: boolean;
+}) {
   const { copied, copy } = useCopy();
   const name = (id: string) => playerName(season, id);
   const message = explain(selection, name).join("\n\n");
@@ -37,6 +111,8 @@ export function SelectionTable({ season, match, selection }: { season: Season; m
    * whole column is noise dressed up as reasoning.
    */
   const contested = selection.order.some((player) => player.role !== "board" && player.reply === "yes");
+
+  if (!settled) return <AvailabilityTable season={season} match={match} selection={selection} />;
 
   return (
     <div className="space-y-4">
