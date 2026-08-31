@@ -1,0 +1,8 @@
+node_modules
+dist
+.DS_Store
+*.local
+.vite
+
+# Copied out of node_modules by scripts/copy-engine.mjs
+public/engine

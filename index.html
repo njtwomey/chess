@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Bristol &amp; Clifton G</title>
+    <meta
+      name="description"
+      content="Fixtures, availability and team selection for Bristol &amp; Clifton G in the Bristol &amp; District Chess League."
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Bristol &amp; Clifton G" />
+    <meta property="og:title" content="Bristol &amp; Clifton G" />
+    <meta property="og:description" content="Fixtures, availability and team selection for Bristol &amp; Clifton G." />
+
+    <!--
+      Set the theme before first paint.
+
+      React applies the same class, but it runs after the browser has already
+      drawn the page, so without this a dark-mode reader gets a white flash on
+      every load. Keep it inline and blocking; a deferred script is too late.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          var dark =
+            stored === "dark" ||
+            ((!stored || stored === "system") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          document.documentElement.classList.toggle("dark", dark);
+          document.documentElement.style.colorScheme = dark ? "dark" : "light";
+        } catch (error) {
+          /* private mode blocks localStorage, and light is a fine default */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

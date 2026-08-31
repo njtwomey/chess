@@ -1,0 +1,329 @@
+[
+  {
+    "id": "r1",
+    "round": 1,
+    "opponent": "South Bristol D",
+    "home": true,
+    "venueId": "bristol-clifton",
+    "date": "2026-03-10",
+    "time": "19:30",
+    "status": "played",
+    "availability": [
+      { "playerId": "ada-mercer", "reply": "yes", "at": "2026-03-01" },
+      { "playerId": "bruno-halliday", "reply": "yes", "at": "2026-03-01" },
+      { "playerId": "cass-oyelaran", "reply": "yes", "at": "2026-03-02" },
+      { "playerId": "dermot-kavanagh", "reply": "yes", "at": "2026-03-02" },
+      { "playerId": "elin-pryce", "reply": "no", "at": "2026-03-01" },
+      { "playerId": "farid-nassar", "reply": "reserve", "at": "2026-03-03" }
+    ],
+    "confirmed": null,
+    "result": {
+      "ourScore": 2.5,
+      "theirScore": 1.5,
+      "games": [
+        {
+          "board": 1,
+          "playerId": "ada-mercer",
+          "colour": "white",
+          "opponent": "R. Whitlock",
+          "opponentRating": 1544,
+          "opponentJunior": false,
+          "result": "win",
+          "pgn": "1. e4 e5 2. Bc4 Nc6 3. Qh5 Nf6 4. Qxf7# 1-0"
+        },
+        {
+          "board": 2,
+          "playerId": "bruno-halliday",
+          "colour": "black",
+          "opponent": "P. Ndiaye",
+          "opponentRating": 1502,
+          "opponentJunior": false,
+          "result": "draw",
+          "pgn": "1. e4 e5 2. Nf3 Nf6 3. Nxe5 d6 4. Nf3 Nxe4 5. Qe2 Qe7 6. d3 Nf6 7. Bg5 Qxe2+ 8. Bxe2 Be7 9. Nc3 c6 10. O-O-O Na6 1/2-1/2"
+        },
+        {
+          "board": 3,
+          "playerId": "cass-oyelaran",
+          "colour": "white",
+          "opponent": "T. Ashworth",
+          "opponentRating": 1688,
+          "opponentJunior": false,
+          "result": "loss",
+          "pgn": null
+        },
+        {
+          "board": 4,
+          "playerId": "dermot-kavanagh",
+          "colour": "black",
+          "opponent": "S. Ellery",
+          "opponentRating": 1301,
+          "opponentJunior": false,
+          "result": "win",
+          "pgn": "1. f3 e5 2. g4 Qh4# 0-1"
+        }
+      ]
+    }
+  },
+  {
+    "id": "r2",
+    "round": 2,
+    "opponent": "Horfield & Redland E",
+    "home": true,
+    "venueId": "bristol-clifton",
+    "date": "2026-03-24",
+    "time": "19:30",
+    "status": "played",
+    "availability": [
+      { "playerId": "ada-mercer", "reply": "yes", "at": "2026-03-15" },
+      { "playerId": "bruno-halliday", "reply": "yes", "at": "2026-03-15" },
+      { "playerId": "elin-pryce", "reply": "yes", "at": "2026-03-16" },
+      { "playerId": "farid-nassar", "reply": "yes", "at": "2026-03-16" },
+      { "playerId": "cass-oyelaran", "reply": "no", "at": "2026-03-15" }
+    ],
+    "confirmed": null,
+    "result": {
+      "ourScore": 1.5,
+      "theirScore": 2.5,
+      "games": [
+        {
+          "board": 1,
+          "playerId": "ada-mercer",
+          "colour": "white",
+          "opponent": "M. Kerslake",
+          "opponentRating": 1571,
+          "opponentJunior": false,
+          "result": "draw",
+          "pgn": null
+        },
+        {
+          "board": 2,
+          "playerId": "bruno-halliday",
+          "colour": "black",
+          "opponent": "D. Brough",
+          "opponentRating": 1533,
+          "opponentJunior": false,
+          "result": "loss",
+          "pgn": null
+        },
+        {
+          "board": 3,
+          "playerId": "elin-pryce",
+          "colour": "white",
+          "opponent": "A. Fenwick",
+          "opponentRating": 1420,
+          "opponentJunior": false,
+          "result": "win",
+          "pgn": "1. e4 e5 2. Nf3 d6 3. Bc4 Bg4 4. Nc3 g6 5. Nxe5 Bxd1 6. Bxf7+ Ke7 7. Nd5# 1-0"
+        },
+        {
+          "board": 4,
+          "playerId": "farid-nassar",
+          "colour": "black",
+          "opponent": "J. Peart",
+          "opponentRating": 1398,
+          "opponentJunior": false,
+          "result": "loss",
+          "pgn": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "r3",
+    "round": 3,
+    "opponent": "Bristol Grendel C",
+    "home": false,
+    "venueId": "bristol-grendel",
+    "date": "2026-04-20",
+    "time": "19:30",
+    "status": "played",
+    "availability": [
+      { "playerId": "ada-mercer", "reply": "yes", "at": "2026-04-10" },
+      { "playerId": "cass-oyelaran", "reply": "yes", "at": "2026-04-10" },
+      { "playerId": "gwen-tsai", "reply": "yes", "at": "2026-04-11" },
+      { "playerId": "hollis-barr", "reply": "yes", "at": "2026-04-11" },
+      { "playerId": "bruno-halliday", "reply": "unsure", "at": "2026-04-10" }
+    ],
+    "confirmed": null,
+    "result": {
+      "ourScore": 2.5,
+      "theirScore": 1.5,
+      "games": [
+        {
+          "board": 1,
+          "playerId": "ada-mercer",
+          "colour": "black",
+          "opponent": "V. Okonjo",
+          "opponentRating": 1612,
+          "opponentJunior": false,
+          "result": "win",
+          "pgn": "1. d4 Nf6 2. c4 e6 3. Nc3 Bb4 4. e3 O-O 5. Bd3 d5 6. Nf3 c5 7. O-O Nc6 8. a3 Bxc3 9. bxc3 dxc4 10. Bxc4 Qc7 0-1"
+        },
+        {
+          "board": 2,
+          "playerId": "cass-oyelaran",
+          "colour": "white",
+          "opponent": "H. Trelawny",
+          "opponentRating": 1655,
+          "opponentJunior": false,
+          "result": "win",
+          "pgn": null
+        },
+        {
+          "board": 3,
+          "playerId": "gwen-tsai",
+          "colour": "black",
+          "opponent": "N. Prowse",
+          "opponentRating": 1310,
+          "opponentJunior": true,
+          "result": "draw",
+          "pgn": null
+        },
+        {
+          "board": 4,
+          "playerId": "hollis-barr",
+          "colour": "white",
+          "opponent": "C. Bramley",
+          "opponentRating": null,
+          "opponentJunior": false,
+          "result": "loss",
+          "pgn": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "r4",
+    "round": 4,
+    "opponent": "Downend & Fishponds F",
+    "home": true,
+    "venueId": "bristol-clifton",
+    "date": "2026-05-12",
+    "time": "19:30",
+    "status": "played",
+    "availability": [
+      { "playerId": "bruno-halliday", "reply": "yes", "at": "2026-05-01" },
+      { "playerId": "dermot-kavanagh", "reply": "yes", "at": "2026-05-01" },
+      { "playerId": "imre-solt", "reply": "yes", "at": "2026-05-02" },
+      { "playerId": "jonah-kestrel", "reply": "yes", "at": "2026-05-02" },
+      { "playerId": "keeley-monrove", "reply": "reserve", "at": "2026-05-03" }
+    ],
+    "confirmed": null,
+    "result": {
+      "ourScore": 2.5,
+      "theirScore": 1.5,
+      "games": [
+        {
+          "board": 1,
+          "playerId": "imre-solt",
+          "colour": "white",
+          "opponent": "G. Passmore",
+          "opponentRating": 1590,
+          "opponentJunior": false,
+          "result": "win",
+          "pgn": "1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. Be3 e5 7. Nb3 Be6 8. f3 Be7 9. Qd2 O-O 10. O-O-O Nbd7 1-0"
+        },
+        {
+          "board": 2,
+          "playerId": "bruno-halliday",
+          "colour": "black",
+          "opponent": "L. Cadbury",
+          "opponentRating": 1548,
+          "opponentJunior": false,
+          "result": "loss",
+          "pgn": null
+        },
+        {
+          "board": 3,
+          "playerId": "dermot-kavanagh",
+          "colour": "white",
+          "opponent": "E. Standfast",
+          "opponentRating": 1362,
+          "opponentJunior": false,
+          "result": "draw",
+          "pgn": null
+        },
+        {
+          "board": 4,
+          "playerId": "jonah-kestrel",
+          "colour": "black",
+          "opponent": "W. Culliford",
+          "opponentRating": 1205,
+          "opponentJunior": true,
+          "result": "default-win",
+          "pgn": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "r5",
+    "round": 5,
+    "opponent": "South Bristol E",
+    "home": false,
+    "venueId": "south-bristol",
+    "date": "2026-09-16",
+    "time": "19:30",
+    "status": "scheduled",
+    "availability": [
+      { "playerId": "keeley-monrove", "reply": "yes", "at": "2026-09-02" },
+      {
+        "playerId": "mira-vance",
+        "reply": "yes",
+        "at": "2026-09-02",
+        "withdrawn": { "at": "2026-09-14", "note": "Called away for work." }
+      },
+      { "playerId": "noor-abadi", "reply": "reserve", "at": "2026-09-03", "note": "Can play if you are short." },
+      {
+        "playerId": "liam-ferrers",
+        "reply": "unsure",
+        "at": "2026-09-03",
+        "note": "Waiting to hear about a work trip."
+      },
+      { "playerId": "elin-pryce", "reply": "yes", "at": "2026-09-02" },
+      { "playerId": "farid-nassar", "reply": "yes", "at": "2026-09-04" },
+      { "playerId": "gwen-tsai", "reply": "yes", "at": "2026-09-04" },
+      { "playerId": "jonah-kestrel", "reply": "yes", "at": "2026-09-05" },
+      { "playerId": "hollis-barr", "reply": "reserve", "at": "2026-09-05" },
+      { "playerId": "dermot-kavanagh", "reply": "reserve", "at": "2026-09-06" },
+      { "playerId": "imre-solt", "reply": "no", "at": "2026-09-02" },
+      { "playerId": "cass-oyelaran", "reply": "no", "at": "2026-09-03" },
+      { "playerId": "ada-mercer", "reply": "yes", "at": "2026-09-02" },
+      { "playerId": "bruno-halliday", "reply": "yes", "at": "2026-09-02" }
+    ],
+    "confirmed": null,
+    "result": null
+  },
+  {
+    "id": "r6",
+    "round": 6,
+    "opponent": "UWE B",
+    "home": false,
+    "venueId": "uwe",
+    "date": "2026-10-13",
+    "time": "19:30",
+    "status": "scheduled",
+    "availability": [
+      { "playerId": "ada-mercer", "reply": "yes", "at": "2026-09-28" },
+      { "playerId": "liam-ferrers", "reply": "yes", "at": "2026-09-28" },
+      { "playerId": "gwen-tsai", "reply": "reserve", "at": "2026-09-29" },
+      { "playerId": "keeley-monrove", "reply": "unsure", "at": "2026-09-29" },
+      { "playerId": "noor-abadi", "reply": "no", "at": "2026-09-30" }
+    ],
+    "confirmed": null,
+    "result": null
+  },
+  {
+    "id": "r7",
+    "round": 7,
+    "opponent": "Hanham Folk Centre B",
+    "home": true,
+    "venueId": "bristol-clifton",
+    "date": "2026-11-10",
+    "time": "19:30",
+    "status": "scheduled",
+    "availability": [],
+    "confirmed": null,
+    "result": null
+  }
+]

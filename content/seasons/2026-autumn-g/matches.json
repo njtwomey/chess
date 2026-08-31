@@ -1,0 +1,154 @@
+[
+  {
+    "id": "r1",
+    "round": 1,
+    "opponent": "South Bristol D",
+    "home": true,
+    "venueId": "bristol-clifton",
+    "date": "2026-09-08",
+    "time": "19:30",
+    "status": "scheduled",
+    "availability": [
+      {
+        "playerId": "niall",
+        "reply": "yes",
+        "at": "2026-08-31"
+      },
+      {
+        "playerId": "steve",
+        "reply": "yes",
+        "at": "2026-08-31"
+      },
+      {
+        "playerId": "lorenzo",
+        "reply": "yes",
+        "at": "2026-08-31"
+      },
+      {
+        "playerId": "jade",
+        "reply": "yes",
+        "at": "2026-08-31"
+      },
+      {
+        "playerId": "alex",
+        "reply": "reserve",
+        "at": "2026-08-31"
+      },
+      {
+        "playerId": "max",
+        "reply": "reserve",
+        "at": "2026-08-31"
+      },
+      {
+        "playerId": "alfie",
+        "reply": "no",
+        "at": "2026-08-31"
+      },
+      {
+        "playerId": "alexandra",
+        "reply": "no",
+        "at": "2026-08-31"
+      },
+      {
+        "playerId": "george",
+        "reply": "no",
+        "at": "2026-08-31"
+      },
+      {
+        "playerId": "shaan",
+        "reply": "no",
+        "at": "2026-08-31"
+      },
+      {
+        "playerId": "thomas",
+        "reply": "unsure",
+        "at": "2026-08-31"
+      },
+      {
+        "playerId": "theo",
+        "reply": "yes",
+        "at": "2026-08-31"
+      }
+    ],
+    "confirmed": null,
+    "result": null
+  },
+  {
+    "id": "r2",
+    "round": 2,
+    "opponent": "Horfield & Redland E",
+    "home": true,
+    "venueId": "bristol-clifton",
+    "date": "2026-09-15",
+    "time": "19:30",
+    "status": "scheduled",
+    "availability": [],
+    "confirmed": null,
+    "result": null
+  },
+  {
+    "id": "r3",
+    "round": 3,
+    "opponent": "Bristol Grendel C",
+    "home": false,
+    "venueId": "bristol-grendel",
+    "date": "2026-10-05",
+    "time": "19:30",
+    "status": "scheduled",
+    "availability": [],
+    "confirmed": null,
+    "result": null
+  },
+  {
+    "id": "r4",
+    "round": 4,
+    "opponent": "Downend & Fishponds F",
+    "home": true,
+    "venueId": "bristol-clifton",
+    "date": "2026-10-20",
+    "time": "19:30",
+    "status": "scheduled",
+    "availability": [],
+    "confirmed": null,
+    "result": null
+  },
+  {
+    "id": "r5",
+    "round": 5,
+    "opponent": "South Bristol E",
+    "home": false,
+    "venueId": "south-bristol",
+    "date": "2026-10-28",
+    "time": "19:30",
+    "status": "scheduled",
+    "availability": [],
+    "confirmed": null,
+    "result": null
+  },
+  {
+    "id": "r6",
+    "round": 6,
+    "opponent": "UWE B",
+    "home": false,
+    "venueId": "uwe",
+    "date": "2026-12-02",
+    "time": "19:30",
+    "status": "scheduled",
+    "availability": [],
+    "confirmed": null,
+    "result": null
+  },
+  {
+    "id": "r7",
+    "round": 7,
+    "opponent": "Hanham Folk Centre B",
+    "home": true,
+    "venueId": "bristol-clifton",
+    "date": "2026-12-15",
+    "time": "19:30",
+    "status": "scheduled",
+    "availability": [],
+    "confirmed": null,
+    "result": null
+  }
+]

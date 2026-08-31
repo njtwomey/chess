@@ -1,0 +1,77 @@
+name: Deploy
+
+# Publishes dist/ to GitHub Pages.
+#
+# This is a *project* site, so it is served from /<repo>/ — and because the
+# account's user site (njtwomey.github.io) carries a CNAME, that resolves to
+# nialltwomey.com/<repo>/. The repository therefore has to be named `chess` for
+# the site to live at nialltwomey.com/chess, and VITE_BASE below has to match
+# that prefix or the page loads and then fails to find its own JavaScript.
+#
+# Deploying from an artifact rather than a branch means GitHub never runs Jekyll
+# over the output, so no .nojekyll is needed and nothing gets rewritten.
+
+on:
+  push:
+    branches: [main]
+    # Prose changes cannot affect the built output, so a README edit does not
+    # redeploy the site.
+    paths-ignore:
+      - "**/*.md"
+      - ".claude/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a running deploy finish rather than cancelling it: a half-published site
+# is worse than a slightly stale one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # The data is the site. `data.ts` throws on a season whose files disagree,
+      # and the tests load it, so an inconsistent roster fails here rather than
+      # publishing a wrong team sheet.
+      - name: Typecheck, format and test
+        run: make check
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_BASE: /chess/
+
+      # `enablement` turns Pages on if it is not already, rather than failing.
+      # Without it the very first run of a new repo dies here, because Pages has
+      # to be enabled by hand before the action can look the site up.
+      - uses: actions/configure-pages@v6
+        with:
+          enablement: true
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

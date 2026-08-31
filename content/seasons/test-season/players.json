@@ -1,0 +1,99 @@
+[
+  {
+    "id": "ada-mercer",
+    "name": "Ada Mercer",
+    "role": "captain",
+    "junior": false,
+    "ratings": [
+      { "date": "2026-01-01", "rating": 1580, "source": "ecf" },
+      { "date": "2026-06-01", "rating": 1602, "source": "ecf" }
+    ]
+  },
+  {
+    "id": "bruno-halliday",
+    "name": "Bruno Halliday",
+    "role": "captain",
+    "junior": false,
+    "ratings": [
+      { "date": "2026-01-01", "rating": 1495, "source": "ecf" },
+      { "date": "2026-06-01", "rating": 1511, "source": "ecf" }
+    ]
+  },
+  {
+    "id": "cass-oyelaran",
+    "name": "Cass Oyelaran",
+    "junior": false,
+    "ratings": [{ "date": "2026-01-01", "rating": 1720, "source": "ecf" }]
+  },
+  {
+    "id": "dermot-kavanagh",
+    "name": "Dermot Kavanagh",
+    "junior": false,
+    "ratings": [{ "date": "2026-01-01", "rating": 1340, "source": "ecf" }]
+  },
+  {
+    "id": "elin-pryce",
+    "name": "Elin Pryce",
+    "junior": false,
+    "ratings": [],
+    "note": "Joined in February, no published grade yet."
+  },
+  {
+    "id": "farid-nassar",
+    "name": "Farid Nassar",
+    "junior": false,
+    "ratings": [{ "date": "2026-02-01", "rating": 1455, "source": "estimated" }]
+  },
+  {
+    "id": "gwen-tsai",
+    "name": "Gwen Tsai",
+    "junior": true,
+    "ratings": [
+      { "date": "2026-01-01", "rating": 1290, "source": "ecf" },
+      { "date": "2026-06-01", "rating": 1325, "source": "ecf" }
+    ]
+  },
+  {
+    "id": "hollis-barr",
+    "name": "Hollis Barr",
+    "junior": false,
+    "ratings": []
+  },
+  {
+    "id": "imre-solt",
+    "name": "Imre Solt",
+    "junior": false,
+    "ratings": [{ "date": "2026-01-01", "rating": 1610, "source": "fide" }]
+  },
+  {
+    "id": "jonah-kestrel",
+    "name": "Jonah Kestrel",
+    "junior": true,
+    "ratings": [{ "date": "2026-01-01", "rating": 1180, "source": "ecf" }],
+    "note": "Under 16, so any board he plays is on the shorter clock."
+  },
+  {
+    "id": "keeley-monrove",
+    "name": "Keeley Monrove",
+    "junior": false,
+    "ratings": [{ "date": "2026-01-01", "rating": 1405, "source": "ecf" }]
+  },
+  {
+    "id": "liam-ferrers",
+    "name": "Liam Ferrers",
+    "junior": false,
+    "ratings": []
+  },
+  {
+    "id": "mira-vance",
+    "name": "Mira Vance",
+    "junior": false,
+    "ratings": [{ "date": "2026-01-01", "rating": 1530, "source": "ecf" }]
+  },
+  {
+    "id": "noor-abadi",
+    "name": "Noor Abadi",
+    "junior": false,
+    "ratings": [{ "date": "2026-02-01", "rating": 1365, "source": "estimated" }]
+  }
+]

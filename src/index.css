@@ -1,0 +1,193 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+/* The radix-nova style's own layer — shadcn components expect it. */
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+/* Lichess's board. Pieces and squares are embedded data URIs in these files,
+   so there are no image assets to host or to break under a different base. */
+@import "@lichess-org/chessground/assets/chessground.base.css";
+@import "@lichess-org/chessground/assets/chessground.brown.css";
+@import "@lichess-org/chessground/assets/chessground.cburnett.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * shadcn design tokens. Everything in the app refers to these semantic names
+ * (bg-background, text-muted-foreground) rather than raw palette values, so a
+ * theme change is a change here and nowhere else.
+ *
+ * The base is neutral with a single warm accent, which is the colour of a
+ * tournament board and about as much colour as a page of fixtures can take
+ * before it stops being readable at a glance in a hall.
+ */
+:root {
+  --radius: 0.625rem;
+
+  --background: oklch(0.995 0.002 85);
+  --foreground: oklch(0.16 0.008 60);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.16 0.008 60);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.16 0.008 60);
+
+  --primary: oklch(0.48 0.11 55);
+  --primary-foreground: oklch(0.99 0.005 85);
+
+  --secondary: oklch(0.965 0.006 80);
+  --secondary-foreground: oklch(0.24 0.01 60);
+
+  --muted: oklch(0.965 0.006 80);
+  --muted-foreground: oklch(0.5 0.012 65);
+
+  --accent: oklch(0.955 0.018 75);
+  --accent-foreground: oklch(0.36 0.08 55);
+
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+
+  --border: oklch(0.9 0.006 75);
+  --input: oklch(0.9 0.006 75);
+  --ring: oklch(0.48 0.11 55);
+
+  /*
+   * The reply palette. These are semantic in their own right: the same four
+   * colours mean the same four answers on every page, and they are defined once
+   * so a badge, a table row and a legend cannot disagree.
+   */
+  --reply-yes: oklch(0.52 0.13 150);
+  --reply-yes-soft: oklch(0.94 0.04 150);
+  --reply-reserve: oklch(0.55 0.12 250);
+  --reply-reserve-soft: oklch(0.94 0.035 250);
+  --reply-unsure: oklch(0.6 0.12 75);
+  --reply-unsure-soft: oklch(0.95 0.05 85);
+  --reply-no: oklch(0.55 0.15 25);
+  --reply-no-soft: oklch(0.95 0.03 25);
+
+  /* The board, and the two squares nobody should have to think about. */
+  --board-light: oklch(0.9 0.03 80);
+  --board-dark: oklch(0.62 0.06 55);
+}
+
+.dark {
+  --background: oklch(0.15 0.006 60);
+  --foreground: oklch(0.97 0.003 85);
+
+  --card: oklch(0.195 0.007 60);
+  --card-foreground: oklch(0.97 0.003 85);
+
+  /* Near-black, and only just lifted off the page. A warmer popover reads as
+     brown against the navbar rather than as a panel floating over it. */
+  --popover: oklch(0.185 0.003 60);
+  --popover-foreground: oklch(0.97 0.003 85);
+
+  --primary: oklch(0.78 0.11 65);
+  --primary-foreground: oklch(0.2 0.03 55);
+
+  --secondary: oklch(0.27 0.008 60);
+  --secondary-foreground: oklch(0.97 0.003 85);
+
+  --muted: oklch(0.26 0.008 60);
+  --muted-foreground: oklch(0.7 0.01 70);
+
+  /* The accent is a highlight, not a colour of its own. At this depth any real
+     chroma turns brown, so dark mode keeps the hue and almost none of it; the
+     amber identity lives in --primary, where it is on something small. */
+  --accent: oklch(0.275 0.006 60);
+  --accent-foreground: oklch(0.95 0.01 70);
+
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.145 0 0);
+
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.78 0.11 65);
+
+  --reply-yes: oklch(0.78 0.15 150);
+  --reply-yes-soft: oklch(0.3 0.05 150);
+  --reply-reserve: oklch(0.76 0.12 250);
+  --reply-reserve-soft: oklch(0.3 0.05 250);
+  --reply-unsure: oklch(0.8 0.12 80);
+  --reply-unsure-soft: oklch(0.31 0.05 80);
+  --reply-no: oklch(0.75 0.15 25);
+  --reply-no-soft: oklch(0.31 0.06 25);
+
+  --board-light: oklch(0.66 0.035 80);
+  --board-dark: oklch(0.42 0.045 55);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-reply-yes: var(--reply-yes);
+  --color-reply-yes-soft: var(--reply-yes-soft);
+  --color-reply-reserve: var(--reply-reserve);
+  --color-reply-reserve-soft: var(--reply-reserve-soft);
+  --color-reply-unsure: var(--reply-unsure);
+  --color-reply-unsure-soft: var(--reply-unsure-soft);
+  --color-reply-no: var(--reply-no);
+  --color-reply-no-soft: var(--reply-no-soft);
+
+  --color-board-light: var(--board-light);
+  --color-board-dark: var(--board-dark);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* The header is sticky, so an anchor jump must clear it. */
+    scroll-padding-top: 5rem;
+    @apply font-sans;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  /* Tabular figures everywhere a rating, a score or a game count is compared
+     down a column, which is most places a number appears here. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}

@@ -1,0 +1,78 @@
+[
+  {
+    "id": "bristol-clifton",
+    "name": "Bristol & Clifton Chess Club",
+    "address": "99 Oldfield Road, Hotwells",
+    "postcode": "BS8 4QQ",
+    "maps": "https://maps.app.goo.gl/1gBZP8mgdUhoXYJH7",
+    "website": "https://bristolandcliftonchess.club/",
+    "note": "Our home venue. Free parking around the club after 7pm.",
+    "lat": 51.449421,
+    "lon": -2.620344
+  },
+  {
+    "id": "south-bristol",
+    "name": "South Bristol Chess Club",
+    "address": "Bristol Independent Gaming, 16 Cater Road, Bishopsworth",
+    "postcode": "BS13 7TW",
+    "maps": "https://maps.app.goo.gl/6u5Shrm81V4z2SNv7",
+    "website": "https://www.southbristolchess.com/",
+    "note": "The club meets inside Bristol Independent Gaming, which is a games shop with its own separate identity. Map pin is a street-level fix; Bristol Independent Gaming is not a numbered address in OpenStreetMap.",
+    "lat": 51.415681,
+    "lon": -2.609972
+  },
+  {
+    "id": "horfield-redland",
+    "name": "Horfield & Redland Chess Club",
+    "address": "1 Redland Park, Redland",
+    "postcode": "BS6 6SA",
+    "maps": "https://maps.app.goo.gl/87rTFRzKWfE5dFup6",
+    "website": "https://horfieldchessclub.com/",
+    "note": "Next to the United Reformed Church, off Whiteladies Road.",
+    "lat": 51.467921,
+    "lon": -2.6124
+  },
+  {
+    "id": "bristol-grendel",
+    "name": "Bristol Grendel Chess Club",
+    "address": "The Sportsman's Bar (downstairs), 40 Colston Street",
+    "postcode": "BS1 5AE",
+    "maps": null,
+    "website": "https://www.bristolchess.co.uk/grendel",
+    "note": "Play is downstairs in the Sportsman's Bar.",
+    "lat": 51.455629,
+    "lon": -2.597346
+  },
+  {
+    "id": "downend-fishponds",
+    "name": "Downend & Fishponds Chess Club",
+    "address": "The Fishponds Club, 761 Fishponds Road, Fishponds",
+    "postcode": "BS16 3UP",
+    "maps": "https://maps.app.goo.gl/UnQEUBPusnaTDzX47",
+    "website": "https://downendchess.com/",
+    "lat": 51.480931,
+    "lon": -2.529006
+  },
+  {
+    "id": "uwe",
+    "name": "UWE Chess Club",
+    "address": "Room 3X110, Bristol Business School, Frenchay Campus, South Gloucestershire",
+    "postcode": "BS16 1QY",
+    "maps": "https://maps.app.goo.gl/S4kqaeT4vrVTsAAa8",
+    "website": "https://chessit.co.uk/Clubs/UWE/UWE.htm",
+    "note": "From the main entrance by the Atrium Cafe, go up one floor to Floor 3 by stairs or the central lifts, then find Room 3X110. Map pin is the Bristol Business School building on Frenchay Campus.",
+    "lat": 51.501142,
+    "lon": -2.550009
+  },
+  {
+    "id": "hanham-folk-centre",
+    "name": "Hanham Folk Centre",
+    "address": "Hanham Community Centre, 118-124 High Street, Hanham",
+    "postcode": "BS15 3EJ",
+    "maps": "https://maps.app.goo.gl/g15gqen5bz71KL4a7",
+    "website": "https://hanhamchess.wixsite.com/home",
+    "note": "Play is in the Somerset Room, with ample free parking. The club is registered with the league as Hanham Folk Centre but calls itself Hanham Chess Club.",
+    "lat": 51.447852,
+    "lon": -2.51485
+  }
+]

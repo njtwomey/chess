@@ -1,0 +1,23 @@
+{
+  "id": "test-season",
+  "name": "Test Season 2026",
+  "teamId": "bristol-clifton-g",
+  "start": "2026-03-01",
+  "end": "2026-11-30",
+  "seed": "test-season-2026",
+  "boards": 4,
+  "reserves": 2,
+  "timeControl": {
+    "standard": {
+      "minutes": 80,
+      "increment": 10
+    },
+    "junior": {
+      "minutes": 55,
+      "increment": 10
+    },
+    "juniorUnder": 16
+  },
+  "active": false,
+  "prototype": true
+}

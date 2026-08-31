@@ -1,0 +1,149 @@
+[
+  {
+    "id": "alex",
+    "name": "Alex",
+    "junior": false,
+    "ratings": [
+      {
+        "date": "2026-08-31",
+        "rating": 1840,
+        "source": "ecf"
+      }
+    ],
+    "ecfCode": "386591F"
+  },
+  {
+    "id": "alexandra",
+    "name": "Alexandra",
+    "junior": false,
+    "ratings": [
+      {
+        "date": "2026-08-31",
+        "rating": 1080,
+        "source": "ecf"
+      }
+    ],
+    "ecfCode": "380878G"
+  },
+  {
+    "id": "alfie",
+    "name": "Alfie",
+    "role": "captain",
+    "junior": false,
+    "ratings": [
+      {
+        "date": "2026-08-31",
+        "rating": 1382,
+        "source": "ecf"
+      }
+    ],
+    "ecfCode": "364477H"
+  },
+  {
+    "id": "george",
+    "name": "George",
+    "junior": false,
+    "ratings": []
+  },
+  {
+    "id": "jade",
+    "name": "Jade",
+    "junior": false,
+    "ratings": []
+  },
+  {
+    "id": "john",
+    "name": "John",
+    "junior": false,
+    "ratings": []
+  },
+  {
+    "id": "lorenzo",
+    "name": "Lorenzo",
+    "junior": false,
+    "ratings": []
+  },
+  {
+    "id": "mark",
+    "name": "Mark",
+    "junior": false,
+    "ratings": []
+  },
+  {
+    "id": "max",
+    "name": "Max",
+    "junior": false,
+    "ratings": []
+  },
+  {
+    "id": "mukhtar",
+    "name": "Mukhtar",
+    "junior": false,
+    "ratings": [
+      {
+        "date": "2026-08-31",
+        "rating": 1284,
+        "source": "ecf"
+      }
+    ],
+    "ecfCode": "389043A"
+  },
+  {
+    "id": "niall",
+    "name": "Niall",
+    "role": "captain",
+    "junior": false,
+    "ratings": []
+  },
+  {
+    "id": "shaan",
+    "name": "Shaan",
+    "junior": false,
+    "ratings": [
+      {
+        "date": "2026-08-31",
+        "rating": 1459,
+        "source": "ecf"
+      }
+    ],
+    "ecfCode": "380146K"
+  },
+  {
+    "id": "steve",
+    "name": "Steve",
+    "junior": false,
+    "ratings": [
+      {
+        "date": "2026-08-31",
+        "rating": 1214,
+        "source": "ecf"
+      }
+    ],
+    "ecfCode": "368493D"
+  },
+  {
+    "id": "theo",
+    "name": "Theo",
+    "junior": true,
+    "ratings": []
+  },
+  {
+    "id": "thomas",
+    "name": "Thomas",
+    "junior": false,
+    "ratings": [
+      {
+        "date": "2026-08-31",
+        "rating": 1350,
+        "source": "ecf"
+      }
+    ],
+    "ecfCode": "220762L"
+  },
+  {
+    "id": "will",
+    "name": "Will",
+    "junior": false,
+    "ratings": []
+  }
+]

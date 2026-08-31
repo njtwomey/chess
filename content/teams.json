@@ -1,0 +1,14 @@
+[
+  {
+    "id": "bristol-clifton-g",
+    "name": "Bristol & Clifton G",
+    "club": "Bristol & Clifton Chess Club",
+    "competition": "Bristol & District Chess League",
+    "homeVenueId": "bristol-clifton",
+    "links": {
+      "fixtures": "https://lms.englishchess.org.uk/lms/team/30209/fixtures",
+      "rules": "https://www.chessinbristol.uk/home/rules",
+      "handbook": "https://handbook.fide.com/chapter/E012023"
+    }
+  }
+]
