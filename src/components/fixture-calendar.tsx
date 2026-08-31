@@ -94,7 +94,7 @@ export function FixtureCalendar({ season }: { season: Season }) {
                           "tabular block rounded py-1 text-xs font-semibold",
                           match.home
                             ? "bg-primary text-primary-foreground hover:opacity-85"
-                            : "border-primary/50 text-primary hover:bg-accent border",
+                            : "bg-fixture-away text-fixture-away-foreground hover:opacity-85",
                         )}
                       >
                         {day}
@@ -122,7 +122,7 @@ export function CalendarKey() {
         <span className="bg-primary size-3 rounded-sm" /> Home
       </span>
       <span className="flex items-center gap-1.5">
-        <span className="border-primary/50 size-3 rounded-sm border" /> Away
+        <span className="bg-fixture-away size-3 rounded-sm" /> Away
       </span>
     </div>
   );

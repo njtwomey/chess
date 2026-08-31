@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Navigate, Route, BrowserRouter as Router, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, BrowserRouter as Router, Routes, useLocation, useParams } from "react-router-dom";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { Page } from "@/components/page";
 import { SeasonProvider, seasonPath, useSeason } from "@/components/season-context";
@@ -14,7 +14,7 @@ import { SiteHome } from "@/routes/site-home";
  * first. Everything else is split, so a player checking where they are playing
  * on Tuesday does not download the game viewer and chessground with it.
  */
-const SeasonHome = React.lazy(() => import("@/routes/season-home").then((m) => ({ default: m.SeasonHome })));
+const SeasonCalendar = React.lazy(() => import("@/routes/calendar").then((m) => ({ default: m.SeasonCalendar })));
 const Schedule = React.lazy(() => import("@/routes/schedule").then((m) => ({ default: m.Schedule })));
 const Team = React.lazy(() => import("@/routes/team").then((m) => ({ default: m.Team })));
 const Games = React.lazy(() => import("@/routes/games").then((m) => ({ default: m.Games })));
@@ -52,6 +52,18 @@ function EnterSeason({ page }: { page?: string }) {
   return <Navigate to={seasonPath(season.id, page)} replace />;
 }
 
+/**
+ * A season on its own opens on its calendar.
+ *
+ * Redirected rather than rendered here, so the calendar has exactly one URL.
+ * Two paths showing the same page is how a shared link stops matching what the
+ * header says is current.
+ */
+function SeasonEntry() {
+  const { seasonId } = useParams();
+  return <Navigate to={seasonPath(seasonId ?? "", "calendar")} replace />;
+}
+
 function RouteFallback() {
   return (
     <Page>
@@ -81,7 +93,8 @@ export default function App() {
                   <Route path="/how-it-works" element={<HowItWorks />} />
 
                   {/* Season-scoped, and therefore shareable. */}
-                  <Route path="/season/:seasonId" element={<SeasonHome />} />
+                  <Route path="/season/:seasonId" element={<SeasonEntry />} />
+                  <Route path="/season/:seasonId/calendar" element={<SeasonCalendar />} />
                   <Route path="/season/:seasonId/schedule" element={<Schedule />} />
                   <Route path="/season/:seasonId/team" element={<Team />} />
                   <Route path="/season/:seasonId/games" element={<Games />} />
@@ -99,6 +112,7 @@ export default function App() {
                   {/* The unscoped forms are kept as entry points: someone who
                     types /schedule, or follows a link from before the season
                     was in the path, lands on the current season's version. */}
+                  <Route path="/calendar" element={<EnterSeason page="calendar" />} />
                   <Route path="/schedule" element={<EnterSeason page="schedule" />} />
                   <Route path="/team" element={<EnterSeason page="team" />} />
                   <Route path="/games" element={<EnterSeason page="games" />} />

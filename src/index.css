@@ -66,6 +66,16 @@
   --reply-no: oklch(0.55 0.15 25);
   --reply-no-soft: oklch(0.95 0.03 25);
 
+  /*
+   * Home and away on the calendar. Home is the primary amber; away is a filled
+   * cool colour rather than an outline of the same one, because at the size of
+   * a calendar day an outline reads as a day with nothing on it. The only thing
+   * these two have to say apart is whether you are travelling, so they are far
+   * apart in hue rather than in weight.
+   */
+  --fixture-away: oklch(0.5 0.1 200);
+  --fixture-away-foreground: oklch(0.99 0.005 200);
+
   /* The board, and the two squares nobody should have to think about. */
   --board-light: oklch(0.9 0.03 80);
   --board-dark: oklch(0.62 0.06 55);
@@ -114,6 +124,9 @@
   --reply-no: oklch(0.75 0.15 25);
   --reply-no-soft: oklch(0.31 0.06 25);
 
+  --fixture-away: oklch(0.72 0.11 200);
+  --fixture-away-foreground: oklch(0.2 0.03 200);
+
   --board-light: oklch(0.66 0.035 80);
   --board-dark: oklch(0.42 0.045 55);
 }
@@ -147,6 +160,9 @@
   --color-reply-unsure-soft: var(--reply-unsure-soft);
   --color-reply-no: var(--reply-no);
   --color-reply-no-soft: var(--reply-no-soft);
+
+  --color-fixture-away: var(--fixture-away);
+  --color-fixture-away-foreground: var(--fixture-away-foreground);
 
   --color-board-light: var(--board-light);
   --color-board-dark: var(--board-dark);

@@ -37,19 +37,20 @@ function DownloadIcs() {
 }
 
 /**
- * A season's front page: the calendar, and nothing else.
+ * The shape of the whole season, on a page of its own.
  *
- * Everything that used to sit around it was either a second route to somewhere
- * the header already goes or a summary of a page one click away. The calendar
- * is the one thing here that is not available anywhere else: it shows the shape
- * of the whole season at a glance, and every marked day is a link.
+ * It used to be what a season opened on, which made it the one page here with
+ * no name and no way back to it: somebody who navigated off had to work out
+ * that the season's own link was the way to return. Giving it a URL and a place
+ * in the header makes it shareable and returnable, which is what everything
+ * else on this site already is.
  */
-export function SeasonHome() {
+export function SeasonCalendar() {
   const { season } = useSeason();
 
   return (
     <Page
-      title={season.team.name}
+      title="Calendar"
       lede={
         <>
           <CompetitionLink team={season.team} /> · {season.name}
@@ -66,8 +67,8 @@ export function SeasonHome() {
       )}
 
       <Section
-        title="The season"
-        description="Fixtures are on Tuesdays unless the league says otherwise, always at 19:30. Every marked day links to the match."
+        title="Fixtures"
+        description="On Tuesdays unless the league says otherwise, always at 19:30. Every marked day links to the match."
         actions={<CalendarKey />}
       >
         <FixtureCalendar season={season} />

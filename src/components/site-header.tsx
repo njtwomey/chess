@@ -190,6 +190,11 @@ function SeasonBox({ onNavigate }: { onNavigate?: () => void }) {
       {inSeason && (
         <>
           <span className="bg-border h-4 w-px" aria-hidden />
+          {/* Ahead of Schedule: the calendar is the shape of the season, and the
+              schedule is the detail of it. */}
+          <NavLink to={seasonPath(season.id, "calendar")} onClick={onNavigate} className={linkStyle()}>
+            Calendar
+          </NavLink>
           <ScheduleNav onNavigate={onNavigate} />
           {SEASON_NAV.map((item) => (
             <NavLink key={item.page} to={seasonPath(season.id, item.page)} onClick={onNavigate} className={linkStyle()}>
