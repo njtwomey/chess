@@ -65,6 +65,7 @@ describe("exporting a PGN", () => {
     status: "played",
     availability: [],
     settled: false,
+    lineup: null,
     result: null,
   };
 

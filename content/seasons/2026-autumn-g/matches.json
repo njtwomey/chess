@@ -80,7 +80,11 @@
         "at": "2026-08-31"
       }
     ],
-    "settled": false,
+    "settled": true,
+    "lineup": {
+      "playerIds": ["theo", "jade", "mukhtar", "niall"],
+      "at": "2026-08-31"
+    },
     "result": null
   },
   {

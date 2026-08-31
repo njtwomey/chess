@@ -319,8 +319,9 @@ export function HowItWorks() {
       <Section title="When the captain overrules it">
         <p className="text-sm/7">
           The rule produces a proposal, not a team sheet. People drop out on the day, a reserve steps in, and sometimes
-          there is a reason the list cannot know about. When that happens the match record shows what was actually
-          fielded alongside what the rule said, rather than quietly rewriting the answer to fit the outcome.
+          there is a reason the list cannot know about. When that happens the captain writes the team down, and the
+          written team is what the page shows. The rule's answer stays underneath it, with the difference named: who
+          came in, who lost their place, and why. Nothing is quietly rewritten to fit the outcome.
         </p>
         <p className="mt-3 text-sm/7">
           What does not change is the arithmetic underneath: a game played is a game counted, so anybody who steps in

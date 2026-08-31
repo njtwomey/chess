@@ -80,6 +80,105 @@ export function selectionFor(season: Season, match: Match): Selection {
   });
 }
 
+/** The team that will actually take the field, and how it differs from the rule. */
+export interface Fielded {
+  /** Who plays, in board order. */
+  players: Player[];
+  /** Who is next in line, in the order they would come in. */
+  reserves: Player[];
+  /** Whether this is simply what the rule and the ratings produced, untouched. */
+  fromRule: boolean;
+  /** Whether the board order was written down rather than computed from ratings. */
+  ordered: boolean;
+  /** Fielded although the rule did not pick them. */
+  added: Player[];
+  /** Picked by the rule and not fielded. */
+  dropped: Player[];
+  /** Named on the shortlist, then pulled out. Everybody below them moved up. */
+  withdrawn: Player[];
+  /** Boards the shortlist could not fill. Reported, never quietly ignored. */
+  unfilled: number;
+  /** The captain's reason, where one was given. */
+  note?: string;
+}
+
+/**
+ * The rule proposes; the captain fields the team.
+ *
+ * Almost always these are the same thing and `fromRule` says so. When they are
+ * not, the override is what the page must show, because a board order for four
+ * players who are not going to play is not a harmless stale proposal: it is a
+ * wrong team sheet on the one page somebody checks before setting off.
+ *
+ * A shortlist is written in board order and runs past the boards into the
+ * reserves, which is what lets it answer both questions at once: the first four
+ * play, in the order given, and the rest are next in line. With no shortlist
+ * the rule picks the four and `assignBoards` orders them on rating, which is
+ * the normal case and stays untouched.
+ *
+ * A dropout is handled exactly as it is in selection, and for the same reason:
+ * the player is taken out of the order that already existed and everybody below
+ * moves up one place. Nothing is re-decided, so somebody who was told they were
+ * playing cannot lose their board to a recalculation.
+ *
+ * What is deliberately not done here is re-running selection. The rule's answer
+ * stays as it was and is shown beside this, so an override reads as a decision
+ * somebody made rather than as an outcome the rule produced.
+ */
+export function fieldedFor(season: Season, match: Match, selection: Selection): Fielded {
+  const byId = new Map(season.players.map((player) => [player.id, player]));
+  const look = (ids: string[]): Player[] => ids.map((id) => byId.get(id)).filter((p) => p !== undefined);
+
+  const ruled = selection.boardPlayers.map((player) => player.playerId);
+
+  if (!match.lineup) {
+    return {
+      players: look(ruled),
+      reserves: look(selection.reservePlayers.map((player) => player.playerId)),
+      fromRule: true,
+      ordered: false,
+      added: [],
+      dropped: [],
+      withdrawn: look(selection.withdrawn.map((player) => player.playerId)),
+      unfilled: selection.unfilled,
+      note: undefined,
+    };
+  }
+
+  const shortlist = match.lineup.playerIds;
+  const out = shortlist.filter((id) => withdrawalOf(match, id) !== null);
+  const standing = shortlist.filter((id) => !out.includes(id));
+
+  const playing = standing.slice(0, season.boards);
+  const onBoard = new Set(playing);
+  const picked = new Set(ruled);
+
+  // A shortlist that stops at the boards says who plays and nothing about who
+  // is next, so the rule still supplies the reserves. Emptying them instead
+  // would quietly tell the squad there were none, which is a different and
+  // untrue statement.
+  const named = standing.slice(season.boards, season.boards + season.reserves);
+  const reserves =
+    named.length > 0
+      ? named
+      : selection.order
+          .filter((player) => !onBoard.has(player.playerId))
+          .slice(0, season.reserves)
+          .map((player) => player.playerId);
+
+  return {
+    players: look(playing),
+    reserves: look(reserves),
+    fromRule: playing.length === ruled.length && ruled.every((id) => onBoard.has(id)),
+    ordered: true,
+    added: look(playing.filter((id) => !picked.has(id))),
+    dropped: look(ruled.filter((id) => !onBoard.has(id))),
+    withdrawn: look(out),
+    unfilled: Math.max(0, season.boards - playing.length),
+    note: match.lineup.note,
+  };
+}
+
 export interface PlayerStats {
   player: Player;
   played: number;

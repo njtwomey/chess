@@ -150,6 +150,43 @@ export const MatchSchema = z.strictObject({
    * settles itself, so this is only ever set on a fixture still to come.
    */
   settled: z.boolean().default(false),
+  /**
+   * The team the captain is actually fielding, when it is not the one the rule
+   * produced.
+   *
+   * The rule proposes and the captain fields the team, and until this existed
+   * the only place an override could be recorded was the result, which is to
+   * say after the event. Meanwhile the page went on showing a proposed team and
+   * a board order for players who were not going to play, which is worse than
+   * showing nothing: it is wrong, and it is wrong in the one place the whole
+   * site asks to be trusted.
+   *
+   * An ordered shortlist: board order first, running on into the reserves. It
+   * answers both questions at once, because a team and the order it sits in are
+   * settled in the same conversation.
+   *
+   * Writing the order down is usually a correction rather than a deviation.
+   * `assignBoards` can only sort on the ratings this site holds, and most of
+   * the squad is unrated, so it puts the one graded player on board one and the
+   * rest in alphabetical order, which is not a strength order at all. The
+   * captain knows who is actually strongest. With no shortlist the computed
+   * order still stands, because it is better than nothing and needs no upkeep.
+   *
+   * This does not touch selection, which still runs on the replies and is still
+   * shown beside this as what the rule said. Nor does it touch anybody's game
+   * count: that is only ever counted from results, so being written in here is
+   * not the same as having played.
+   */
+  lineup: z
+    .strictObject({
+      playerIds: z.array(ID).min(1),
+      /** When the captain settled it. */
+      at: DATE.optional(),
+      /** Why it is not what the rule said. Worth writing: somebody will ask. */
+      note: z.string().optional(),
+    })
+    .nullable()
+    .default(null),
   result: ResultSchema.nullable().default(null),
 });
 

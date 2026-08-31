@@ -65,16 +65,19 @@ export interface BoardAssignment {
  */
 export function assignBoards(
   players: Player[],
-  options: { timeControl: TimeControl; onDate?: string },
+  options: { timeControl: TimeControl; onDate?: string; keepOrder?: boolean },
 ): BoardAssignment[] {
   const scored = players.map((player) => ({ player, rating: ratingOn(player, options.onDate) }));
 
-  scored.sort((a, b) => {
-    // Rated above unrated, then by rating descending.
-    if ((a.rating === null) !== (b.rating === null)) return a.rating === null ? 1 : -1;
-    if (a.rating && b.rating && a.rating.rating !== b.rating.rating) return b.rating.rating - a.rating.rating;
-    return a.player.name.localeCompare(b.player.name);
-  });
+  // A shortlist written out by hand is already in board order, and sorting it
+  // would throw away the decision it was written down to record.
+  if (!options.keepOrder)
+    scored.sort((a, b) => {
+      // Rated above unrated, then by rating descending.
+      if ((a.rating === null) !== (b.rating === null)) return a.rating === null ? 1 : -1;
+      if (a.rating && b.rating && a.rating.rating !== b.rating.rating) return b.rating.rating - a.rating.rating;
+      return a.player.name.localeCompare(b.player.name);
+    });
 
   return scored.map((entry, index) => ({
     board: index + 1,

@@ -180,6 +180,28 @@ function checkSeason(season: Season): string[] {
       }
     }
 
+    if (match.lineup) {
+      const fielded = new Set<string>();
+      for (const playerId of match.lineup.playerIds) {
+        if (!known(playerId)) note(`${at} fields "${playerId}", who is not on the roster`);
+        if (fielded.has(playerId)) note(`${at} fields "${playerId}" twice`);
+        fielded.add(playerId);
+      }
+      // A shortlist is written in board order and runs on into the reserves, so
+      // the limit is the whole team sheet rather than the boards alone.
+      const room = season.boards + season.reserves;
+      if (match.lineup.playerIds.length > room) {
+        note(
+          `${at} names ${match.lineup.playerIds.length} players, above the season's ${season.boards} boards and ${season.reserves} reserves`,
+        );
+      }
+      // A settled team that the site refuses to show is the state this field
+      // exists to prevent, so it is an error rather than something to guess at.
+      if (!match.settled && match.result === null) {
+        note(`${at} names a team but is not settled, so the site would not show it`);
+      }
+    }
+
     if (match.status === "played" && match.result === null) note(`${at} is marked played but has no result`);
     if (match.status !== "played" && match.result !== null) note(`${at} is not played but carries a result`);
 

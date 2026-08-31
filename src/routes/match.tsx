@@ -11,12 +11,13 @@ import { VenueMap } from "@/components/venue-map";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { assignBoards, expectedColour, formatClock } from "@/lib/boards";
+import { assignBoards, expectedColour, formatClock, type BoardAssignment } from "@/lib/boards";
 import { findMatch, playerById, venueById } from "@/lib/data";
 import { mapsUrl, taggedPgn } from "@/lib/links";
 import { GAME_RESULT_LABEL, type Match, type Season } from "@/lib/schema";
-import { matchScore, ratingOn, selectionFor } from "@/lib/season";
+import { fieldedFor, matchScore, ratingOn, selectionFor, type Fielded } from "@/lib/season";
 import { formatLongDate, formatYear, relativeDay, today } from "@/lib/time";
+import type { Selection } from "@/lib/selection";
 import { cn } from "@/lib/utils";
 
 /**
@@ -99,6 +100,103 @@ function Where({ season, match }: { season: Season; match: Match }) {
 }
 
 /**
+ * What the captain changed, and why.
+ *
+ * An override that simply replaced the rule's answer would be the one thing
+ * this site is built not to do. The rule's answer stays on the page underneath;
+ * this says what was done to it, in the names of the people it happened to,
+ * because they are the ones who will want to know.
+ */
+function Override({ fielded }: { fielded: Fielded }) {
+  const names = (players: { name: string }[]) => players.map((player) => player.name).join(", ");
+
+  return (
+    <div className="border-primary/30 bg-accent/40 space-y-1.5 rounded-lg border-l-4 px-5 py-4 text-sm/6">
+      <p className="font-medium">The captain has settled this team by hand.</p>
+      {fielded.added.length > 0 && (
+        <p>
+          <span className="text-muted-foreground">Playing although the rule did not pick them:</span>{" "}
+          {names(fielded.added)}.
+        </p>
+      )}
+      {fielded.dropped.length > 0 && (
+        <p>
+          <span className="text-muted-foreground">Picked by the rule and not playing:</span> {names(fielded.dropped)}.
+        </p>
+      )}
+      {fielded.note && <p className="text-muted-foreground">{fielded.note}</p>}
+    </div>
+  );
+}
+
+/**
+ * The rule's order beside the settled one, and only on this machine.
+ *
+ * Written as `import.meta.env.DEV && ...` so the bundler folds it away, exactly
+ * as the force-the-proposal control is: this is a captain's working view and
+ * has no business on the published site, where two competing orders would be
+ * precisely the confusion the shortlist exists to remove.
+ *
+ * The point of it is the diff. Once a team is settled by hand the rule's answer
+ * stops being visible anywhere the boards are shown, and settling one board by
+ * hand quietly moves everybody below it. Seeing both makes that a decision
+ * rather than a surprise.
+ */
+function LocalComparison({
+  season,
+  match,
+  selection,
+  fielded,
+}: {
+  season: Season;
+  match: Match;
+  selection: Selection;
+  fielded: Fielded;
+}) {
+  const ruled = assignBoards(
+    selection.boardPlayers
+      .map((player) => playerById(season, player.playerId))
+      .filter((player) => player !== undefined),
+    { timeControl: season.timeControl, onDate: match.date },
+  );
+  const settled = assignBoards(fielded.players, {
+    timeControl: season.timeControl,
+    onDate: match.date,
+    keepOrder: fielded.ordered,
+  });
+
+  const column = (title: string, boards: BoardAssignment[], other: BoardAssignment[]) => (
+    <div className="min-w-0 flex-1">
+      <p className="text-muted-foreground mb-1.5 text-xs font-medium">{title}</p>
+      <ol className="space-y-1">
+        {boards.map((entry) => {
+          const same = other[entry.board - 1]?.player.id === entry.player.id;
+          return (
+            <li key={entry.player.id} className="flex items-baseline gap-2 text-sm">
+              <span className="tabular text-muted-foreground w-4 shrink-0 text-xs">{entry.board}</span>
+              <span className={cn("truncate", !same && "text-reply-unsure font-medium")}>{entry.player.name}</span>
+              <span className="tabular text-muted-foreground ml-auto shrink-0 text-xs">
+                {entry.rating ? entry.rating.rating : "Unrated"}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  );
+
+  return (
+    <div className="border-reply-unsure/40 bg-reply-unsure-soft/40 mt-4 rounded-lg border p-4">
+      <p className="text-reply-unsure mb-3 text-sm font-medium">Only visible to you, running locally.</p>
+      <div className="flex flex-wrap gap-x-8 gap-y-4">
+        {column("What the rule and the ratings give", ruled, settled)}
+        {column("What you have settled", settled, ruled)}
+      </div>
+    </div>
+  );
+}
+
+/**
  * The proposed board order, which is a different question from who plays.
  *
  * Kept visually separate from the selection table for the same reason it is a
@@ -106,19 +204,20 @@ function Where({ season, match }: { season: Season; match: Match }) {
  * league's rating rule, and running them together is how a rating starts
  * quietly influencing who gets a game.
  */
-function BoardOrder({ season, match }: { season: Season; match: Match }) {
-  const selection = selectionFor(season, match);
-  const chosen = selection.boardPlayers
-    .map((player) => playerById(season, player.playerId))
-    .filter((player) => player !== undefined);
+function BoardOrder({ season, match, fielded }: { season: Season; match: Match; fielded: Fielded }) {
+  if (fielded.players.length === 0)
+    return <Empty>Nobody is selected yet, so there is no board order to propose.</Empty>;
 
-  if (chosen.length === 0) return <Empty>Nobody is selected yet, so there is no board order to propose.</Empty>;
-
-  const boards = assignBoards(chosen, { timeControl: season.timeControl, onDate: match.date });
+  const boards = assignBoards(fielded.players, {
+    timeControl: season.timeControl,
+    onDate: match.date,
+    keepOrder: fielded.ordered,
+  });
   const anyJunior = boards.some((entry) => entry.clock.junior);
 
   return (
     <div className="space-y-3">
+      {!fielded.fromRule && <Override fielded={fielded} />}
       <div className="overflow-x-auto rounded-lg border">
         <Table>
           <TableHeader>
@@ -167,8 +266,10 @@ function BoardOrder({ season, match }: { season: Season; match: Match }) {
       </div>
 
       <p className="text-muted-foreground text-xs/5">
-        Boards run strongest first, on the most recent rating; unrated players go below every graded one. Colours are
-        the usual convention, with the home side on White at board one.{" "}
+        {fielded.ordered
+          ? "Boards run strongest first, in the order the captain set. "
+          : "Boards run strongest first, on the most recent rating; unrated players go below every graded one. "}
+        Colours are the usual convention, with the home side on White at board one.{" "}
         <span className="whitespace-nowrap">* {formatClock(season.timeControl.standard)}</span> unless the opponent on
         that board is under {season.timeControl.juniorUnder}, which makes it {formatClock(season.timeControl.junior)}.
         {anyJunior &&
@@ -263,7 +364,9 @@ export function MatchPage() {
    * The second one matters: a match with a result is history, and hiding how
    * that team was picked would defeat the point of keeping the working.
    */
+  const selection = selectionFor(season, match);
   const settled = match.settled || match.result !== null;
+  const fielded = fieldedFor(season, match, selection);
 
   /**
    * The captain can always see the proposal locally.
@@ -285,7 +388,6 @@ export function MatchPage() {
   const canForce = import.meta.env.DEV && !settled;
   const [forced, setForced] = React.useState(true);
   const showProposal = settled || (canForce && forced);
-  const selection = selectionFor(season, match);
   const home = match.home ? season.team.name : match.opponent;
   const away = match.home ? match.opponent : season.team.name;
 
@@ -373,7 +475,7 @@ export function MatchPage() {
             title={match.result ? "How this team was picked" : showProposal ? "Selection" : "Availability"}
             description={
               match.result
-                ? "What the rule produced from the replies at the time. Where the team that took the field differed, it is recorded below."
+                ? "What the rule produced from the replies at the time. The team that actually took the field is above."
                 : showProposal
                   ? "The order below is what the rule produces from the replies. It is a proposal: the captain fields the team."
                   : "Who has said what so far. The team is picked nearer the match."
@@ -388,10 +490,17 @@ export function MatchPage() {
           {!match.result &&
             (showProposal ? (
               <Section
-                title="Proposed board order"
-                description="Now the four are settled, the league decides where they sit."
+                title={fielded.ordered ? "Board order" : "Proposed board order"}
+                description={
+                  fielded.ordered
+                    ? "Written down by the captain, so this is the order as it stands."
+                    : "Now the four are settled, the league decides where they sit."
+                }
               >
-                <BoardOrder season={season} match={match} />
+                <BoardOrder season={season} match={match} fielded={fielded} />
+                {import.meta.env.DEV && fielded.ordered && (
+                  <LocalComparison season={season} match={match} selection={selection} fielded={fielded} />
+                )}
               </Section>
             ) : (
               <p className="text-muted-foreground mt-6 text-sm">

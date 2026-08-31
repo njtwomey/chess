@@ -9,7 +9,7 @@
 import { Chess } from "chess.js";
 import { describe, expect, it } from "vitest";
 import { activeSeason, playerById, seasonById, seasons, venueById, venues } from "@/lib/data";
-import { candidatesFor, gamesPlayedBefore, orderedMatches, selectionFor } from "@/lib/season";
+import { candidatesFor, fieldedFor, gamesPlayedBefore, orderedMatches, selectionFor } from "@/lib/season";
 import { select } from "@/lib/selection";
 
 describe("the season files load", () => {
@@ -83,11 +83,31 @@ describe("the season files load", () => {
     }
   });
 
-  it("keeps the board order off a match until it is settled", () => {
-    // The default matters: a running order shared while replies are still
-    // arriving is one that is going to change, so it stays off until asked for.
-    const real = seasonById.get("2026-autumn-g")!;
-    for (const match of real.matches) expect(match.settled).toBe(false);
+  it("settles a match only when there is a full team to publish", () => {
+    // Settling is what puts a running order in front of the squad, so the thing
+    // worth catching is a short one: a published team sheet with a board nobody
+    // is on is worse than saying nothing yet. Matches still taking replies stay
+    // unsettled, which is the default and is checked by the absence of a team.
+    for (const season of seasons) {
+      for (const match of season.matches) {
+        if (!match.settled || match.result) continue;
+        const fielded = fieldedFor(season, match, selectionFor(season, match));
+        expect({ match: `${season.id}/${match.id}`, unfilled: fielded.unfilled }).toEqual({
+          match: `${season.id}/${match.id}`,
+          unfilled: 0,
+        });
+      }
+    }
+  });
+
+  it("names a team only on a match that is settled", () => {
+    // The pair the loader enforces, kept here as well because the failure is
+    // silent: a team written down and never shown.
+    for (const season of seasons) {
+      for (const match of season.matches) {
+        if (match.lineup) expect(match.settled || match.result !== null).toBe(true);
+      }
+    }
   });
 
   it("gives every recorded ECF code the shape the ECF uses", () => {

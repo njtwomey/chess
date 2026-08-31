@@ -14,7 +14,7 @@
 import { playerName, venueById } from "@/lib/data";
 import { mapsUrl } from "@/lib/links";
 import type { Game, Match, Season } from "@/lib/schema";
-import { formatPoints, replyOf } from "@/lib/season";
+import { fieldedFor, formatPoints, replyOf } from "@/lib/season";
 import type { Reply, Selection } from "@/lib/selection";
 import { formatLongDate } from "@/lib/time";
 
@@ -118,24 +118,32 @@ export function availabilityUpdate(season: Season, match: Match): string {
  * who was not picked wants to hear.
  */
 export function selectedTeam(season: Season, match: Match, selection: Selection): string {
-  const names = (players: { playerId: string }[]) => players.map((player) => playerName(season, player.playerId));
+  // The team the captain is fielding, which is the rule's answer unless he has
+  // written one down. A message naming four people who are not playing is the
+  // worst thing this function could produce.
+  const fielded = fieldedFor(season, match, selection);
+  const names = (players: { name: string }[]) => players.map((player) => player.name);
   // Only the team and the reserves are named. Listing everybody who offered and
   // did not get on is a roll-call of people who missed out, which is the last
   // thing anybody wants read out; the line at the end speaks to them instead.
-  const missedOut = selection.reservePlayers.length > 0 || selection.standby.length > 0;
+  const missedOut = fielded.reserves.length > 0 || selection.standby.length > 0;
 
   return join([
     `Team for ${fixtureLine(season, match, true)}`,
     "",
 
-    selection.boardPlayers.length > 0 ? `Playing: ${names(selection.boardPlayers).join(", ")}.` : null,
-    // Reserves keep the rule's order, because the order is the point: reserve
-    // one fills the first vacancy. Everyone else is alphabetical.
-    selection.reservePlayers.length > 0 ? `Reserves: ${names(selection.reservePlayers).join(", ")}.` : null,
-    selection.withdrawn.length > 0 ? `Dropped out: ${sorted(names(selection.withdrawn))}.` : null,
+    // Board order, because that is what the message is for. Reserves keep their
+    // order too: reserve one fills the first vacancy.
+    fielded.players.length > 0 ? `Playing: ${names(fielded.players).join(", ")}.` : null,
+    fielded.reserves.length > 0 ? `Reserves: ${names(fielded.reserves).join(", ")}.` : null,
+    fielded.withdrawn.length > 0 ? `Dropped out: ${sorted(names(fielded.withdrawn))}.` : null,
 
-    selection.unfilled > 0
-      ? `\n${selection.unfilled} ${selection.unfilled === 1 ? "board is" : "boards are"} still unfilled. ` +
+    // The captain's reason travels with the team. Somebody who was picked by
+    // the rule and is not playing will ask, and they should not have to.
+    fielded.note ? `\n${fielded.note}` : null,
+
+    fielded.unfilled > 0
+      ? `\n${fielded.unfilled} ${fielded.unfilled === 1 ? "board is" : "boards are"} still unfilled. ` +
         "If you can make it, please say so."
       : null,
 
