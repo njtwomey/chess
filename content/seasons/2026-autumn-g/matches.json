@@ -68,6 +68,11 @@
         "playerId": "theo",
         "reply": "yes",
         "at": "2026-08-31"
+      },
+      {
+        "playerId": "will",
+        "reply": "unsure",
+        "at": "2026-08-31"
       }
     ],
     "confirmed": null,
