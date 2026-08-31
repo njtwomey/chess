@@ -118,7 +118,11 @@ export function Games() {
 
 export function GamePage() {
   const { seasonId, matchId, board } = useParams();
-  const [analysing, setAnalysing] = React.useState(false);
+  // On by default: anybody who opens a game page has come to look at the game,
+  // and the evaluation is most of why the page is worth opening. The cost is
+  // that the engine downloads on arrival rather than on request; it is scoped
+  // to this page, so nobody browsing fixtures ever pays it.
+  const [analysing, setAnalysing] = React.useState(true);
   const [engineOptions, setEngineOptions] = React.useState<EngineOptions>(DEFAULT_ENGINE_OPTIONS);
   const found = findMatch(seasonId, matchId);
   const game = found?.match.result?.games.find((entry) => entry.board === Number(board));

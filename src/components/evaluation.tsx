@@ -119,15 +119,16 @@ export function EvalLines({
 }
 
 const DEPTHS = [10, 14, 18, 22];
-const LINES = [1, 2, 3];
+const LINES = [1, 2, 3, 4, 5];
 
 /**
- * Turn the engine on, and say how hard it should work.
+ * Turn the engine off, and say how hard it should work.
  *
- * Off by default and off by design. Stockfish is 650KB of WebAssembly that
- * nothing else on the site needs, and a player looking up which board they are
- * on has no use for it. Only the position on screen is ever analysed, on
- * demand: nothing is precomputed and no evaluation is kept.
+ * On by default on a game page, off everywhere else: Stockfish is 650KB of
+ * WebAssembly that nothing but this page needs, so it is loaded here and never
+ * by somebody looking up which board they are on. Only the position on screen
+ * is ever analysed, on demand: nothing is precomputed and no evaluation is
+ * kept, which is why more lines costs time rather than memory.
  */
 export function EngineSwitch({
   enabled,

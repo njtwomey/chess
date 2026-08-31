@@ -229,7 +229,7 @@ export function SelectionTable({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-muted-foreground text-xs">
           {contested
-            ? "Ties are broken by a hash of the season seed, this match and the player id, so the order is the same every time this page is opened and different in every match."
+            ? "Where two people cannot be separated, a digital coin flip settles it. It gives the same answer every time this page is opened, and lands differently in every match."
             : "Everybody who said they can play is playing, so nobody was turned away and there was nothing to decide."}
         </p>
         <MessageButtons season={season} match={match} selection={selection} settled />

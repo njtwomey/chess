@@ -94,11 +94,11 @@ export function HowItWorks() {
       lede="Every example on this page is produced by the same function that picks the real teams."
     >
       <p className="text-[0.95rem]/7">
-        We are Team G, so we are here to get beginners playing. The objective is to give as many people as many games as
-        possible, and everything below follows from that.
+        We are Team G, the club's beginners' team. We want to give as many people as many games as we can, and every
+        rule below comes out of that.
       </p>
       <p className="mt-3 text-[0.95rem]/7">
-        Before each match a poll goes out. There are four responses, and what you pick is taken to mean what it says.
+        Before each match a poll goes out with four answers. We read each one literally, so pick the one you mean.
       </p>
 
       {/* No heading. "The four answers" named the thing without telling anybody
@@ -112,7 +112,7 @@ export function HowItWorks() {
                 {reply === "yes" && "In the running for a board, least-played first."}
                 {reply === "reserve" &&
                   "Behind everybody who said they can play. Offering to stand in is taken to mean you would rather not this time."}
-                {reply === "unsure" && "Never selected. Somebody will come and ask you."}
+                {reply === "unsure" && "Never selected, however few games you have played."}
                 {reply === "no" && "Out for this one. Your game count is untouched, so you move up for the next."}
               </p>
             </div>
@@ -121,26 +121,22 @@ export function HowItWorks() {
       </div>
 
       <Section
-        title="The order"
-        description="Everyone who said yes or offered to reserve goes into one list, sorted by four keys in this order."
+        title="How we pick the four"
+        description="Everyone who said they can play, or offered to reserve, goes into one list. Three things decide the order."
       >
         <ol className="space-y-3 text-sm/7">
           {[
             {
-              key: "Can play, ahead of can reserve",
-              body: "Always, not merely as a tiebreaker. Choosing 'reserve' over 'yes' usually means there is some reason you would rather sit this one out, and it would be a strange thanks for the more accommodating answer to hand you a game that somebody else was asking for.",
+              key: "Can play comes before can reserve",
+              body: "Choosing reserve usually means there is some reason you would rather sit this one out, and it would be poor thanks to hand you a game somebody else was asking for.",
             },
             {
-              key: "Fewest games first",
-              body: "Applied inside each group, which is where it does the work: the boards go to the least-played of the people who asked for a game. Games are counted from the results of earlier fixtures, never typed in by hand.",
+              key: "Then fewest games",
+              body: "Inside each group, the boards go to whoever has played least. This is what spreads the games around, and it runs for every match. Your game count comes from results, never typed in by hand.",
             },
             {
-              key: "A seeded coin toss",
-              body: `Ties are broken by a number derived from the season seed (${season.seed}), the match, and the player's id. It is not random at run time: the same inputs always give the same answer, and it comes out differently in each match so the same person does not keep losing the toss.`,
-            },
-            {
-              key: "Player id",
-              body: "A last resort so that the order is total and can never depend on the order the data happens to be in.",
+              key: "Then a coin flip",
+              body: "If two people are still level, the site flips a digital coin. It knows nothing about your name, your rating or how long you have been at the club, and it lands differently each match: losing one flip does not make you likelier to lose the next. (If two flips ever land identically, alphabetical order settles it, so nobody can stay tied.)",
             },
           ].map((rule, index) => (
             <li key={rule.key} className="flex gap-3">
@@ -153,13 +149,22 @@ export function HowItWorks() {
             </li>
           ))}
         </ol>
-        <p className="text-muted-foreground mt-4 text-sm/7">
-          The first {season.boards} in that list play. The next {season.reserves} are the reserves.
+
+        <p className="mt-5 text-sm/7">
+          <strong className="font-semibold">
+            The first {season.boards} play and the next {season.reserves} are reserves.
+          </strong>{" "}
+          The reserves are in order, not a pool: reserve one fills the first vacancy. The whole list, from board one
+          down, is settled in one go, and nothing is left to decide on the night.
         </p>
-        <p className="text-muted-foreground mt-3 text-sm/7">
-          <strong className="text-foreground font-semibold">The reserves are ranked, not a pool.</strong> Reserve one is
-          ahead of reserve two, and if a board falls vacant it is reserve one who fills it. There is no second decision
-          to be made on the night: the whole list, from board one to the last person who offered, is settled in one go.
+
+        <p className="border-primary/30 bg-accent/40 mt-4 rounded-lg border-l-4 px-5 py-4 text-sm/7">
+          Nobody gets a second game while somebody else who asked is still waiting for their first.
+        </p>
+
+        <p className="text-muted-foreground mt-3 text-xs/6">
+          The flip is worked out from the season seed ({season.seed}), the match and your name, so the page gives the
+          same answer every time it is opened, and cannot be re-rolled until somebody likes the result.
         </p>
       </Section>
 
@@ -240,7 +245,7 @@ export function HowItWorks() {
         <p className="text-sm/7">
           People pull out. Work, illness, a train. When that happens the rule is{" "}
           <strong className="font-semibold">not run again</strong>. The order was settled when the replies came in, and
-          a withdrawal takes that one person out of it: everybody below moves up exactly one place, so the first reserve
+          a withdrawal removes one person from it. Everybody below moves up exactly one place, so the first reserve
           takes the empty board and the second reserve becomes the first.
         </p>
 
@@ -282,24 +287,23 @@ export function HowItWorks() {
         </p>
 
         <p className="mt-3 text-sm/7">
-          Re-running the rule instead would be the obvious thing to do and it would be wrong. A tie that had already
-          been settled could come out the other way, and somebody who had been told they were not playing could find
-          themselves on the team, or worse, the reverse. Recording a withdrawal as a withdrawal rather than changing the
-          person's answer to "cannot play" is what keeps the original order intact and keeps the record honest about
-          what actually happened.
+          Re-running the rule would be the obvious thing to do, and it would be wrong. A tie that had already been
+          settled could come out the other way, and somebody who had been told they were playing could lose their board
+          to it. So a withdrawal is recorded as a withdrawal, rather than by changing that person's answer to "cannot
+          play". The order stays as it was, and the record still shows what happened.
         </p>
       </Section>
 
       <Section title="Which board you play" description="A different question, decided by a different rule.">
         <p className="text-sm/7">
           Selection decides <em>who</em> plays and takes no account of anybody's rating. Where those four then sit is
-          the league's business: boards run strongest first, so the highest rated of the four plays board one and it
-          descends from there. Unrated players go below every graded one, because there is nothing to show they belong
-          higher.
+          the league's business: boards run strongest first, so the highest rated of the four plays board one and the
+          rest follow in rating order. Unrated players go below every graded one, because there is nothing on record to
+          put them higher.
         </p>
         <p className="mt-3 text-sm/7">
-          Keeping the two apart is deliberate. If a rating could reach the selection step it would start deciding who
-          gets a game, which is the one thing this system must not do.
+          Keeping rating out of selection is deliberate. If it could reach the selection step it would start deciding
+          who gets a game, and that is the one thing this system must not do.
         </p>
       </Section>
 
@@ -315,8 +319,8 @@ export function HowItWorks() {
       <Section title="When the captain overrules it">
         <p className="text-sm/7">
           The rule produces a proposal, not a team sheet. People drop out on the day, a reserve steps in, and sometimes
-          there is a reason the list cannot know about. When that happens the match records what was actually fielded
-          and why, alongside what the rule said, rather than quietly rewriting the answer to match the outcome.
+          there is a reason the list cannot know about. When that happens the match record shows what was actually
+          fielded alongside what the rule said, rather than quietly rewriting the answer to fit the outcome.
         </p>
         <p className="mt-3 text-sm/7">
           What does not change is the arithmetic underneath: a game played is a game counted, so anybody who steps in

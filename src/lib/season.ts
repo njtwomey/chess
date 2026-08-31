@@ -147,8 +147,15 @@ export function nextMatch(season: Season, today: string): Match | undefined {
   return orderedMatches(season).find((match) => match.status === "scheduled" && match.date >= today);
 }
 
+/** A chess score. A bare half is "½", not "0½": there is no whole part to print. */
+export function formatPoints(value: number): string {
+  if (Number.isInteger(value)) return String(value);
+  const whole = Math.floor(value);
+  return whole === 0 ? "½" : `${whole}½`;
+}
+
+/** Our score first, which is how the site reads everywhere. */
 export function matchScore(match: Match): string | null {
   if (!match.result) return null;
-  const format = (value: number) => (Number.isInteger(value) ? String(value) : `${Math.floor(value)}½`);
-  return `${format(match.result.ourScore)} - ${format(match.result.theirScore)}`;
+  return `${formatPoints(match.result.ourScore)} - ${formatPoints(match.result.theirScore)}`;
 }

@@ -35,8 +35,9 @@ fewest games. In full, everyone who said yes or offered to reserve goes into one
 
 1. **Games played, fewest first.** This beats everything below it.
 2. **`yes` ahead of `reserve`**, but only between players on the same game count.
-3. **A seeded coin toss**, derived from the season seed, the match and the player's id. It is not
-   random at run time: the same data always gives the same answer.
+3. **A digital coin flip**, worked out from the season seed, the match and the player's name. It is
+   not random at run time: the same data always gives the same answer, and it lands differently in
+   every match.
 4. **Player id**, so the order is total and never depends on the order the data is in.
 
 The first four play, the next two are reserves, **in that order**: reserve one fills the first

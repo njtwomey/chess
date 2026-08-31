@@ -93,18 +93,43 @@ export function evaluationShare(evaluation: Evaluation): number {
 
 type Listener = (evaluation: Evaluation) => void;
 
+interface Request {
+  fen: string;
+  options: { depth: number; lines: number };
+  listener: Listener;
+}
+
 /**
  * A Worker running Stockfish, driven one position at a time.
  *
  * Only the most recent request matters: somebody stepping through a game
- * changes position faster than the engine finishes, so each new position stops
- * the previous search rather than queueing behind it.
+ * changes position faster than the engine finishes, so each new position
+ * replaces the previous search rather than queueing behind it.
+ *
+ * Replacing it is not as simple as sending the next position, though, and the
+ * difference is the whole reason this class exists. `stop` is a request, not an
+ * event: the search keeps emitting `info` lines until the engine gets round to
+ * ending it, and those lines are still about the *old* position. Attributing
+ * them to the new one gets the sign backwards every single time, because the
+ * side to move alternates with every move, so a quiet position reads as a
+ * lurch in one direction and then snaps back when the real lines arrive.
+ *
+ * So a search is only ever started when the engine is idle. `bestmove` is the
+ * one thing that says a search is over and no more of its output is coming,
+ * and it is emitted whether the search ran out of depth or was stopped. The
+ * position waiting to be analysed is held until then.
  */
 export class Engine {
   private worker: Worker | null = null;
   private ready: Promise<void> | null = null;
-  private fen: string | null = null;
-  private listener: Listener | null = null;
+  /**
+   * The search actually running, and the position it belongs to. Null while the
+   * engine is idle. The listener is dropped when a search is abandoned, but the
+   * entry stays until `bestmove`, because until then the engine is still busy.
+   */
+  private running: { fen: string; listener: Listener | null } | null = null;
+  /** The most recently asked for position, waiting for the engine to go idle. */
+  private next: Request | null = null;
 
   constructor(private readonly url: string) {}
 
@@ -130,9 +155,18 @@ export class Engine {
           resolve();
           return;
         }
-        if (!this.fen || !this.listener) return;
-        const evaluation = parseInfo(line, this.fen);
-        if (evaluation) this.listener(evaluation);
+
+        // The search is over and the engine is idle, so whatever is waiting can
+        // now be sent. Everything before this line belonged to the old position.
+        if (line.startsWith("bestmove")) {
+          this.running = null;
+          this.launch();
+          return;
+        }
+
+        if (!this.running?.listener) return;
+        const evaluation = parseInfo(line, this.running.fen);
+        if (evaluation) this.running.listener(evaluation);
       };
 
       worker.addEventListener("message", onMessage);
@@ -147,24 +181,48 @@ export class Engine {
   async analyse(fen: string, options: { depth: number; lines: number }, onEvaluation: Listener): Promise<void> {
     await this.start();
     if (!this.worker) return;
-    this.fen = fen;
-    this.listener = onEvaluation;
-    this.worker.postMessage("stop");
-    this.worker.postMessage(`setoption name MultiPV value ${options.lines}`);
-    this.worker.postMessage(`position fen ${fen}`);
-    this.worker.postMessage(`go depth ${options.depth}`);
+
+    this.next = { fen, options, listener: onEvaluation };
+    if (this.running) {
+      // Abandon the running search now, so none of its remaining output is
+      // delivered, and start the new one when its `bestmove` says it is safe.
+      this.running.listener = null;
+      this.worker.postMessage("stop");
+      return;
+    }
+    this.launch();
+  }
+
+  /**
+   * Send a position to an idle engine.
+   *
+   * MultiPV is set here rather than beside the request because Stockfish
+   * refuses `setoption` during a search: sent at the wrong moment it is
+   * silently dropped, and the reader gets one line after asking for three.
+   */
+  private launch() {
+    const request = this.next;
+    if (!request || !this.worker) return;
+    this.next = null;
+    this.running = { fen: request.fen, listener: request.listener };
+    this.worker.postMessage(`setoption name MultiPV value ${request.options.lines}`);
+    this.worker.postMessage(`position fen ${request.fen}`);
+    this.worker.postMessage(`go depth ${request.options.depth}`);
   }
 
   stop() {
+    this.next = null;
+    if (!this.running) return;
+    this.running.listener = null;
     this.worker?.postMessage("stop");
-    this.listener = null;
   }
 
   destroy() {
     this.worker?.terminate();
     this.worker = null;
     this.ready = null;
-    this.listener = null;
+    this.running = null;
+    this.next = null;
   }
 }
 

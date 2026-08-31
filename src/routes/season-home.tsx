@@ -1,6 +1,7 @@
 import { Download } from "lucide-react";
 import { CalendarKey, FixtureCalendar } from "@/components/fixture-calendar";
 import { Page, Section } from "@/components/page";
+import { CompetitionLink } from "@/components/competition-link";
 import { useSeason } from "@/components/season-context";
 import { Button } from "@/components/ui/button";
 import { venueById } from "@/lib/data";
@@ -36,18 +37,26 @@ function DownloadIcs() {
 }
 
 /**
- * The landing page is the calendar, and nothing else.
+ * A season's front page: the calendar, and nothing else.
  *
  * Everything that used to sit around it was either a second route to somewhere
  * the header already goes or a summary of a page one click away. The calendar
  * is the one thing here that is not available anywhere else: it shows the shape
  * of the whole season at a glance, and every marked day is a link.
  */
-export function Home() {
+export function SeasonHome() {
   const { season } = useSeason();
 
   return (
-    <Page title={season.team.name} lede={`${season.team.competition} · ${season.name}`} actions={<DownloadIcs />}>
+    <Page
+      title={season.team.name}
+      lede={
+        <>
+          <CompetitionLink team={season.team} /> · {season.name}
+        </>
+      }
+      actions={<DownloadIcs />}
+    >
       {season.prototype && (
         <div className="border-reply-unsure/40 bg-reply-unsure-soft/40 text-reply-unsure mb-6 rounded-lg border px-4 py-3 text-sm">
           <strong className="font-semibold">This season is invented.</strong> The players, ratings, results and games in{" "}

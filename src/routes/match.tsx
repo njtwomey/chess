@@ -4,6 +4,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { AnalysisIcons } from "@/components/analysis-links";
 import { seasonPath } from "@/components/season-context";
 import { Empty, Page, Section } from "@/components/page";
+import { CompetitionLink } from "@/components/competition-link";
 import { RatingLabel } from "@/components/rating";
 import { SelectionTable } from "@/components/selection-table";
 import { VenueMap } from "@/components/venue-map";
@@ -25,7 +26,7 @@ import { cn } from "@/lib/utils";
  * a player opening this page already knows who they are playing. What they came
  * for is when to leave the house and where they are going.
  */
-function Where({ match }: { match: Match }) {
+function Where({ season, match }: { season: Season; match: Match }) {
   const venue = venueById.get(match.venueId);
   const place = venue ? [venue.address, venue.postcode].filter(Boolean).join(", ") : "";
 
@@ -75,6 +76,24 @@ function Where({ match }: { match: Match }) {
       </div>
 
       {venue && <VenueMap venue={venue} className="w-full self-center" />}
+
+      {/* The league's list is the authority on when and where a match is. This
+          page is a convenience built on top of it, so it says so and links
+          back: a fixture page with no way to the record it copied is one that
+          can be quietly wrong for weeks. */}
+      <p className="text-muted-foreground border-t pt-3 text-xs sm:col-span-2">
+        Times and venues come from{" "}
+        <a
+          href={season.team.links.fixtures}
+          target="_blank"
+          rel="noreferrer"
+          className="text-primary inline-flex items-center gap-1 hover:underline"
+        >
+          the league's fixture list
+          <ExternalLink className="size-3" />
+        </a>
+        . If the two disagree, the league is right.
+      </p>
     </div>
   );
 }
@@ -273,7 +292,11 @@ export function MatchPage() {
   return (
     <Page
       title={`${home} v ${away}`}
-      lede={`Round ${match.round} · ${season.team.competition}`}
+      lede={
+        <>
+          Round {match.round} · <CompetitionLink team={season.team} />
+        </>
+      }
       actions={
         <Button variant="ghost" size="sm" asChild>
           <Link to={seasonPath(season.id, "schedule")}>
@@ -283,7 +306,7 @@ export function MatchPage() {
         </Button>
       }
     >
-      <Where match={match} />
+      <Where season={season} match={match} />
 
       {score && (
         <div className="mt-4 flex items-center gap-3 rounded-lg border px-5 py-4">

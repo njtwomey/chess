@@ -1,11 +1,10 @@
-import { Check, ClipboardCopy, MessageSquare, Users } from "lucide-react";
+import { Check, ClipboardCopy, MessageSquare, Trophy, Users } from "lucide-react";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { useCopy } from "@/hooks/use-copy";
-import { playerName } from "@/lib/data";
-import { availabilitySummary, callToAction } from "@/lib/messages";
+import { availabilityUpdate, callToAction, matchResult, selectedTeam } from "@/lib/messages";
 import type { Match, Season } from "@/lib/schema";
-import { explain, type Selection } from "@/lib/selection";
+import type { Selection } from "@/lib/selection";
 import { cn } from "@/lib/utils";
 
 /**
@@ -37,17 +36,23 @@ export function MessageButtons({
     void copy(text);
   };
 
+  /**
+   * Which messages make sense right now.
+   *
+   * A played match is done being organised, so asking who can play and
+   * reporting where the replies got to are both noise; what is wanted then is
+   * the result. Before that the result does not exist.
+   */
+  const played = match.result !== null;
   const messages = [
-    { label: "Ask who can play", Icon: MessageSquare, text: () => callToAction(season, match) },
-    { label: "Copy the status", Icon: Users, text: () => availabilitySummary(season, match) },
+    ...(played
+      ? [{ label: "Copy the result", Icon: Trophy, text: () => matchResult(season, match) ?? "" }]
+      : [
+          { label: "Ask who can play", Icon: MessageSquare, text: () => callToAction(season, match) },
+          { label: "Copy the status", Icon: Users, text: () => availabilityUpdate(season, match) },
+        ]),
     ...(settled
-      ? [
-          {
-            label: "Copy the team",
-            Icon: ClipboardCopy,
-            text: () => explain(selection, (id: string) => playerName(season, id)).join("\n\n"),
-          },
-        ]
+      ? [{ label: "Copy the team", Icon: ClipboardCopy, text: () => selectedTeam(season, match, selection) }]
       : []),
   ];
 

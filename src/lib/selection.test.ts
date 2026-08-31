@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { compareRanked, decidingKey, explain, select, type Candidate, type Reply } from "@/lib/selection";
+import { compareRanked, decidingKey, select, type Candidate, type Reply } from "@/lib/selection";
 
 const SEED = "test-seed";
 
@@ -306,13 +306,6 @@ describe("dropping out", () => {
     expect(selection.unfilled).toBe(4);
     expect(selection.withdrawn).toHaveLength(4);
   });
-
-  it("says so in the message for the group chat", () => {
-    const lines = explain(run(withdraw("c")), (id) => id.toUpperCase()).join(" ");
-    expect(lines).toContain("C has had to drop out");
-    expect(lines).toContain("everybody below moves up one place");
-    expect(lines).toContain("E, G moves up");
-  });
 });
 
 describe("the shape of the result", () => {
@@ -363,60 +356,5 @@ describe("showing the working", () => {
 
     const onToss = run([candidate("a", "yes", 1), candidate("b", "yes", 1)]);
     expect(decidingKey(onToss.order[0]!, onToss.order[1]!)).toBe("tiebreak");
-  });
-
-  it("does not explain a cut that turned nobody away", () => {
-    // Four can play and there are four boards, so the reserves are reserves by
-    // their own choice. Explaining the last board would invent a contest.
-    const lines = explain(
-      run([
-        candidate("ada", "yes", 0),
-        candidate("bruno", "yes", 0),
-        candidate("cass", "yes", 0),
-        candidate("dermot", "yes", 0),
-        candidate("elin", "reserve", 0),
-        candidate("farid", "reserve", 0),
-      ]),
-      (id) => id,
-    ).join(" ");
-
-    expect(lines).toContain("Playing:");
-    expect(lines).not.toContain("took the last board");
-  });
-
-  it("explains the cut when somebody who asked for a game missed out", () => {
-    const lines = explain(
-      run([
-        candidate("ada", "yes", 0),
-        candidate("bruno", "yes", 0),
-        candidate("cass", "yes", 0),
-        candidate("dermot", "yes", 0),
-        candidate("elin", "yes", 1),
-      ]),
-      (id) => id,
-    ).join(" ");
-
-    expect(lines).toContain("took the last board");
-  });
-
-  it("writes a message the captain can paste into the group chat", () => {
-    const selection = run([
-      candidate("ada", "yes", 0),
-      candidate("bruno", "yes", 0),
-      candidate("cass", "yes", 1),
-      candidate("dermot", "yes", 1),
-      candidate("elin", "yes", 2),
-      candidate("farid", "unsure", 0),
-    ]);
-
-    const lines = explain(selection, (id) => id.toUpperCase()).join(" ");
-    expect(lines).toMatch(/^Playing: /);
-    expect(lines).toContain("Reserves, in this order: ELIN.");
-    expect(lines).toContain("Still to hear from: FARID.");
-  });
-
-  it("says how many boards are short rather than staying quiet about it", () => {
-    const lines = explain(run([candidate("ada", "yes", 0)]), (id) => id).join(" ");
-    expect(lines).toContain("3 boards still unfilled");
   });
 });

@@ -132,6 +132,12 @@ describe("the real fixture list", () => {
     }
   });
 
+  it("gives every team a link to the league's fixture list", () => {
+    // Required, not optional: it is the authority on when and where a match is,
+    // and every match page points back at it.
+    for (const season of seasons) expect(season.team.links.fixtures).toMatch(/^https:\/\//);
+  });
+
   it("names its team once, rather than repeating the string in every season", () => {
     expect(season.team.id).toBe("bristol-clifton-g");
     expect(season.team.name).toBe("Bristol & Clifton G");

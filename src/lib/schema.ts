@@ -185,7 +185,13 @@ export const TeamSchema = z.strictObject({
   competition: z.string().min(1),
   /** Where this team plays its home matches. */
   homeVenueId: ID,
-  links: z.strictObject({ fixtures: URL.optional(), rules: URL.optional(), handbook: URL.optional() }).default({}),
+  /**
+   * The league's own pages. `fixtures` is required, because it is the authority
+   * on when and where a match is: this site is a convenience built on top of
+   * it, and a fixture page with no way back to the record it copied is a page
+   * that can be quietly wrong.
+   */
+  links: z.strictObject({ fixtures: URL, rules: URL.optional(), handbook: URL.optional() }),
 });
 
 export const SeasonSchema = z.strictObject({

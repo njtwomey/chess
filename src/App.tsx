@@ -7,13 +7,14 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Home } from "@/routes/home";
+import { SiteHome } from "@/routes/site-home";
 
 /**
- * Home is in the main bundle because it is what almost everyone opens first.
- * Everything else is split, so a player checking where they are playing on
- * Tuesday does not download the game viewer and chessground with it.
+ * The site home is in the main bundle because it is what almost everyone opens
+ * first. Everything else is split, so a player checking where they are playing
+ * on Tuesday does not download the game viewer and chessground with it.
  */
+const SeasonHome = React.lazy(() => import("@/routes/season-home").then((m) => ({ default: m.SeasonHome })));
 const Schedule = React.lazy(() => import("@/routes/schedule").then((m) => ({ default: m.Schedule })));
 const Team = React.lazy(() => import("@/routes/team").then((m) => ({ default: m.Team })));
 const Games = React.lazy(() => import("@/routes/games").then((m) => ({ default: m.Games })));
@@ -74,14 +75,20 @@ export default function App() {
               <SiteHeader />
               <React.Suspense fallback={<RouteFallback />}>
                 <Routes>
-                  <Route path="/" element={<EnterSeason />} />
+                  {/* The global half: about the club, not about one season. */}
+                  <Route path="/" element={<SiteHome />} />
+                  <Route path="/venues" element={<Venues />} />
+                  <Route path="/how-it-works" element={<HowItWorks />} />
 
                   {/* Season-scoped, and therefore shareable. */}
-                  <Route path="/season/:seasonId" element={<Home />} />
+                  <Route path="/season/:seasonId" element={<SeasonHome />} />
                   <Route path="/season/:seasonId/schedule" element={<Schedule />} />
                   <Route path="/season/:seasonId/team" element={<Team />} />
                   <Route path="/season/:seasonId/games" element={<Games />} />
-                  <Route path="/season/:seasonId/venues" element={<Venues />} />
+                  {/* Venues used to hang off a season and was published that
+                      way, so an old link keeps working rather than silently
+                      landing somebody on the front page. */}
+                  <Route path="/season/:seasonId/venues" element={<Navigate to="/venues" replace />} />
 
                   {/* A match belongs to a season and a game is a board of a
                       match, so the path says exactly that. It also lets a match
@@ -89,15 +96,12 @@ export default function App() {
                   <Route path="/season/:seasonId/match/:matchId" element={<MatchPage />} />
                   <Route path="/season/:seasonId/match/:matchId/board/:board" element={<GamePage />} />
 
-                  <Route path="/how-it-works" element={<HowItWorks />} />
-
                   {/* The unscoped forms are kept as entry points: someone who
                     types /schedule, or follows a link from before the season
                     was in the path, lands on the current season's version. */}
                   <Route path="/schedule" element={<EnterSeason page="schedule" />} />
                   <Route path="/team" element={<EnterSeason page="team" />} />
                   <Route path="/games" element={<EnterSeason page="games" />} />
-                  <Route path="/venues" element={<EnterSeason page="venues" />} />
 
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>

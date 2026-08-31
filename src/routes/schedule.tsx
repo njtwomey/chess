@@ -1,6 +1,7 @@
 import { Download } from "lucide-react";
 import { MatchCard } from "@/components/match-card";
 import { Empty, Page, Section } from "@/components/page";
+import { CompetitionLink } from "@/components/competition-link";
 import { useSeason } from "@/components/season-context";
 import { Button } from "@/components/ui/button";
 import { venueById } from "@/lib/data";
@@ -31,7 +32,12 @@ export function Schedule() {
   return (
     <Page
       title="Schedule"
-      lede={`${season.matches.length} fixtures, ${season.boards} boards each, all starting at 19:30.`}
+      lede={
+        <>
+          {season.matches.length} fixtures, {season.boards} boards each, all starting at 19:30. Fixtures come from the{" "}
+          <CompetitionLink team={season.team} />.
+        </>
+      }
       actions={
         <Button variant="outline" size="sm" onClick={download}>
           <Download className="size-3.5" />

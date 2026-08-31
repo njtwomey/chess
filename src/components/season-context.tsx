@@ -6,8 +6,18 @@ import type { Season } from "@/lib/schema";
 const STORAGE_KEY = "season";
 
 interface SeasonState {
+  /** The season on screen, or the best guess at one for the global pages. */
   season: Season;
   seasons: Season[];
+  /**
+   * Whether the URL actually names a season.
+   *
+   * The site has a global half (the club, the venues, how selection works) and
+   * a season half. `season` is always populated so a picker has something to
+   * show, but the header must not offer Schedule and Team while nobody has
+   * chosen a season.
+   */
+  inSeason: boolean;
   /** Switch season and go to the same page under it. */
   setSeasonId: (id: string) => void;
 }
@@ -75,13 +85,18 @@ export function SeasonProvider({ children }: { children: React.ReactNode }) {
       // season's schedule instead of nowhere.
       // A match belongs to one season and cannot follow the switch, so anything
       // deeper than a season-level page goes to that season's schedule instead.
+      // Stay on the same kind of page where there is one, otherwise land on
+      // the season's own home rather than somewhere arbitrary.
       const scoped = /^\/season\/[^/]+\/?([^/]*)$/.exec(pathname);
-      navigate(seasonPath(id, scoped ? scoped[1] || undefined : "schedule"));
+      navigate(seasonPath(id, scoped ? scoped[1] || undefined : undefined));
     },
     [navigate, pathname],
   );
 
-  const value = React.useMemo(() => ({ season, seasons, setSeasonId }), [season, setSeasonId]);
+  const value = React.useMemo(
+    () => ({ season, seasons, inSeason: fromPath !== null, setSeasonId }),
+    [season, fromPath, setSeasonId],
+  );
   return <SeasonContext value={value}>{children}</SeasonContext>;
 }
 

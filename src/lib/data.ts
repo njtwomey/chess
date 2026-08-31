@@ -63,6 +63,16 @@ for (const venue of venues) {
   if ((venue.lat === null) !== (venue.lon === null)) {
     throw new Error(`content/venues.json: "${venue.id}" has only one half of a lat/lon pair`);
   }
+  // A map link with no path is a half-copied short link. It passes for a URL,
+  // opens a blank map, and is worse than the name search it displaced, so it
+  // has to be caught rather than shipped. A website may be a bare host, so this
+  // applies only to the map.
+  if (venue.maps && new URL(venue.maps).pathname.replace(/\/+$/, "") === "") {
+    throw new Error(
+      `content/venues.json: "${venue.id}" has a map link with no place in it (${venue.maps}). ` +
+        `Paste the full short link, or set it to null and let the map search by name.`,
+    );
+  }
 }
 export const venueById = new Map(venues.map((venue) => [venue.id, venue]));
 

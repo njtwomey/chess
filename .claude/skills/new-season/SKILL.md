@@ -16,6 +16,15 @@ content/seasons/2027-jan-apr/
   matches.json   the fixtures
 ```
 
+## The team comes first
+
+A season points at a team in `content/teams.json` by `teamId`. If the side is
+new, add the team there before the season: name, club, competition, home venue,
+and **`links.fixtures`, which is required**. That link is the league's own
+record and every match page points back at it, because this site is a
+convenience built on top of the league's list and has to say where its facts
+came from.
+
 ## Naming
 
 Use `<year>-<start month>-<end month>`, lowercase: `2026-autumn-g`,
