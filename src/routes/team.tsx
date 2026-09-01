@@ -118,11 +118,6 @@ export function Team() {
                         Captain
                       </Badge>
                     )}
-                    {entry.player.junior && (
-                      <Badge variant="outline" className="ml-2 text-[0.65rem]">
-                        Junior
-                      </Badge>
-                    )}
                   </TableCell>
                   <TableCell className="text-right whitespace-nowrap">
                     {entry.player.ecfCode ? (

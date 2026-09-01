@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BookOpen, CalendarDays, ExternalLink, Scale } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Page, Section } from "@/components/page";
 import { CompetitionLink } from "@/components/competition-link";
@@ -60,6 +60,57 @@ function SeasonCard({ season }: { season: (typeof seasons)[number] }) {
  */
 const real = seasons.filter((season) => !season.prototype);
 
+/**
+ * The league's own pages, at the top rather than only in the footer.
+ *
+ * Three links that are needed rarely but urgently: the fixture list when
+ * somebody doubts a date, the rules when there is an argument, and the Laws
+ * when the argument is about the game itself. They are the authority and this
+ * site is a derived view, so they belong where somebody looking for the source
+ * will find them without being told.
+ */
+const LEAGUE_LINKS = [
+  {
+    key: "fixtures" as const,
+    label: "Fixtures",
+    Icon: CalendarDays,
+    blurb: "The league's own table. If it and this site disagree, it is right.",
+  },
+  { key: "rules" as const, label: "League rules", Icon: Scale, blurb: "How the Bristol & District league is run." },
+  {
+    key: "handbook" as const,
+    label: "Laws of Chess",
+    Icon: BookOpen,
+    blurb: "FIDE, for when the argument is about the game.",
+  },
+];
+
+function LeagueLinks({ team }: { team: Team }) {
+  const links = LEAGUE_LINKS.filter((link) => team.links[link.key]);
+  if (links.length === 0) return null;
+
+  return (
+    <div className="grid gap-3 sm:grid-cols-3">
+      {links.map(({ key, label, Icon, blurb }) => (
+        <a
+          key={key}
+          href={team.links[key]}
+          target="_blank"
+          rel="noreferrer"
+          className="hover:border-primary/40 hover:bg-accent/40 group bg-card block rounded-lg border p-4 transition-colors"
+        >
+          <div className="flex items-center gap-2">
+            <Icon className="text-primary size-4 shrink-0" />
+            <span className="font-medium">{label}</span>
+            <ExternalLink className="text-muted-foreground ml-auto size-3.5 shrink-0" />
+          </div>
+          <p className="text-muted-foreground mt-1.5 text-sm/6">{blurb}</p>
+        </a>
+      ))}
+    </div>
+  );
+}
+
 function TeamBlock({ team }: { team: Team }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2">
@@ -97,7 +148,7 @@ export function SiteHome() {
         ) : undefined
       }
     >
-      <p className="max-w-2xl text-[0.95rem]/7">A transparent organiser for picking teams for the chess league.</p>
+      {team && <LeagueLinks team={team} />}
 
       <Section title="Seasons" description="Fixtures, availability and results live inside a season.">
         {sides.map((entry) => (

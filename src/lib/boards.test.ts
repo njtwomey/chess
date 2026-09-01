@@ -6,6 +6,7 @@ const CONTROL: TimeControl = {
   standard: { minutes: 80, increment: 10 },
   junior: { minutes: 55, increment: 10 },
   juniorUnder: 16,
+  juniorOn: null,
 };
 
 function player(id: string, rating: number | null, junior = false): Player {

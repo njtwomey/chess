@@ -80,11 +80,14 @@ export const PlayerSchema = z.strictObject({
     .nullable()
     .default(null),
   /**
-   * Under the league's junior age, which shortens the clock on their board.
+   * Under the league's junior age on the season's cut-off date, which shortens
+   * the clock on their board.
    *
    * A flag rather than a date of birth. The site has no business holding a
-   * child's birthday to compute something the captain already knows, and the
-   * flag has to be reviewed each season anyway, which is the right prompt.
+   * child's birthday to compute something the captain already knows, and
+   * because age is taken once a season and then holds, a flag is not an
+   * approximation of the rule: it is the rule. See `timeControl.juniorOn` for
+   * the date it was taken on.
    */
   junior: z.boolean().default(false),
   note: z.string().optional(),
@@ -204,6 +207,16 @@ export const TimeControlSchema = z.strictObject({
   /** Applied to a board with a junior on either side of it. */
   junior: ClockSchema,
   juniorUnder: z.number().int().min(1).default(16),
+  /**
+   * The date age is taken on, which the league fixes for the whole season.
+   *
+   * Without it the site says "under 16" and leaves a reader to guess whether
+   * that means today. It does not: somebody who turns 16 in October was 15 on
+   * the cut-off and stays on the short clock until the summer. Null where the
+   * date has not been recorded, and then the site says less rather than
+   * guessing.
+   */
+  juniorOn: DATE.nullable().default(null),
 });
 
 /**
@@ -248,6 +261,7 @@ export const SeasonSchema = z.strictObject({
     standard: { minutes: 80, increment: 10 },
     junior: { minutes: 55, increment: 10 },
     juniorUnder: 16,
+    juniorOn: null,
   }),
   /** The season the site opens on. Exactly one across all seasons. */
   active: z.boolean().default(false),

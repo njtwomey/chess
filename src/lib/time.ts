@@ -65,6 +65,7 @@ export function londonToUtc(date: string, time: string): Date {
 const WEEKDAY = new Intl.DateTimeFormat("en-GB", { timeZone: "UTC", weekday: "short" });
 const LONG = new Intl.DateTimeFormat("en-GB", { timeZone: "UTC", weekday: "long", day: "numeric", month: "long" });
 const SHORT = new Intl.DateTimeFormat("en-GB", { timeZone: "UTC", day: "numeric", month: "short" });
+const DATED = new Intl.DateTimeFormat("en-GB", { timeZone: "UTC", day: "numeric", month: "long", year: "numeric" });
 
 /** Midday UTC, so formatting a bare date can never slip across a boundary. */
 function noon(date: string): Date {
@@ -83,6 +84,16 @@ export function formatLongDate(date: string): string {
 /** "8 Sep" — for tables, where the column has to stay narrow. */
 export function formatShortDate(date: string): string {
   return SHORT.format(noon(date));
+}
+
+/**
+ * "1 September 2026" — for a date that is a rule rather than a fixture.
+ *
+ * The year is there on purpose. A cut-off without one is ambiguous the moment
+ * a season spans New Year, which this one does.
+ */
+export function formatDated(date: string): string {
+  return DATED.format(noon(date));
 }
 
 export function formatYear(date: string): string {

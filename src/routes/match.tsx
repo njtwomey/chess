@@ -1,4 +1,4 @@
-import { ArrowLeft, Clock3, Eye, EyeOff, ExternalLink, MapPin, Timer } from "lucide-react";
+import { ArrowLeft, Clock3, Eye, EyeOff, ExternalLink, MapPin } from "lucide-react";
 import * as React from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { AnalysisIcons } from "@/components/analysis-links";
@@ -16,7 +16,7 @@ import { findMatch, playerById, venueById } from "@/lib/data";
 import { mapsUrl, taggedPgn } from "@/lib/links";
 import { GAME_RESULT_LABEL, type Match, type Season } from "@/lib/schema";
 import { fieldedFor, matchScore, ratingOn, selectionFor, type Fielded } from "@/lib/season";
-import { formatLongDate, formatYear, relativeDay, today } from "@/lib/time";
+import { formatDated, formatLongDate, formatYear, relativeDay, today } from "@/lib/time";
 import type { Selection } from "@/lib/selection";
 import { cn } from "@/lib/utils";
 
@@ -213,7 +213,6 @@ function BoardOrder({ season, match, fielded }: { season: Season; match: Match; 
     onDate: match.date,
     keepOrder: fielded.ordered,
   });
-  const anyJunior = boards.some((entry) => entry.clock.junior);
 
   return (
     <div className="space-y-3">
@@ -226,38 +225,18 @@ function BoardOrder({ season, match, fielded }: { season: Season; match: Match; 
               <TableHead>Player</TableHead>
               <TableHead className="w-24 text-right">Rating</TableHead>
               <TableHead className="w-24">Colour</TableHead>
-              <TableHead className="w-28">Clock</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {boards.map((entry) => (
               <TableRow key={entry.player.id}>
                 <TableCell className="tabular font-medium">{entry.board}</TableCell>
-                <TableCell>
-                  {entry.player.name}
-                  {entry.player.junior && (
-                    <Badge variant="outline" className="ml-2 text-[0.65rem]">
-                      Junior
-                    </Badge>
-                  )}
-                </TableCell>
+                <TableCell>{entry.player.name}</TableCell>
                 <TableCell className="text-right">
                   <RatingLabel rating={entry.rating} />
                 </TableCell>
                 <TableCell className="text-muted-foreground text-sm capitalize">
                   {expectedColour(match.home, entry.board)}
-                </TableCell>
-                <TableCell>
-                  <span
-                    className={cn(
-                      "tabular inline-flex items-center gap-1.5 text-sm",
-                      entry.clock.junior && "text-reply-unsure font-medium",
-                    )}
-                  >
-                    <Timer className="size-3.5" />
-                    {formatClock(entry.clock.clock)}
-                    {!entry.clock.certain && <span className="text-muted-foreground text-xs">*</span>}
-                  </span>
                 </TableCell>
               </TableRow>
             ))}
@@ -269,11 +248,13 @@ function BoardOrder({ season, match, fielded }: { season: Season; match: Match; 
         {fielded.ordered
           ? "Boards run strongest first, in the order the captain set. "
           : "Boards run strongest first, on the most recent rating; unrated players go below every graded one. "}
-        Colours are the usual convention, with the home side on White at board one.{" "}
-        <span className="whitespace-nowrap">* {formatClock(season.timeControl.standard)}</span> unless the opponent on
-        that board is under {season.timeControl.juniorUnder}, which makes it {formatClock(season.timeControl.junior)}.
-        {anyJunior &&
-          ` A junior of ours settles it either way, so those boards are ${formatClock(season.timeControl.junior)}.`}
+        Colours are the usual convention, with the home side on White at board one. Games are{" "}
+        {formatClock(season.timeControl.standard)}, but a junior on either side of a board can choose{" "}
+        {formatClock(season.timeControl.junior)} instead
+        {season.timeControl.juniorOn
+          ? `, a junior being anybody under ${season.timeControl.juniorUnder} on ${formatDated(season.timeControl.juniorOn)}`
+          : ""}
+        .
       </p>
     </div>
   );

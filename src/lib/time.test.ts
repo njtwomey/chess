@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { daysBetween, formatLongDate, formatWeekday, londonToUtc, relativeDay, today } from "@/lib/time";
+import { daysBetween, formatDated, formatLongDate, formatWeekday, londonToUtc, relativeDay, today } from "@/lib/time";
 
 describe("londonToUtc", () => {
   it("takes an hour off during British Summer Time", () => {
@@ -32,6 +32,19 @@ describe("formatting", () => {
 
   it("writes a date the way it would be written in a message", () => {
     expect(formatLongDate("2026-09-08")).toBe("Tuesday 8 September");
+  });
+});
+
+describe("formatDated", () => {
+  it("names the year, because a cut-off without one is ambiguous over New Year", () => {
+    expect(formatDated("2026-09-01")).toBe("1 September 2026");
+  });
+
+  it("cannot slip a day across a timezone boundary", () => {
+    // Formatted at midday UTC for exactly this reason: British Summer Time
+    // would otherwise pull a midnight date back into the previous day.
+    expect(formatDated("2026-07-01")).toBe("1 July 2026");
+    expect(formatDated("2026-01-01")).toBe("1 January 2026");
   });
 });
 

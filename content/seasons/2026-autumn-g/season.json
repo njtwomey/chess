@@ -16,7 +16,8 @@
       "minutes": 55,
       "increment": 10
     },
-    "juniorUnder": 16
+    "juniorUnder": 16,
+    "juniorOn": "2026-09-01"
   },
   "active": true,
   "prototype": false

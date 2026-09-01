@@ -2,6 +2,7 @@ import { Page, Section } from "@/components/page";
 import { ReplyBadge, RoleBadge } from "@/components/reply-badge";
 import { useSeason } from "@/components/season-context";
 import { formatClock } from "@/lib/boards";
+import { formatDated } from "@/lib/time";
 import { REPLIES, select, type Candidate } from "@/lib/selection";
 import { cn } from "@/lib/utils";
 
@@ -309,10 +310,18 @@ export function HowItWorks() {
 
       <Section title="Clocks">
         <p className="text-sm/7">
-          Boards are {formatClock(season.timeControl.standard)}. A board with a player under{" "}
-          {season.timeControl.juniorUnder} on <em>either</em> side is {formatClock(season.timeControl.junior)}. The
-          shorter clock belongs to the board rather than to the child, so an adult can find themselves playing it, and a
-          board can turn out to be a junior board only once the other club names its team.
+          Boards are {formatClock(season.timeControl.standard)}. A junior on <em>either</em> side of a board can choose{" "}
+          {formatClock(season.timeControl.junior)} instead. The shorter clock belongs to the board rather than to the
+          child, so an adult can find themselves playing it, and a board can turn out to be a short one only once the
+          other club names its team.
+          {season.timeControl.juniorOn && (
+            <>
+              {" "}
+              A junior is anybody under {season.timeControl.juniorUnder} on {formatDated(season.timeControl.juniorOn)}.
+              Age is taken on that date and holds for the whole season, so somebody who turns{" "}
+              {season.timeControl.juniorUnder} part way through it is a junior until the end of it.
+            </>
+          )}
         </p>
       </Section>
 
