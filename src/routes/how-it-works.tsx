@@ -95,8 +95,7 @@ export function HowItWorks() {
       lede="Every example on this page is produced by the same function that picks the real teams."
     >
       <p className="text-[0.95rem]/7">
-        We are Team G, the club's beginners' team. We want to give as many people as many games as we can, and every
-        rule below comes out of that.
+        We are Team G. We want to give as many people as many games as we can, and every rule below comes out of that.
       </p>
       <p className="mt-3 text-[0.95rem]/7">
         Before each match a poll goes out with four answers. We read each one literally, so pick the one you mean.

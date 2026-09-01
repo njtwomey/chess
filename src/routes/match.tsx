@@ -5,6 +5,7 @@ import { AnalysisIcons } from "@/components/analysis-links";
 import { seasonPath } from "@/components/season-context";
 import { Empty, Page, Section } from "@/components/page";
 import { CompetitionLink } from "@/components/competition-link";
+import { HomeAway } from "@/components/home-away";
 import { RatingLabel } from "@/components/rating";
 import { SelectionTable } from "@/components/selection-table";
 import { VenueMap } from "@/components/venue-map";
@@ -52,7 +53,10 @@ function Where({ season, match }: { season: Season; match: Match }) {
             <MapPin className="size-3.5" />
             Where
           </p>
-          <p className="mt-1.5 text-lg font-semibold">{venue?.name ?? "Venue to be confirmed"}</p>
+          <p className="mt-1.5 text-lg font-semibold">
+            {venue?.name ?? "Venue to be confirmed"}
+            <HomeAway home={match.home} />
+          </p>
           <p className="text-muted-foreground text-sm">{place || "Address not confirmed yet"}</p>
           {venue && (
             <div className="mt-2 flex flex-wrap items-center gap-3">
@@ -375,6 +379,7 @@ export function MatchPage() {
   return (
     <Page
       title={`${home} v ${away}`}
+      badge={<HomeAway home={match.home} size="lg" />}
       lede={
         <>
           Round {match.round} · <CompetitionLink team={season.team} />

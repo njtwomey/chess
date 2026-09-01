@@ -27,12 +27,21 @@ export function useDocumentTitle(title?: string) {
  */
 export function Page({
   title,
+  badge,
   lede,
   actions,
   children,
   className,
 }: {
   title?: string;
+  /**
+   * Rendered inside the heading, ahead of the title.
+   *
+   * Separate from `title` because the title is also the document title, and a
+   * tab called "[object Object] v South Bristol D" is the sort of thing nobody
+   * notices until it is in somebody's bookmarks.
+   */
+  badge?: React.ReactNode;
   lede?: React.ReactNode;
   /** Buttons that belong to the page rather than to anything on it. */
   actions?: React.ReactNode;
@@ -46,7 +55,10 @@ export function Page({
       {title && (
         <header className="mb-7 flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
           <div className="min-w-0">
-            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h1>
+            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+              {badge}
+              {title}
+            </h1>
             {lede && <p className="text-muted-foreground mt-2 text-[0.95rem]/7">{lede}</p>}
           </div>
           {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
