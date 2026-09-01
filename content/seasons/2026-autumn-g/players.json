@@ -124,7 +124,7 @@
   {
     "id": "theo",
     "name": "Theo",
-    "junior": true,
+    "junior": false,
     "ratings": []
   },
   {
