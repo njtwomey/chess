@@ -1,11 +1,28 @@
 import { describe, expect, it } from "vitest";
 import { playerName, seasonById } from "@/lib/data";
+import type { Match } from "@/lib/schema";
 import { selectionFor } from "@/lib/season";
 import { availabilityUpdate, callToAction, describeRound, matchResult, selectedTeam } from "@/lib/messages";
 
 const season = seasonById.get("2026-autumn-g")!;
 const first = season.matches.find((match) => match.id === "r1")!;
+const second = season.matches.find((match) => match.id === "r2")!;
 const away = season.matches.find((match) => match.id === "r3")!;
+
+/**
+ * A real fixture with the replies replaced, for the cases that are about a
+ * shape of availability rather than about a particular match. The venue, date
+ * and opponent stay real so the message still reads as one the captain sends.
+ */
+function withAvailability(match: Match, yes: string[]): Match {
+  return {
+    ...match,
+    availability: yes.map((playerId) => ({ playerId, reply: "yes" as const, at: "2026-09-01", withdrawn: null })),
+  };
+}
+
+/** Nobody has answered yet. */
+const silent = withAvailability(second, []);
 
 describe("describeRound", () => {
   it("uses words while it has them", () => {
@@ -88,8 +105,10 @@ describe("availabilityUpdate", () => {
   });
 
   it("leaves out a group nobody is in", () => {
-    const quiet = season.matches.find((match) => match.id === "r2")!;
-    const summary = availabilityUpdate(season, quiet);
+    // Availability is written here rather than borrowed from a real fixture:
+    // the season's own replies change every week, and a test that reads them
+    // is really asserting who happened to answer the captain.
+    const summary = availabilityUpdate(season, silent);
     expect(summary).not.toContain("Can play:");
     expect(summary).toContain("Not heard from:");
   });
@@ -128,9 +147,10 @@ describe("selectedTeam", () => {
 
   it("says nothing consoling when everybody available is playing", () => {
     // Four boards, four volunteers, nobody left over: there is nobody to
-    // console and the line would be addressed at no one.
-    const quiet = season.matches.find((match) => match.id === "r2")!;
-    expect(selectedTeam(season, quiet, selectionFor(season, quiet))).not.toContain("nearer the front");
+    // console and the line would be addressed at no one. Exactly four is a
+    // shape a real fixture only holds until the fifth person replies.
+    const exact = withAvailability(second, ["niall", "steve", "max", "thomas"]);
+    expect(selectedTeam(season, exact, selectionFor(season, exact))).not.toContain("nearer the front");
   });
 });
 
