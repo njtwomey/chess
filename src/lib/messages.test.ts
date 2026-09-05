@@ -4,15 +4,27 @@ import type { Match } from "@/lib/schema";
 import { selectionFor } from "@/lib/season";
 import { availabilityUpdate, callToAction, describeRound, matchResult, selectedTeam } from "@/lib/messages";
 
-const season = seasonById.get("2026-autumn-g")!;
+// The prototype season, on purpose. These tests assert on the words a message
+// comes out with, which means asserting on who replied and what they said, and
+// in a live season that is whatever the captain last wrote down. A test that
+// reads the real roster's availability breaks every time somebody answers the
+// group chat, and it fails on the one commit that is hardest to argue with:
+// recording a reply that really was sent. The demo season is invented and is
+// only edited when the prototype itself changes.
+const season = seasonById.get("demo")!;
 const first = season.matches.find((match) => match.id === "r1")!;
-const second = season.matches.find((match) => match.id === "r2")!;
 const away = season.matches.find((match) => match.id === "r3")!;
+/** Every reply group represented, and nine players yet to answer. */
+const mixed = season.matches.find((match) => match.id === "r6")!;
+/** Nobody has answered yet. */
+const silent = season.matches.find((match) => match.id === "r7")!;
+/** Settled, with more volunteers than boards, so somebody missed out. */
+const settled = season.matches.find((match) => match.id === "r5")!;
 
 /**
- * A real fixture with the replies replaced, for the cases that are about a
- * shape of availability rather than about a particular match. The venue, date
- * and opponent stay real so the message still reads as one the captain sends.
+ * A fixture with the replies replaced, for a case that is about a shape of
+ * availability no real match happens to have. The venue, date and opponent stay
+ * real so the message still reads as one the captain would send.
  */
 function withAvailability(match: Match, yes: string[]): Match {
   return {
@@ -20,9 +32,6 @@ function withAvailability(match: Match, yes: string[]): Match {
     availability: yes.map((playerId) => ({ playerId, reply: "yes" as const, at: "2026-09-01", withdrawn: null })),
   };
 }
-
-/** Nobody has answered yet. */
-const silent = withAvailability(second, []);
 
 describe("describeRound", () => {
   it("uses words while it has them", () => {
@@ -41,13 +50,13 @@ describe("callToAction", () => {
   it("asks the question, then names the match", () => {
     expect(message.split("\n").filter(Boolean)).toEqual([
       "Who can play in the first fixture of the season?",
-      "Bristol & Clifton G v South Bristol D, Tuesday 8 September, 19:30, at home (https://maps.app.goo.gl/1gBZP8mgdUhoXYJH7).",
+      "Bristol & Clifton G v South Bristol D, Tuesday 10 March, 19:30, at home (https://maps.app.goo.gl/1gBZP8mgdUhoXYJH7).",
     ]);
   });
 
   it("gives the date and time without a relative one", () => {
     // A message sits in the chat for a week, and "in 14 days" ages badly.
-    expect(message).toContain("Tuesday 8 September, 19:30");
+    expect(message).toContain("Tuesday 10 March, 19:30");
     expect(message).not.toMatch(/in \d+ days|today|tomorrow/);
   });
 
@@ -76,9 +85,7 @@ describe("availabilityUpdate", () => {
   const message = availabilityUpdate(season, first);
 
   it("names the fixture, so it cannot be read against the wrong match", () => {
-    expect(message.startsWith("Where we are for Bristol & Clifton G v South Bristol D, Tuesday 8 September")).toBe(
-      true,
-    );
+    expect(message.startsWith("Where we are for Bristol & Clifton G v South Bristol D, Tuesday 10 March")).toBe(true);
   });
 
   it("carries no map, because it is a reply to the message that had one", () => {
@@ -90,13 +97,18 @@ describe("availabilityUpdate", () => {
   });
 
   it("groups the replies and sorts each group", () => {
-    expect(message).toContain("Can play: Jade, Lorenzo, Mukhtar, Niall, Steve, Theo.");
-    expect(message).toContain("Can be a reserve: Alex, Max.");
-    expect(message).toContain("Not sure yet: Thomas, Will.");
+    const summary = availabilityUpdate(season, mixed);
+    expect(summary).toContain("Can play: Ada Mercer, Liam Ferrers.");
+    expect(summary).toContain("Can be a reserve: Gwen Tsai.");
+    expect(summary).toContain("Not sure yet: Keeley Monrove.");
+    expect(summary).toContain("Cannot play: Noor Abadi.");
   });
 
   it("names the people who have not replied at all", () => {
-    expect(message).toContain("Not heard from: John, Mark.");
+    expect(availabilityUpdate(season, mixed)).toContain(
+      "Not heard from: Bruno Halliday, Cass Oyelaran, Dermot Kavanagh, Elin Pryce, Farid Nassar, Hollis Barr, " +
+        "Imre Solt, Jonah Kestrel, Mira Vance.",
+    );
   });
 
   it("says plainly that nobody is picked", () => {
@@ -105,9 +117,6 @@ describe("availabilityUpdate", () => {
   });
 
   it("leaves out a group nobody is in", () => {
-    // Availability is written here rather than borrowed from a real fixture:
-    // the season's own replies change every week, and a test that reads them
-    // is really asserting who happened to answer the captain.
     const summary = availabilityUpdate(season, silent);
     expect(summary).not.toContain("Can play:");
     expect(summary).toContain("Not heard from:");
@@ -115,11 +124,10 @@ describe("availabilityUpdate", () => {
 });
 
 describe("selectedTeam", () => {
-  const settled = season.matches.find((match) => match.id === "r1")!;
   const message = selectedTeam(season, settled, selectionFor(season, settled));
 
   it("names the fixture, with a map, because people have to get there", () => {
-    expect(message.startsWith("Team for Bristol & Clifton G v South Bristol D, Tuesday 8 September")).toBe(true);
+    expect(message.startsWith("Team for South Bristol E v Bristol & Clifton G, Wednesday 16 September")).toBe(true);
     expect(message).toContain("maps.app.goo.gl");
   });
 
@@ -149,42 +157,46 @@ describe("selectedTeam", () => {
     // Four boards, four volunteers, nobody left over: there is nobody to
     // console and the line would be addressed at no one. Exactly four is a
     // shape a real fixture only holds until the fifth person replies.
-    const exact = withAvailability(second, ["niall", "steve", "max", "thomas"]);
-    expect(selectedTeam(season, exact, selectionFor(season, exact))).not.toContain("nearer the front");
+    const exact = withAvailability(settled, ["ada-mercer", "bruno-halliday", "elin-pryce", "farid-nassar"]);
+    const message = selectedTeam(season, exact, selectionFor(season, exact));
+    // Asserted first, because a message naming nobody also lacks the line, and
+    // a fixture that quietly emptied would pass this test without testing it.
+    expect(/Playing: (?:[^,.]+, ){3}[^,.]+\./.test(message)).toBe(true);
+    expect(message).not.toContain("Reserves:");
+    expect(message).not.toContain("nearer the front");
   });
 });
 
 describe("matchResult", () => {
-  const demo = seasonById.get("demo")!;
-  const played = demo.matches.find((match) => match.id === "r1")!;
-  const lost = demo.matches.find((match) => match.id === "r2")!;
-  const awayWin = demo.matches.find((match) => match.id === "r3")!;
+  const played = season.matches.find((match) => match.id === "r1")!;
+  const lost = season.matches.find((match) => match.id === "r2")!;
+  const awayWin = season.matches.find((match) => match.id === "r3")!;
 
   it("is nothing at all until there is a result", () => {
-    const pending = demo.matches.find((match) => match.status === "scheduled")!;
-    expect(matchResult(demo, pending)).toBeNull();
+    const pending = season.matches.find((match) => match.status === "scheduled")!;
+    expect(matchResult(season, pending)).toBeNull();
   });
 
   it("leads with whether we won", () => {
-    expect(matchResult(demo, played)!.startsWith("A win:")).toBe(true);
-    expect(matchResult(demo, lost)!.startsWith("A loss:")).toBe(true);
+    expect(matchResult(season, played)!.startsWith("A win:")).toBe(true);
+    expect(matchResult(season, lost)!.startsWith("A loss:")).toBe(true);
   });
 
   it("writes the scoreline home side first", () => {
     // Ours is the away side here, so our score has to be the second number or
     // an away win reads as a defeat.
-    const message = matchResult(demo, awayWin)!;
+    const message = matchResult(season, awayWin)!;
     expect(message).toContain("Bristol Grendel C 1½ - 2½ Bristol & Clifton G.");
     expect(message.startsWith("A win:")).toBe(true);
   });
 
   it("writes a bare half as a half", () => {
-    expect(matchResult(demo, played)).toContain("2½ - 1½");
-    expect(matchResult(demo, played)).not.toContain("0½");
+    expect(matchResult(season, played)).toContain("2½ - 1½");
+    expect(matchResult(season, played)).not.toContain("0½");
   });
 
   it("gives every board, ours first, in board order", () => {
-    const boards = matchResult(demo, played)!
+    const boards = matchResult(season, played)!
       .split("\n")
       .filter((line) => /^\d\./.test(line));
     expect(boards).toHaveLength(4);
@@ -193,7 +205,7 @@ describe("matchResult", () => {
   });
 
   it("marks a default rather than passing it off as a game", () => {
-    const defaulted = demo.matches.find((match) => match.id === "r4")!;
-    expect(matchResult(demo, defaulted)).toContain("(default)");
+    const defaulted = season.matches.find((match) => match.id === "r4")!;
+    expect(matchResult(season, defaulted)).toContain("(default)");
   });
 });
