@@ -96,7 +96,43 @@
     "date": "2026-09-15",
     "time": "19:30",
     "status": "scheduled",
-    "availability": [],
+    "availability": [
+      {
+        "playerId": "niall",
+        "reply": "yes",
+        "at": "2026-09-05"
+      },
+      {
+        "playerId": "alex",
+        "reply": "yes",
+        "at": "2026-09-05"
+      },
+      {
+        "playerId": "max",
+        "reply": "yes",
+        "at": "2026-09-05"
+      },
+      {
+        "playerId": "thomas",
+        "reply": "yes",
+        "at": "2026-09-05"
+      },
+      {
+        "playerId": "steve",
+        "reply": "yes",
+        "at": "2026-09-05"
+      },
+      {
+        "playerId": "alfie",
+        "reply": "no",
+        "at": "2026-09-05"
+      },
+      {
+        "playerId": "alexandra",
+        "reply": "no",
+        "at": "2026-09-05"
+      }
+    ],
     "settled": false,
     "result": null
   },
