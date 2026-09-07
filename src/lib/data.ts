@@ -27,6 +27,7 @@ import {
   type Team,
   type Venue,
 } from "@/lib/schema";
+import { fieldedFor, selectionFor } from "@/lib/season";
 
 type RawFiles = Record<string, unknown>;
 
@@ -119,9 +120,28 @@ function loadSeasons(): Season[] {
 
   for (const season of loaded) problems.push(...checkSeason(season));
 
+  // No made-up player on a real team sheet, and no real person in the
+  // prototype. The two casts are checked against each other rather than the
+  // real ones being required to be empty, which they no longer are.
+  const invented = new Set(
+    loaded.filter((season) => season.prototype).flatMap((season) => season.players.map((player) => player.id)),
+  );
+  for (const season of loaded) {
+    if (season.prototype) continue;
+    for (const player of season.players) {
+      if (invented.has(player.id)) problems.push(`season "${season.id}": "${player.id}" is also a prototype player`);
+    }
+  }
+
+  // Exactly one, not at most one. With none, the header opens on nothing and
+  // every bare path has nowhere to redirect to.
   const active = loaded.filter((season) => season.active);
-  if (active.length > 1) {
-    problems.push(`more than one season is marked active: ${active.map((season) => season.id).join(", ")}`);
+  if (active.length !== 1) {
+    problems.push(
+      active.length === 0
+        ? "no season is marked active"
+        : `more than one season is marked active: ${active.map((season) => season.id).join(", ")}`,
+    );
   }
 
   if (problems.length > 0) {
@@ -129,6 +149,14 @@ function loadSeasons(): Season[] {
   }
 
   return loaded.sort((a, b) => (a.start < b.start ? 1 : -1));
+}
+
+/** The id a name should produce, so the two cannot drift apart. */
+function slug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
 /** Everything the schemas cannot see, because it spans two files or two records. */
@@ -143,6 +171,20 @@ function checkSeason(season: Season): string[] {
   for (const player of season.players) {
     if (playerIds.has(player.id)) note(`two players share the id "${player.id}"`);
     playerIds.add(player.id);
+
+    // The convention, so an id can be read and typed from a name. It is also
+    // what feeds the tiebreak hash, which is why a rename after a match has
+    // been played needs a deliberate decision rather than a tidy-up.
+    if (player.id !== slug(player.name)) {
+      note(`${player.id} is not the slug of "${player.name}", which would be "${slug(player.name)}"`);
+    }
+
+    // "player-a" and a display name of "A" were both stand-ins for somebody
+    // whose name nobody had asked for yet. One that survives into a season is a
+    // person nobody has checked on.
+    if (/^player-/.test(player.id) || player.name.length < 2) {
+      note(`${player.id} still looks like a placeholder rather than a person`);
+    }
 
     const dates = player.ratings.map((rating) => rating.date);
     if (dates.some((date, index) => index > 0 && date <= (dates[index - 1] ?? ""))) {
@@ -162,6 +204,9 @@ function checkSeason(season: Season): string[] {
     rounds.add(match.round);
 
     if (!venueById.has(match.venueId)) note(`${at} names venue "${match.venueId}", which is not in venues.json`);
+    if (match.home && match.venueId !== season.team.homeVenueId) {
+      note(`${at} is at home but not at "${season.team.homeVenueId}", where this team plays`);
+    }
     if (match.date < season.start || match.date > season.end) {
       note(`${at} is on ${match.date}, outside the season (${season.start} to ${season.end})`);
     }
@@ -200,6 +245,14 @@ function checkSeason(season: Season): string[] {
       if (!match.settled && match.result === null) {
         note(`${at} names a team but is not settled, so the site would not show it`);
       }
+    }
+
+    // Settling is what puts a running order in front of the squad, so the thing
+    // worth catching is a short one: a published sheet with a board nobody is on
+    // is worse than saying nothing yet.
+    if (match.settled && match.result === null) {
+      const unfilled = fieldedFor(season, match, selectionFor(season, match)).unfilled;
+      if (unfilled > 0) note(`${at} is settled but ${unfilled} of its boards have nobody on them`);
     }
 
     if (match.status === "played" && match.result === null) note(`${at} is marked played but has no result`);

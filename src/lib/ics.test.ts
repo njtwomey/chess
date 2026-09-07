@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import { seasonById, venueById } from "@/lib/data";
 import { icsFilename, toIcs } from "@/lib/ics";
 
-const season = seasonById.get("2026-autumn-g")!;
-const NOW = new Date("2026-08-31T09:00:00Z");
+// The prototype season. Its fixture list is invented and therefore stable;
+// the live one is edited whenever the league moves a date.
+const season = seasonById.get("demo")!;
+const NOW = new Date("2026-03-01T09:00:00Z");
 const calendar = toIcs(season, venueById, NOW);
 const lines = calendar.split("\r\n");
 
@@ -26,12 +28,13 @@ describe("the fixture calendar", () => {
   });
 
   it("converts the 19:30 start through British Summer Time", () => {
-    expect(calendar).toContain("DTSTART:20260908T183000Z");
-    expect(calendar).toContain("DTSTART:20261215T193000Z");
+    // April is BST, so 19:30 local is 18:30Z; November is GMT and stays 19:30Z.
+    expect(calendar).toContain("DTSTART:20260420T183000Z");
+    expect(calendar).toContain("DTSTART:20261110T193000Z");
   });
 
   it("finishes each event later than it starts", () => {
-    expect(calendar).toContain("DTEND:20260908T220000Z");
+    expect(calendar).toContain("DTEND:20260420T220000Z");
   });
 
   it("names the teams the way the league does, home side first", () => {
@@ -62,10 +65,10 @@ describe("the fixture calendar", () => {
   it("gives every event a stable id, so a re-download updates rather than duplicates", () => {
     const uids = lines.filter((line) => line.startsWith("UID:"));
     expect(new Set(uids).size).toBe(7);
-    expect(uids[0]).toBe("UID:2026-autumn-g-r1@bristol-clifton-g");
+    expect(uids[0]).toBe("UID:demo-r1@bristol-clifton-g");
   });
 
   it("names the file after the team and season", () => {
-    expect(icsFilename(season)).toBe("bristol-clifton-g-autumn-2026.ics");
+    expect(icsFilename(season)).toBe("bristol-clifton-g-demo-season.ics");
   });
 });

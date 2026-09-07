@@ -60,13 +60,27 @@ describe("board order", () => {
   it("orders unrated players alphabetically, which is the whole order when nobody is rated", () => {
     // A seeded coin toss would be stable but unexplainable, and board order is
     // not a fairness question.
-    const squad = [player("niall", null), player("jade", null), player("lorenzo", null)];
-    expect(assignBoards(squad, options).map((entry) => entry.player.id)).toEqual(["jade", "lorenzo", "niall"]);
+    const squad = [player("imre-solt", null), player("gwen-tsai", null), player("hollis-barr", null)];
+    expect(assignBoards(squad, options).map((entry) => entry.player.id)).toEqual([
+      "gwen-tsai",
+      "hollis-barr",
+      "imre-solt",
+    ]);
   });
 
   it("puts the one rated player on board one, then the rest alphabetically", () => {
-    const squad = [player("niall", null), player("steve", 1214), player("jade", null), player("lorenzo", null)];
-    expect(assignBoards(squad, options).map((entry) => entry.player.id)).toEqual(["steve", "jade", "lorenzo", "niall"]);
+    const squad = [
+      player("imre-solt", null),
+      player("noor-abadi", 1214),
+      player("gwen-tsai", null),
+      player("hollis-barr", null),
+    ];
+    expect(assignBoards(squad, options).map((entry) => entry.player.id)).toEqual([
+      "noor-abadi",
+      "gwen-tsai",
+      "hollis-barr",
+      "imre-solt",
+    ]);
   });
 });
 
