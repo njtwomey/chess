@@ -100,20 +100,30 @@
       {
         "playerId": "niall",
         "reply": "yes",
-        "at": "2026-09-05"
+        "at": "2026-09-04"
       },
       {
-        "playerId": "alex",
+        "playerId": "thomas",
         "reply": "yes",
-        "at": "2026-09-05"
+        "at": "2026-09-04"
       },
       {
         "playerId": "max",
         "reply": "yes",
+        "at": "2026-09-04"
+      },
+      {
+        "playerId": "lorenzo",
+        "reply": "yes",
         "at": "2026-09-05"
       },
       {
-        "playerId": "thomas",
+        "playerId": "will",
+        "reply": "yes",
+        "at": "2026-09-05"
+      },
+      {
+        "playerId": "alex",
         "reply": "yes",
         "at": "2026-09-05"
       },
@@ -125,11 +135,21 @@
       {
         "playerId": "alfie",
         "reply": "no",
-        "at": "2026-09-05"
+        "at": "2026-09-04"
       },
       {
         "playerId": "alexandra",
         "reply": "no",
+        "at": "2026-09-04"
+      },
+      {
+        "playerId": "theo",
+        "reply": "unsure",
+        "at": "2026-09-07"
+      },
+      {
+        "playerId": "mark",
+        "reply": "reserve",
         "at": "2026-09-05"
       }
     ],

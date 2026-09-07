@@ -252,7 +252,7 @@ function BoardOrder({ season, match, fielded }: { season: Season; match: Match; 
         {fielded.ordered
           ? "Boards run strongest first, in the order the captain set. "
           : "Boards run strongest first, on the most recent rating; unrated players go below every graded one. "}
-        Colours are the usual convention, with the home side on White at board one. Games are{" "}
+        Colours alternate down the sheet, with the home side on Black at board one. Games are{" "}
         {formatClock(season.timeControl.standard)}, but a junior on either side of a board can choose{" "}
         {formatClock(season.timeControl.junior)} instead
         {season.timeControl.juniorOn

@@ -88,12 +88,17 @@ export function assignBoards(
 }
 
 /**
- * The usual convention: the home team has White on the odd boards.
+ * The home team has Black on the odd boards, starting at board one.
+ *
+ * The other way round is the more familiar convention, and it is not the one
+ * this league uses: home gives away the first move on board one, and the
+ * colours alternate down the sheet from there. Getting it backwards would put
+ * every player on the wrong side of the board on the night.
  *
  * A preview only. Once a match is played the colours come from the result,
  * because the captains can and do agree something else on the night.
  */
 export function expectedColour(home: boolean, board: number): "white" | "black" {
   const oddBoard = board % 2 === 1;
-  return home === oddBoard ? "white" : "black";
+  return home === oddBoard ? "black" : "white";
 }

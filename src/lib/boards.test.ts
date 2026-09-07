@@ -102,8 +102,9 @@ describe("clocks", () => {
 });
 
 describe("expected colours", () => {
-  it("gives the home team White on the odd boards", () => {
-    expect([1, 2, 3, 4].map((board) => expectedColour(true, board))).toEqual(["white", "black", "white", "black"]);
-    expect([1, 2, 3, 4].map((board) => expectedColour(false, board))).toEqual(["black", "white", "black", "white"]);
+  it("gives the home team Black on the odd boards", () => {
+    // Home starts on Black at board one, which is this league's way round.
+    expect([1, 2, 3, 4].map((board) => expectedColour(true, board))).toEqual(["black", "white", "black", "white"]);
+    expect([1, 2, 3, 4].map((board) => expectedColour(false, board))).toEqual(["white", "black", "white", "black"]);
   });
 });
