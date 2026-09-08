@@ -6,3 +6,9 @@ dist
 
 # Copied out of node_modules by scripts/copy-engine.mjs
 public/engine
+
+# Photographs of scoresheets. A scoresheet carries an opponent's full name in
+# their own handwriting, and they are not on this team and have not been asked.
+# The PGN read off it is committed, into the season's matches.json; the picture
+# is not.
+games
