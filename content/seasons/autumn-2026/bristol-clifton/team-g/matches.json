@@ -1,6 +1,6 @@
 [
   {
-    "id": "fixture-1",
+    "number": 1,
     "opponentTeamId": "south-bristol/team-d",
     "home": true,
     "date": "2026-09-08",
@@ -129,7 +129,7 @@
     }
   },
   {
-    "id": "fixture-2",
+    "number": 2,
     "opponentTeamId": "horfield-redland/team-e",
     "home": true,
     "date": "2026-09-15",
@@ -211,7 +211,7 @@
     "result": null
   },
   {
-    "id": "fixture-3",
+    "number": 3,
     "opponentTeamId": "bristol-grendel/team-c",
     "home": false,
     "date": "2026-10-05",
@@ -223,7 +223,7 @@
     "result": null
   },
   {
-    "id": "fixture-4",
+    "number": 4,
     "opponentTeamId": "downend-fishponds/team-f",
     "home": true,
     "date": "2026-10-20",
@@ -235,7 +235,7 @@
     "result": null
   },
   {
-    "id": "fixture-5",
+    "number": 5,
     "opponentTeamId": "south-bristol/team-e",
     "home": false,
     "date": "2026-10-28",
@@ -247,7 +247,7 @@
     "result": null
   },
   {
-    "id": "fixture-6",
+    "number": 6,
     "opponentTeamId": "uwe/team-b",
     "home": false,
     "date": "2026-12-02",
@@ -259,7 +259,7 @@
     "result": null
   },
   {
-    "id": "fixture-7",
+    "number": 7,
     "opponentTeamId": "hanham-folk-centre/team-b",
     "home": true,
     "date": "2026-12-15",

@@ -90,7 +90,8 @@ match is settled automatically.
 
 ## How to do it
 
-1. Ask which fixture if it is not obvious. Fixture ids look like `fixture-5`.
+1. Ask which fixture if it is not obvious. A fixture is its `number` in
+   `matches.json`, and reads as `fixture-5` in a URL.
 2. Match each name to a player on our team in that season's `teams.json`, and
    write their id out in full. Never
    invent a player to fit a message. A name you cannot place is something to ask

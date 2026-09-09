@@ -16,7 +16,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { assignBoards, expectedColour, formatClock, type BoardAssignment } from "@/lib/boards";
 import { findMatch, playerById } from "@/lib/data";
 import { addressLines, mapsUrl, taggedPgn } from "@/lib/links";
-import { GAME_RESULT_LABEL, boardSlug, fixtureNumber, type Match, type Season } from "@/lib/schema";
+import { GAME_RESULT_LABEL, boardSlug, type Match, type Season } from "@/lib/schema";
 import {
   fieldedFor,
   matchScore,
@@ -397,7 +397,7 @@ export function MatchPage({ seasonId, matchId }: { seasonId: string; matchId: st
       badge={<HomeAway home={match.home} size="lg" />}
       lede={
         <>
-          Fixture {fixtureNumber(match)} · <CompetitionLink season={season} />
+          Fixture {match.number} · <CompetitionLink season={season} />
         </>
       }
       actions={

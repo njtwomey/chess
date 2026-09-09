@@ -37,9 +37,9 @@ const season = aSeason({
   team: us,
   teams: [us, them, another],
   matches: [
-    aMatch({ id: "fixture-1", opponentTeamId: them.id, home: true, date: "2026-04-20" }),
-    aMatch({ id: "fixture-2", opponentTeamId: them.id, home: false, date: "2026-11-10" }),
-    aMatch({ id: "fixture-3", opponentTeamId: another.id, home: true, date: "2026-11-24" }),
+    aMatch({ number: 1, opponentTeamId: them.id, home: true, date: "2026-04-20" }),
+    aMatch({ number: 2, opponentTeamId: them.id, home: false, date: "2026-11-10" }),
+    aMatch({ number: 3, opponentTeamId: another.id, home: true, date: "2026-11-24" }),
   ],
 });
 

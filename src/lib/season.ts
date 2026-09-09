@@ -10,7 +10,6 @@
 import { select, type Candidate, type Ranked, type Reply, type Role, type Selection } from "@/lib/selection";
 import {
   GAME_POINTS,
-  fixtureNumber,
   type Club,
   type Game,
   type Match,
@@ -23,7 +22,7 @@ import {
 /** Chronological, with the fixture number settling two matches on one day. */
 export function matchOrder(a: Match, b: Match): number {
   if (a.date !== b.date) return a.date < b.date ? -1 : 1;
-  return fixtureNumber(a) - fixtureNumber(b);
+  return a.number - b.number;
 }
 
 /**

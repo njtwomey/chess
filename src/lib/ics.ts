@@ -10,7 +10,7 @@
  * relies on `londonToUtc` having got the clock change right, which is tested.
  */
 import { addressLines, mapsUrl } from "@/lib/links";
-import { fixtureNumber, type Match, type Season } from "@/lib/schema";
+import { type Match, type Season } from "@/lib/schema";
 import { sides, venueFor } from "@/lib/season";
 import { londonToUtc } from "@/lib/time";
 
@@ -51,7 +51,7 @@ function event(season: Season, match: Match, now: Date): string[] {
   const place = [venue.name, ...addressLines(venue)].join(", ");
 
   const description = [
-    `${season.league.name}, fixture ${fixtureNumber(match)}.`,
+    `${season.league.name}, fixture ${match.number}.`,
     match.home ? "Home fixture." : "Away fixture.",
     `Map: ${mapsUrl(venue)}`,
   ].join(" ");

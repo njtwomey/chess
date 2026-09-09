@@ -23,6 +23,7 @@ import {
   SeasonSchema,
   SquadMemberSchema,
   TeamSchema,
+  fixtureSlug,
   playerSlug,
   teamSlug,
   type Availability,
@@ -120,15 +121,18 @@ export function said(playerId: string, reply: Reply, over: Partial<Availability>
 }
 
 export function aMatch(over: Partial<Match> = {}): Match {
-  return MatchSchema.parse({
-    id: over.id ?? `fixture-${(counter += 1)}`,
+  const { id, ...rest } = over;
+  void id;
+  const record = MatchSchema.parse({
+    number: (counter += 1),
     opponentTeamId: THEIR_TEAM,
     home: true,
     date: "2026-03-10",
     time: "19:30",
     status: "scheduled",
-    ...over,
+    ...rest,
   });
+  return { ...record, id: fixtureSlug(record) };
 }
 
 export function aGame(over: Partial<Game> = {}): Game {

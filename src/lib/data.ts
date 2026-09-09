@@ -33,11 +33,13 @@ import {
   MatchesFileSchema,
   SeasonSchema,
   TeamsFileSchema,
+  fixtureSlug,
   playerSlug,
   seasonSlug,
   teamSlug,
   type Club,
   type League,
+  type Match,
   type Player,
   type Season,
   type Team,
@@ -141,11 +143,13 @@ function loadSeasons(): Season[] {
     if (teamFiles[teamsPath] === undefined) problems.push(`${teamsPath} is missing`);
     if (matchFiles[matchesPath] === undefined) problems.push(`${matchesPath} is missing`);
 
-    const records = teamFiles[teamsPath] === undefined ? [] : parse(TeamsFileSchema, teamFiles[teamsPath], teamsPath);
-    const matches =
+    const teamRecords =
+      teamFiles[teamsPath] === undefined ? [] : parse(TeamsFileSchema, teamFiles[teamsPath], teamsPath);
+    const records =
       matchFiles[matchesPath] === undefined ? [] : parse(MatchesFileSchema, matchFiles[matchesPath], matchesPath);
+    const matches: Match[] = records.map((match) => ({ ...match, id: fixtureSlug(match) }));
 
-    const teams: Team[] = records.map((record) => {
+    const teams: Team[] = teamRecords.map((record) => {
       const club = clubById.get(record.clubId);
       if (!club) {
         problems.push(`${teamsPath}: "${teamSlug(record)}" is at club "${record.clubId}", which is not a club`);

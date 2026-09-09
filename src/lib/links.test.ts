@@ -85,6 +85,7 @@ describe("analysis links", () => {
 describe("exporting a PGN", () => {
   const match: Match = {
     id: "fixture-3",
+    number: 3,
     opponentTeamId: "bristol-grendel/team-c",
     home: false,
     date: "2026-04-20",

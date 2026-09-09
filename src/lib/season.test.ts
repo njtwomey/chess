@@ -23,7 +23,7 @@ import { aMatch, aSeason, aSquad, ours, said } from "@/lib/testing";
  * cannot change what this file is testing.
  */
 const base = aMatch({
-  id: "fixture-1",
+  number: 1,
   availability: [
     said(ours("p1"), "yes"),
     said(ours("p2"), "yes"),

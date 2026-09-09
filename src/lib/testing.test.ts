@@ -8,7 +8,7 @@ describe("the builders", () => {
       players: aSquad(6),
       matches: [
         aMatch({
-          id: "fixture-1",
+          number: 1,
           availability: [said(ours("p1"), "yes"), said(ours("p2"), "yes"), said(ours("p3"), "reserve")],
         }),
       ],

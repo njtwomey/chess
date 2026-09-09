@@ -4,7 +4,7 @@ import { seasonPath } from "@/components/season-context";
 import { HomeAway } from "@/components/home-away";
 import { Badge } from "@/components/ui/badge";
 import { addressLines, mapsUrl } from "@/lib/links";
-import { fixtureNumber, type Match, type Season } from "@/lib/schema";
+import { type Match, type Season } from "@/lib/schema";
 import { matchScore, opponentTeam, venueFor } from "@/lib/season";
 import { formatLongDate, formatShortDate, formatWeekday, relativeDay, today } from "@/lib/time";
 import { cn } from "@/lib/utils";
@@ -69,7 +69,7 @@ export function MatchCard({ season, match, className }: { season: Season; match:
       <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-muted-foreground tabular text-xs">Fixture {fixtureNumber(match)}</span>
+            <span className="text-muted-foreground tabular text-xs">Fixture {match.number}</span>
             <HomeAway home={match.home} />
             {match.status === "cancelled" && <Badge variant="outline">Cancelled</Badge>}
           </div>

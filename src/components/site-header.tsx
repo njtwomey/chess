@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useTheme } from "@/hooks/use-theme";
-import { fixtureNumber } from "@/lib/schema";
 import { matchScore, opponentTeam, orderedMatches } from "@/lib/season";
 import { formatShortDate, today } from "@/lib/time";
 import { cn } from "@/lib/utils";
@@ -163,7 +162,7 @@ function ScheduleNav({ onNavigate }: { onNavigate?: () => void }) {
                       here && "text-foreground bg-accent font-medium",
                     )}
                   >
-                    <span className="tabular w-3 shrink-0 text-xs opacity-70">{fixtureNumber(match)}</span>
+                    <span className="tabular w-3 shrink-0 text-xs opacity-70">{match.number}</span>
                     <span className="tabular w-12 shrink-0 text-xs opacity-70">{formatShortDate(match.date)}</span>
                     <HomeAway home={match.home} size="xs" />
                     <span className="min-w-0 flex-1 truncate">{opponentTeam(season, match).name}</span>

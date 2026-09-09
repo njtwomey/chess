@@ -4,7 +4,7 @@
  * Everything here is a URL builder. Nothing fetches, and nothing analyses — the
  * site hands a game to a site that can analyse it and gets out of the way.
  */
-import { fixtureNumber, type Club, type Game, type Match, type Player, type PlayerCode } from "@/lib/schema";
+import { type Club, type Game, type Match, type Player, type PlayerCode } from "@/lib/schema";
 
 /**
  * The building, in the order an envelope would have it.
@@ -91,7 +91,7 @@ export function taggedPgn(
     ["Date", match.date.replace(/-/g, ".")],
     // Team chess numbers a round by match and board, which is what makes two
     // games from the same evening distinguishable in a database.
-    ["Round", `${fixtureNumber(match)}.${game.board}`],
+    ["Round", `${match.number}.${game.board}`],
     ["White", white],
     ["Black", black],
     ["Result", result],

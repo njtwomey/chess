@@ -54,8 +54,10 @@ says only who it picked, plus the two things that are true of a season rather th
 `junior` (age is taken on the league's cut-off date) and `role: captain`. Clubs and seasons are both
 found by glob, so adding a file or a directory is all it takes.
 
-**Ids are paths, composed from the parts the records store and never written down whole.** A slug
-names its parent, then itself: `-` inside a segment, `/` between them, and a segment says what it is.
+**Ids are composed from the parts the records store and never written down whole.** A record with no
+parent stores `id`; a record inside one stores the bare value under its own name (`teamId: "g"`,
+`number: 1`) and the `*Slug` functions spell out the rest: `-` inside a segment, `/` between them,
+and a segment says what it is.
 
 ```
 league    bristol-district
@@ -64,8 +66,8 @@ team      bristol-clifton/team-g          from clubId "bristol-clifton", teamId 
 player    bristol-clifton/niall-twomey    the club, not the team: moving from G to F
                                           is not becoming somebody else
 season    bristol-district/bristol-clifton/team-g/autumn-2026
-fixture   fixture-1                       unique within its season
-board     board-3                         within its fixture
+fixture   fixture-1                       from number 1, unique within its season
+board     board-3                         from board 3, within its fixture
 ```
 
 The season id is also the URL, so `/season/` takes a splat and the site splits it by the longest

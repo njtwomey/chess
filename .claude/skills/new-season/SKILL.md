@@ -94,7 +94,7 @@ The league publishes a table like `Bristol & Clifton G | 0 - 0 | South Bristol D
 
 ```json
 {
-  "id": "fixture-1",
+  "number": 1,
   "opponentTeamId": "south-bristol/team-d",
   "home": true,
   "date": "2026-09-08",
@@ -107,8 +107,10 @@ The league publishes a table like `Bristol & Clifton G | 0 - 0 | South Bristol D
 }
 ```
 
-- **`id` is `fixture-<n>`**, its position in the list counting from one, unique
-  within the season. There is no separate round number: the id is the number.
+- **`number` is its position in the list**, counting from one and unique within
+  the season. It is the whole of the fixture's identity: the site spells it
+  `fixture-1` for the URL, exactly as a board's `3` becomes `board-3`, so there
+  is no id to write down and no round number to disagree with it.
 - **`home` is whether we are named first.** That is all the venue needs, because
   the venue is the home club's and is never written down.
 - **`opponentTeamId`** is the team's whole path, `<clubId>/team-<letter>`, and

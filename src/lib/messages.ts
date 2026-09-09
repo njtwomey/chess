@@ -13,7 +13,7 @@
  */
 import { playerName } from "@/lib/data";
 import { mapsUrl } from "@/lib/links";
-import { fixtureNumber, type Game, type Match, type Season } from "@/lib/schema";
+import { type Game, type Match, type Season } from "@/lib/schema";
 import { fieldedFor, formatPoints, opponentOf, replyOf, sides, venueFor } from "@/lib/season";
 import type { Reply, Selection } from "@/lib/selection";
 import { formatLongDate } from "@/lib/time";
@@ -71,7 +71,7 @@ function fixtureLine(season: Season, match: Match, withMap: boolean): string {
  * so spelling them out would be a second, worse copy of the options.
  */
 export function callToAction(season: Season, match: Match): string {
-  return join([`Who can play in ${describeFixture(fixtureNumber(match))}?`, "", fixtureLine(season, match, true)]);
+  return join([`Who can play in ${describeFixture(match.number)}?`, "", fixtureLine(season, match, true)]);
 }
 
 /**

@@ -47,12 +47,12 @@ const theirs = (playerId: string) => `${them.clubId}/${playerId}`;
 const home = { home: true, opponentTeamId: them.id };
 const awayAt = { home: false, opponentTeamId: them.id };
 
-const first = aMatch({ id: "fixture-1", date: "2026-03-10", ...home });
-const away = aMatch({ id: "fixture-3", date: "2026-04-20", ...awayAt });
+const first = aMatch({ number: 1, date: "2026-03-10", ...home });
+const away = aMatch({ number: 3, date: "2026-04-20", ...awayAt });
 
 /** Every reply group represented, and four players yet to answer. */
 const mixed = aMatch({
-  id: "fixture-6",
+  number: 6,
   date: "2026-10-13",
   ...home,
   availability: [
@@ -65,11 +65,11 @@ const mixed = aMatch({
 });
 
 /** Nobody has answered yet. */
-const silent = aMatch({ id: "fixture-7", date: "2026-11-10", ...home });
+const silent = aMatch({ number: 7, date: "2026-11-10", ...home });
 
 /** Settled, with more volunteers than boards, so somebody missed out. */
 const settled = aMatch({
-  id: "fixture-5",
+  number: 5,
   date: "2026-09-16",
   ...awayAt,
   settled: true,
@@ -88,28 +88,28 @@ const boards = (results: Game["result"][]) =>
   );
 
 const won = aMatch({
-  id: "fixture-8",
+  number: 8,
   date: "2026-03-17",
   ...home,
   status: "played",
   result: { ourScore: 2.5, theirScore: 1.5, games: boards(["win", "draw", "win", "loss"]) },
 });
 const lost = aMatch({
-  id: "fixture-9",
+  number: 9,
   date: "2026-03-24",
   ...home,
   status: "played",
   result: { ourScore: 1, theirScore: 3, games: boards(["win", "loss", "loss", "loss"]) },
 });
 const awayWin = aMatch({
-  id: "fixture-10",
+  number: 10,
   date: "2026-04-27",
   ...awayAt,
   status: "played",
   result: { ourScore: 2.5, theirScore: 1.5, games: boards(["win", "draw", "win", "loss"]) },
 });
 const defaulted = aMatch({
-  id: "fixture-11",
+  number: 11,
   date: "2026-05-12",
   ...home,
   status: "played",
