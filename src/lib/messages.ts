@@ -7,12 +7,16 @@
  * question, a progress report or the team, and which match it belongs to,
  * without reading the whole thing or scrolling back up.
  *
+ * The team message opens with a greeting and closes by asking for a reaction,
+ * because it is the one that is an announcement rather than a question: it goes
+ * out to everybody, and the people named in it have to answer it.
+ *
  * All three are built from the data the page renders, so a pasted message
  * cannot quietly disagree with the site. Plain text, because the destination is
  * WhatsApp.
  */
 import { playerName } from "@/lib/data";
-import { mapsUrl } from "@/lib/links";
+import { addressLines } from "@/lib/links";
 import { type Game, type Match, type Season } from "@/lib/schema";
 import { fieldedFor, formatPoints, opponentOf, replyOf, sides, venueFor } from "@/lib/season";
 import type { Reply, Selection } from "@/lib/selection";
@@ -50,17 +54,25 @@ const sorted = (names: string[]) => [...names].sort().join(", ");
  * The fixture, in one line.
  *
  * Both sides named, because "the first fixture" leaves somebody scrolling back
- * through the chat to work out which match a list belongs to. The map is only
- * on the messages where somebody has to get themselves somewhere: on a progress
- * report it is a link nobody clicks, and four of them in a row is clutter.
+ * through the chat to work out which match a list belongs to.
+ *
+ * The address, rather than a map link. A pasted URL takes up more of a chat
+ * than the fixture does, and it unfurls into a preview card on top of that,
+ * where an address and a postcode are what somebody types into their own maps
+ * anyway. It appears only on the messages where somebody has to get themselves
+ * somewhere: on a progress report it is a line nobody reads.
+ *
+ * Nothing at all where the address is not confirmed, because the venue's name
+ * is already in the line and that is exactly what a search would have used.
  */
-function fixtureLine(season: Season, match: Match, withMap: boolean): string {
+function fixtureLine(season: Season, match: Match, withPlace: boolean): string {
   const venue = venueFor(season, match);
   const { home, away } = sides(season, match);
   const where = match.home ? "at home" : `away at ${venue.name}`;
-  const link = withMap ? ` (${mapsUrl(venue)})` : "";
+  const place = addressLines(venue).join(", ");
+  const at = withPlace && place ? ` (${place})` : "";
 
-  return `${home} v ${away}, ${formatLongDate(match.date)}, ${match.time}, ${where}${link}.`;
+  return `${home} v ${away}, ${formatLongDate(match.date)}, ${match.time}, ${where}${at}.`;
 }
 
 /**
@@ -126,7 +138,15 @@ export function selectedTeam(season: Season, match: Match, selection: Selection)
   // thing anybody wants read out; the line at the end speaks to them instead.
   const missedOut = fielded.reserves.length > 0 || selection.standby.length > 0;
 
+  // Everybody named has to say they are still coming, and a group chat where
+  // eight people type "yes" buries the team it was confirming. A reaction
+  // answers the question without adding a message.
+  const asked = fielded.reserves.length > 0 ? "players and reserves" : "players";
+
   return join([
+    "Morning all.",
+    "Here is the team for next week's fixture:",
+    "",
     `Team for ${fixtureLine(season, match, true)}`,
     "",
 
@@ -147,6 +167,8 @@ export function selectedTeam(season: Season, match: Match, selection: Selection)
       : null,
 
     missedOut ? "\nIf you are not playing this time, you are nearer the front next time." : null,
+
+    `\nCan all ${asked} please confirm that they are still available for this match? ` + "React with 👍 to confirm.",
   ]);
 }
 

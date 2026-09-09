@@ -145,7 +145,7 @@ describe("callToAction", () => {
   it("asks the question, then names the match", () => {
     expect(message.split("\n").filter(Boolean)).toEqual([
       "Who can play in the first fixture of the season?",
-      "Our Team A v Their Team B, Tuesday 10 March, 19:30, at home (https://maps.example.invalid/ours).",
+      "Our Team A v Their Team B, Tuesday 10 March, 19:30, at home (1 Some Road, AB1 2CD).",
     ]);
   });
 
@@ -155,9 +155,12 @@ describe("callToAction", () => {
     expect(message).not.toMatch(/in \d+ days|today|tomorrow/);
   });
 
-  it("says where, with a map", () => {
+  it("says where, with the address rather than a link", () => {
     expect(message).toContain("at home");
-    expect(message).toContain("https://maps.example.invalid/ours");
+    expect(message).toContain("1 Some Road, AB1 2CD");
+    // A pasted URL takes up more of a chat than the fixture does, and unfurls
+    // into a preview card on top of that.
+    expect(message).not.toMatch(/https?:\/\//);
   });
 
   it("names the away club rather than just saying away", () => {
@@ -183,8 +186,8 @@ describe("availabilityUpdate", () => {
     expect(message.startsWith("Where we are for Our Team A v Their Team B, Tuesday 10 March")).toBe(true);
   });
 
-  it("carries no map, because it is a reply to the message that had one", () => {
-    expect(message).not.toContain("maps.example.invalid");
+  it("carries no address, because it is a reply to the message that had one", () => {
+    expect(message).not.toContain("1 Some Road");
   });
 
   it("says which side of the fixture we are on for an away match", () => {
@@ -226,9 +229,17 @@ describe("availabilityUpdate", () => {
 describe("selectedTeam", () => {
   const message = selectedTeam(season, settled, selectionFor(season, settled));
 
-  it("names the fixture, with a map, because people have to get there", () => {
-    expect(message.startsWith("Team for Their Team B v Our Team A, Wednesday 16 September")).toBe(true);
-    expect(message).toMatch(/https:\/\/\S+/);
+  it("opens with a greeting, then names the fixture and where it is", () => {
+    expect(message.startsWith("Morning all.\nHere is the team for next week's fixture:")).toBe(true);
+    expect(message).toContain("Team for Their Team B v Our Team A, Wednesday 16 September");
+    expect(message).toContain("away at Their Chess Club");
+    expect(message).not.toMatch(/https?:\/\//);
+  });
+
+  it("asks the named players to confirm with a reaction rather than a reply", () => {
+    // Eight people typing "yes" buries the team the message exists to publish.
+    expect(message).toContain("Can all players and reserves please confirm");
+    expect(message).toContain("React with 👍");
   });
 
   it("reports the players and nothing else", () => {
@@ -268,6 +279,8 @@ describe("selectedTeam", () => {
     expect(/Playing: (?:[^,.]+, ){3}[^,.]+\./.test(message)).toBe(true);
     expect(message).not.toContain("Reserves:");
     expect(message).not.toContain("nearer the front");
+    // Nobody is in reserve, so there are no reserves to ask.
+    expect(message).toContain("Can all players please confirm");
   });
 });
 
