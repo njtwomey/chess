@@ -10,7 +10,7 @@
       {
         "playerId": "alex",
         "name": "Alex",
-        "fullName": null,
+        "fullName": "Alex Zervudachi",
         "junior": false,
         "ratings": [
           {
@@ -24,7 +24,7 @@
       {
         "playerId": "alexandra",
         "name": "Alexandra",
-        "fullName": null,
+        "fullName": "Alexandra Bicknell",
         "junior": false,
         "ratings": [
           {
@@ -38,7 +38,7 @@
       {
         "playerId": "alfie",
         "name": "Alfie",
-        "fullName": null,
+        "fullName": "Alfred Holton-Stoppani",
         "role": "captain",
         "junior": false,
         "ratings": [
@@ -60,7 +60,7 @@
       {
         "playerId": "jade",
         "name": "Jade",
-        "fullName": null,
+        "fullName": "Jade Redpath-Aislabie",
         "junior": false,
         "ratings": []
       },
@@ -74,7 +74,7 @@
       {
         "playerId": "lorenzo",
         "name": "Lorenzo",
-        "fullName": null,
+        "fullName": "Lorenzo Milleri",
         "junior": false,
         "ratings": []
       },
@@ -88,14 +88,14 @@
       {
         "playerId": "max",
         "name": "Max",
-        "fullName": null,
+        "fullName": "Max Pester",
         "junior": false,
         "ratings": []
       },
       {
         "playerId": "mukhtar",
         "name": "Mukhtar",
-        "fullName": null,
+        "fullName": "Mukhtar Hasan",
         "junior": false,
         "ratings": [
           {
@@ -109,7 +109,7 @@
       {
         "playerId": "niall",
         "name": "Niall",
-        "fullName": null,
+        "fullName": "Niall Twomey",
         "role": "captain",
         "junior": false,
         "ratings": []
@@ -117,7 +117,7 @@
       {
         "playerId": "shaan",
         "name": "Shaan",
-        "fullName": null,
+        "fullName": "Shaan Thomas",
         "junior": false,
         "ratings": [
           {
@@ -131,14 +131,14 @@
       {
         "playerId": "sonny",
         "name": "Sonny",
-        "fullName": null,
+        "fullName": "Sonny Hancock",
         "junior": true,
         "ratings": []
       },
       {
         "playerId": "steve",
         "name": "Steve",
-        "fullName": null,
+        "fullName": "Stephen Hinde",
         "junior": false,
         "ratings": [
           {
@@ -152,14 +152,14 @@
       {
         "playerId": "theo",
         "name": "Theo",
-        "fullName": null,
+        "fullName": "Theo Wright",
         "junior": false,
         "ratings": []
       },
       {
         "playerId": "thomas",
         "name": "Thomas",
-        "fullName": null,
+        "fullName": "Thomas Booth",
         "junior": false,
         "ratings": [
           {
@@ -173,7 +173,7 @@
       {
         "playerId": "will",
         "name": "Will",
-        "fullName": null,
+        "fullName": "William Blatchford",
         "junior": false,
         "ratings": []
       }
