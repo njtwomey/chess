@@ -66,6 +66,7 @@ describe("exporting a PGN", () => {
     availability: [],
     settled: false,
     lineup: null,
+    recordUrl: null,
     result: null,
   };
 
@@ -75,6 +76,7 @@ describe("exporting a PGN", () => {
     colour: "black",
     opponent: "V. Okonjo",
     opponentRating: 1612,
+    opponentUrl: null,
     opponentJunior: false,
     result: "win",
     pgn: "1. d4 Nf6 2. c4 e6 0-1",

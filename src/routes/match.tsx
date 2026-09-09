@@ -98,6 +98,22 @@ function Where({ season, match }: { season: Season; match: Match }) {
           <ExternalLink className="size-3" />
         </a>
         . If the two disagree, the league is right.
+        {match.recordUrl && (
+          <>
+            {" "}
+            This match has{" "}
+            <a
+              href={match.recordUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary inline-flex items-center gap-1 hover:underline"
+            >
+              a record of its own
+              <ExternalLink className="size-3" />
+            </a>
+            , with the board order as submitted and both sides' ratings.
+          </>
+        )}
       </p>
     </div>
   );
@@ -298,7 +314,18 @@ function Result({ season, match }: { season: Season; match: Match }) {
                   </TableCell>
                   <TableCell className="text-muted-foreground text-sm capitalize">{game.colour}</TableCell>
                   <TableCell>
-                    {game.opponent}
+                    {game.opponentUrl ? (
+                      <a
+                        href={game.opponentUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="hover:text-primary hover:underline"
+                      >
+                        {game.opponent}
+                      </a>
+                    ) : (
+                      game.opponent
+                    )}
                     {game.opponentRating !== null && (
                       <span className="text-muted-foreground tabular ml-2 text-xs">{game.opponentRating}</span>
                     )}

@@ -85,6 +85,7 @@
       "playerIds": ["theo", "jade", "mukhtar", "niall"],
       "at": "2026-08-31"
     },
+    "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155235",
     "result": {
       "ourScore": 1,
       "theirScore": 3,
@@ -93,8 +94,9 @@
           "board": 1,
           "playerId": "theo",
           "colour": "black",
-          "opponent": "Sean Hobble",
-          "opponentRating": null,
+          "opponent": "Sean Hubble",
+          "opponentRating": 1542,
+          "opponentUrl": "https://lms.englishchess.org.uk/lms/player/121305/view",
           "opponentJunior": false,
           "result": "win",
           "pgn": null
@@ -104,7 +106,8 @@
           "playerId": "jade",
           "colour": "white",
           "opponent": "Michael Chaffey",
-          "opponentRating": null,
+          "opponentRating": 1488,
+          "opponentUrl": "https://lms.englishchess.org.uk/lms/player/112300/view",
           "opponentJunior": false,
           "result": "loss",
           "pgn": null
@@ -114,7 +117,8 @@
           "playerId": "mukhtar",
           "colour": "black",
           "opponent": "Ryszard Dudko",
-          "opponentRating": null,
+          "opponentRating": 1475,
+          "opponentUrl": "https://lms.englishchess.org.uk/lms/player/129174/view",
           "opponentJunior": false,
           "result": "loss",
           "pgn": null
@@ -124,7 +128,8 @@
           "playerId": "niall",
           "colour": "white",
           "opponent": "Alessandro Coppola",
-          "opponentRating": null,
+          "opponentRating": 1356,
+          "opponentUrl": "https://lms.englishchess.org.uk/lms/player/73812/view",
           "opponentJunior": false,
           "result": "loss",
           "pgn": null
@@ -144,6 +149,16 @@
     "availability": [
       {
         "playerId": "niall",
+        "reply": "yes",
+        "at": "2026-09-04"
+      },
+      {
+        "playerId": "steve",
+        "reply": "yes",
+        "at": "2026-09-04"
+      },
+      {
+        "playerId": "alex",
         "reply": "yes",
         "at": "2026-09-04"
       },
@@ -168,14 +183,9 @@
         "at": "2026-09-05"
       },
       {
-        "playerId": "alex",
+        "playerId": "theo",
         "reply": "yes",
-        "at": "2026-09-05"
-      },
-      {
-        "playerId": "steve",
-        "reply": "yes",
-        "at": "2026-09-05"
+        "at": "2026-09-08"
       },
       {
         "playerId": "alfie",
@@ -188,8 +198,8 @@
         "at": "2026-09-04"
       },
       {
-        "playerId": "theo",
-        "reply": "unsure",
+        "playerId": "mukhtar",
+        "reply": "no",
         "at": "2026-09-07"
       },
       {
@@ -198,7 +208,11 @@
         "at": "2026-09-05"
       }
     ],
-    "settled": false,
+    "settled": true,
+    "lineup": {
+      "playerIds": ["max", "lorenzo", "will", "thomas"],
+      "at": "2026-09-09"
+    },
     "result": null
   },
   {

@@ -118,6 +118,14 @@ export const GameSchema = z.strictObject({
   opponent: z.string().min(1),
   opponentRating: z.number().int().min(0).max(3500).nullable().default(null),
   /**
+   * The league's page for this opponent, where their rating comes from.
+   *
+   * Ours link out to their ECF record the same way, and for the same reason: a
+   * rating printed with no way to check it is a number somebody has to take on
+   * trust. Null whenever it has not been looked up, which is most of the time.
+   */
+  opponentUrl: URL.nullable().default(null),
+  /**
    * Needed because the shorter clock applies to the board, not to the child.
    * Ours can be adults and the board still be a 55+10 board.
    */
@@ -153,6 +161,19 @@ export const MatchSchema = z.strictObject({
    * settles itself, so this is only ever set on a fixture still to come.
    */
   settled: z.boolean().default(false),
+  /**
+   * The league's own page for this fixture.
+   *
+   * The team already links to the whole fixture list, which is the authority on
+   * when and where a match is. This is the authority on what happened in it:
+   * the board order as submitted, both sides' ratings, and who reported it. A
+   * result recorded here that disagrees with that page is wrong, and a reader
+   * who suspects as much should not have to go hunting for the comparison.
+   *
+   * Null until the league publishes it, which is usually a day or two after the
+   * match rather than the same night.
+   */
+  recordUrl: URL.nullable().default(null),
   /**
    * The team the captain is actually fielding, when it is not the one the rule
    * produced.
