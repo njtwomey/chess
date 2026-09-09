@@ -2,6 +2,7 @@ import { Check, ChevronDown, Crown, Menu, Moon, Sun } from "lucide-react";
 import * as React from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { seasonPath, useSeason } from "@/components/season-context";
+import { HomeAway } from "@/components/home-away";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -137,9 +138,12 @@ function ScheduleNav({ onNavigate }: { onNavigate?: () => void }) {
           >
             <ChevronDown className="size-3.5" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-68">
+          <DropdownMenuContent align="start" className="w-80">
             {matches.map((match) => {
               const here = match.id === currentId;
+              const score = matchScore(match);
+              const won = match.result !== null && match.result.ourScore > match.result.theirScore;
+              const lost = match.result !== null && match.result.ourScore < match.result.theirScore;
               return (
                 <DropdownMenuItem key={match.id} asChild>
                   <Link
@@ -150,16 +154,24 @@ function ScheduleNav({ onNavigate }: { onNavigate?: () => void }) {
                       here && "text-foreground bg-accent font-medium",
                     )}
                   >
-                    <span className="tabular w-4 shrink-0 text-xs opacity-70">{match.round}</span>
-                    <span className="min-w-0 flex-1 truncate">
-                      {match.home ? "" : "away to "}
-                      {match.opponent}
-                    </span>
-                    <span className="tabular shrink-0 text-xs opacity-70">
-                      {match.status === "played" ? (matchScore(match) ?? "") : formatShortDate(match.date)}
-                    </span>
-                    {match.status === "scheduled" && match.date >= now && (
-                      <span className="bg-primary size-1.5 shrink-0 rounded-full" />
+                    <span className="tabular w-3 shrink-0 text-xs opacity-70">{match.round}</span>
+                    <span className="tabular w-12 shrink-0 text-xs opacity-70">{formatShortDate(match.date)}</span>
+                    <HomeAway home={match.home} size="xs" />
+                    <span className="min-w-0 flex-1 truncate">{match.opponent}</span>
+                    {score ? (
+                      <span
+                        className={cn(
+                          "tabular shrink-0 text-xs font-medium",
+                          won && "text-reply-yes",
+                          lost && "text-reply-no",
+                          !won && !lost && "opacity-70",
+                        )}
+                      >
+                        {score}
+                      </span>
+                    ) : (
+                      match.date >= now &&
+                      match.status === "scheduled" && <span className="bg-primary size-1.5 shrink-0 rounded-full" />
                     )}
                   </Link>
                 </DropdownMenuItem>

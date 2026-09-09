@@ -49,9 +49,17 @@
           "board": 1,
           "playerId": "ada-mercer",
           "colour": "white",
-          "opponent": "R. Whitlock",
-          "opponentRating": 1544,
-          "opponentJunior": false,
+          "opponent": {
+            "id": "south-bristol-d-r-whitlock",
+            "name": "R. Whitlock",
+            "ratings": [
+              {
+                "date": "2026-03-10",
+                "rating": 1544,
+                "source": "ecf"
+              }
+            ]
+          },
           "result": "win",
           "pgn": "1. e4 e5 2. Bc4 Nc6 3. Qh5 Nf6 4. Qxf7# 1-0"
         },
@@ -59,9 +67,17 @@
           "board": 2,
           "playerId": "bruno-halliday",
           "colour": "black",
-          "opponent": "P. Ndiaye",
-          "opponentRating": 1502,
-          "opponentJunior": false,
+          "opponent": {
+            "id": "south-bristol-d-p-ndiaye",
+            "name": "P. Ndiaye",
+            "ratings": [
+              {
+                "date": "2026-03-10",
+                "rating": 1502,
+                "source": "ecf"
+              }
+            ]
+          },
           "result": "draw",
           "pgn": "1. e4 e5 2. Nf3 Nf6 3. Nxe5 d6 4. Nf3 Nxe4 5. Qe2 Qe7 6. d3 Nf6 7. Bg5 Qxe2+ 8. Bxe2 Be7 9. Nc3 c6 10. O-O-O Na6 1/2-1/2"
         },
@@ -69,9 +85,17 @@
           "board": 3,
           "playerId": "cass-oyelaran",
           "colour": "white",
-          "opponent": "T. Ashworth",
-          "opponentRating": 1688,
-          "opponentJunior": false,
+          "opponent": {
+            "id": "south-bristol-d-t-ashworth",
+            "name": "T. Ashworth",
+            "ratings": [
+              {
+                "date": "2026-03-10",
+                "rating": 1688,
+                "source": "ecf"
+              }
+            ]
+          },
           "result": "loss",
           "pgn": null
         },
@@ -79,9 +103,17 @@
           "board": 4,
           "playerId": "dermot-kavanagh",
           "colour": "black",
-          "opponent": "S. Ellery",
-          "opponentRating": 1301,
-          "opponentJunior": false,
+          "opponent": {
+            "id": "south-bristol-d-s-ellery",
+            "name": "S. Ellery",
+            "ratings": [
+              {
+                "date": "2026-03-10",
+                "rating": 1301,
+                "source": "ecf"
+              }
+            ]
+          },
           "result": "win",
           "pgn": "1. f3 e5 2. g4 Qh4# 0-1"
         }
@@ -133,9 +165,17 @@
           "board": 1,
           "playerId": "ada-mercer",
           "colour": "white",
-          "opponent": "M. Kerslake",
-          "opponentRating": 1571,
-          "opponentJunior": false,
+          "opponent": {
+            "id": "horfield-redland-e-m-kerslake",
+            "name": "M. Kerslake",
+            "ratings": [
+              {
+                "date": "2026-03-24",
+                "rating": 1571,
+                "source": "ecf"
+              }
+            ]
+          },
           "result": "draw",
           "pgn": null
         },
@@ -143,9 +183,17 @@
           "board": 2,
           "playerId": "bruno-halliday",
           "colour": "black",
-          "opponent": "D. Brough",
-          "opponentRating": 1533,
-          "opponentJunior": false,
+          "opponent": {
+            "id": "horfield-redland-e-d-brough",
+            "name": "D. Brough",
+            "ratings": [
+              {
+                "date": "2026-03-24",
+                "rating": 1533,
+                "source": "ecf"
+              }
+            ]
+          },
           "result": "loss",
           "pgn": null
         },
@@ -153,9 +201,17 @@
           "board": 3,
           "playerId": "elin-pryce",
           "colour": "white",
-          "opponent": "A. Fenwick",
-          "opponentRating": 1420,
-          "opponentJunior": false,
+          "opponent": {
+            "id": "horfield-redland-e-a-fenwick",
+            "name": "A. Fenwick",
+            "ratings": [
+              {
+                "date": "2026-03-24",
+                "rating": 1420,
+                "source": "ecf"
+              }
+            ]
+          },
           "result": "win",
           "pgn": "1. e4 e5 2. Nf3 d6 3. Bc4 Bg4 4. Nc3 g6 5. Nxe5 Bxd1 6. Bxf7+ Ke7 7. Nd5# 1-0"
         },
@@ -163,9 +219,17 @@
           "board": 4,
           "playerId": "farid-nassar",
           "colour": "black",
-          "opponent": "J. Peart",
-          "opponentRating": 1398,
-          "opponentJunior": false,
+          "opponent": {
+            "id": "horfield-redland-e-j-peart",
+            "name": "J. Peart",
+            "ratings": [
+              {
+                "date": "2026-03-24",
+                "rating": 1398,
+                "source": "ecf"
+              }
+            ]
+          },
           "result": "loss",
           "pgn": null
         }
@@ -217,9 +281,17 @@
           "board": 1,
           "playerId": "ada-mercer",
           "colour": "black",
-          "opponent": "V. Okonjo",
-          "opponentRating": 1612,
-          "opponentJunior": false,
+          "opponent": {
+            "id": "bristol-grendel-c-v-okonjo",
+            "name": "V. Okonjo",
+            "ratings": [
+              {
+                "date": "2026-04-20",
+                "rating": 1612,
+                "source": "ecf"
+              }
+            ]
+          },
           "result": "win",
           "pgn": "1. d4 Nf6 2. c4 e6 3. Nc3 Bb4 4. e3 O-O 5. Bd3 d5 6. Nf3 c5 7. O-O Nc6 8. a3 Bxc3 9. bxc3 dxc4 10. Bxc4 Qc7 0-1"
         },
@@ -227,9 +299,17 @@
           "board": 2,
           "playerId": "cass-oyelaran",
           "colour": "white",
-          "opponent": "H. Trelawny",
-          "opponentRating": 1655,
-          "opponentJunior": false,
+          "opponent": {
+            "id": "bristol-grendel-c-h-trelawny",
+            "name": "H. Trelawny",
+            "ratings": [
+              {
+                "date": "2026-04-20",
+                "rating": 1655,
+                "source": "ecf"
+              }
+            ]
+          },
           "result": "win",
           "pgn": null
         },
@@ -237,9 +317,18 @@
           "board": 3,
           "playerId": "gwen-tsai",
           "colour": "black",
-          "opponent": "N. Prowse",
-          "opponentRating": 1310,
-          "opponentJunior": true,
+          "opponent": {
+            "id": "bristol-grendel-c-n-prowse",
+            "name": "N. Prowse",
+            "junior": true,
+            "ratings": [
+              {
+                "date": "2026-04-20",
+                "rating": 1310,
+                "source": "ecf"
+              }
+            ]
+          },
           "result": "draw",
           "pgn": null
         },
@@ -247,9 +336,10 @@
           "board": 4,
           "playerId": "hollis-barr",
           "colour": "white",
-          "opponent": "C. Bramley",
-          "opponentRating": null,
-          "opponentJunior": false,
+          "opponent": {
+            "id": "bristol-grendel-c-c-bramley",
+            "name": "C. Bramley"
+          },
           "result": "loss",
           "pgn": null
         }
@@ -301,9 +391,17 @@
           "board": 1,
           "playerId": "imre-solt",
           "colour": "white",
-          "opponent": "G. Passmore",
-          "opponentRating": 1590,
-          "opponentJunior": false,
+          "opponent": {
+            "id": "downend-fishponds-f-g-passmore",
+            "name": "G. Passmore",
+            "ratings": [
+              {
+                "date": "2026-05-12",
+                "rating": 1590,
+                "source": "ecf"
+              }
+            ]
+          },
           "result": "win",
           "pgn": "1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. Be3 e5 7. Nb3 Be6 8. f3 Be7 9. Qd2 O-O 10. O-O-O Nbd7 1-0"
         },
@@ -311,9 +409,17 @@
           "board": 2,
           "playerId": "bruno-halliday",
           "colour": "black",
-          "opponent": "L. Cadbury",
-          "opponentRating": 1548,
-          "opponentJunior": false,
+          "opponent": {
+            "id": "downend-fishponds-f-l-cadbury",
+            "name": "L. Cadbury",
+            "ratings": [
+              {
+                "date": "2026-05-12",
+                "rating": 1548,
+                "source": "ecf"
+              }
+            ]
+          },
           "result": "loss",
           "pgn": null
         },
@@ -321,9 +427,17 @@
           "board": 3,
           "playerId": "dermot-kavanagh",
           "colour": "white",
-          "opponent": "E. Standfast",
-          "opponentRating": 1362,
-          "opponentJunior": false,
+          "opponent": {
+            "id": "downend-fishponds-f-e-standfast",
+            "name": "E. Standfast",
+            "ratings": [
+              {
+                "date": "2026-05-12",
+                "rating": 1362,
+                "source": "ecf"
+              }
+            ]
+          },
           "result": "draw",
           "pgn": null
         },
@@ -331,9 +445,18 @@
           "board": 4,
           "playerId": "jonah-kestrel",
           "colour": "black",
-          "opponent": "W. Culliford",
-          "opponentRating": 1205,
-          "opponentJunior": true,
+          "opponent": {
+            "id": "downend-fishponds-f-w-culliford",
+            "name": "W. Culliford",
+            "junior": true,
+            "ratings": [
+              {
+                "date": "2026-05-12",
+                "rating": 1205,
+                "source": "ecf"
+              }
+            ]
+          },
           "result": "default-win",
           "pgn": null
         }

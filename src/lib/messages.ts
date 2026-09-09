@@ -111,9 +111,8 @@ export function availabilityUpdate(season: Season, match: Match): string {
  * The team.
  *
  * Who is playing, who is standing by, who missed out, and then it stops. It
- * does not explain which coin toss went whose way: the working is on the site
- * for anybody who wants it, and a chat message that argues its own case invites
- * the argument. What it does say is that missing out moves you up next time,
+ * does not explain which coin toss went whose way: a chat message that argues
+ * its own case invites the argument. What it does say is that missing out moves you up next time,
  * because that is the whole promise the rule makes and the one thing somebody
  * who was not picked wants to hear.
  */
@@ -138,8 +137,9 @@ export function selectedTeam(season: Season, match: Match, selection: Selection)
     fielded.reserves.length > 0 ? `Reserves: ${names(fielded.reserves).join(", ")}.` : null,
     fielded.withdrawn.length > 0 ? `Dropped out: ${sorted(names(fielded.withdrawn))}.` : null,
 
-    // The captain's reason travels with the team. Somebody who was picked by
-    // the rule and is not playing will ask, and they should not have to.
+    // The captain's reason travels with the team. The site does not publish
+    // what an override changed, so this line is the only place somebody who was
+    // picked by the rule and is not playing will hear why.
     fielded.note ? `\n${fielded.note}` : null,
 
     fielded.unfilled > 0
@@ -185,7 +185,7 @@ export function matchResult(season: Season, match: Match): string | null {
 
   const boards = [...match.result.games]
     .sort((a, b) => a.board - b.board)
-    .map((game) => `${game.board}. ${playerName(season, game.playerId)} ${score[game.result]} ${game.opponent}`);
+    .map((game) => `${game.board}. ${playerName(season, game.playerId)} ${score[game.result]} ${game.opponent.name}`);
 
   return join([
     `${outcome}: ${home} ${formatPoints(homeScore)} - ${formatPoints(awayScore)} ${away}.`,

@@ -56,7 +56,7 @@ export function Page({
         <header className="mb-7 flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
           <div className="min-w-0">
             <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              {badge}
+              {badge && <span className="mr-2.5">{badge}</span>}
               {title}
             </h1>
             {lede && <p className="text-muted-foreground mt-2 text-[0.95rem]/7">{lede}</p>}

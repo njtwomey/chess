@@ -21,9 +21,12 @@ than getting the moves right.
   "board": 1,
   "playerId": "ada-mercer",
   "colour": "white",
-  "opponent": "R. Whitlock",
-  "opponentRating": 1544,
-  "opponentJunior": false,
+  "opponent": {
+    "id": "south-bristol-d-r-whitlock",
+    "name": "R. Whitlock",
+    "ratings": [{ "date": "2026-03-10", "rating": 1544, "source": "ecf" }],
+    "url": "https://lms.englishchess.org.uk/lms/player/121305/view"
+  },
   "result": "win",
   "pgn": "1. e4 e5 2. Bc4 Nc6 3. Qh5 Nf6 4. Qxf7# 1-0"
 }
@@ -40,6 +43,8 @@ conversion; do not pre-convert.
   otherwise 0.
 - `ourScore + theirScore` must equal the number of games.
 - Board numbers unique, no player playing twice, every `playerId` on the roster.
+- An opponent's ratings ascend by date and none is dated after the match, and
+  their id is not one of ours.
 - A match with `status: "played"` must have a result, and one without must not.
 
 ## Things that are easy to get wrong
@@ -47,8 +52,15 @@ conversion; do not pre-convert.
 - **Record who actually played, not who was selected.** If a reserve stepped in,
   the reserve is in `games`. Their game count follows from this entry, so
   crediting the wrong person quietly corrupts every later selection.
-- **`opponentJunior` matters** even when our player is an adult: one junior on
-  either side makes that board the shorter clock.
+- **An opponent is a player record, the same shape as ours.** Name, and where
+  the league's page gives them, a dated rating and a `url` to that page. Their
+  `id` is made up from the team and the name, slugified, because they have no id
+  of ours to be known by. Everything else on a player is optional and usually
+  absent: they have no ECF code we know and no role in this club.
+- **`junior` on the opponent matters** even when our player is an adult: one
+  junior on either side makes that board the shorter clock.
+- **Date an opponent's rating on or before the match.** It is the rating that
+  applied on the night, and the loader rejects one dated later.
 - **PGN is optional.** `null` is the honest value for a game nobody wrote up.
   Never reconstruct moves from memory or from a result.
 

@@ -63,7 +63,7 @@ what the trend arrow on the team page reads.
 
 Change `junior` to `false`. Do not edit past matches: the clock that was used on
 the night was the right one, and the recorded games hold their own
-`opponentJunior` flag.
+opponent's own `junior` flag.
 
 ## What you must never do
 

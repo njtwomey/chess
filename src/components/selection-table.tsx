@@ -1,27 +1,14 @@
 import { ArrowUp, TriangleAlert } from "lucide-react";
 import { MessageButtons } from "@/components/message-buttons";
+import { PlayerLink } from "@/components/player-link";
 import { ReplyBadge, RoleBadge } from "@/components/reply-badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { playerName } from "@/lib/data";
+import { playerById, playerName } from "@/lib/data";
 import type { Season } from "@/lib/schema";
-import { replyOf } from "@/lib/season";
-import { decidingKey, KEY_LABEL, type Ranked, type Reply, type Selection } from "@/lib/selection";
+import { replyOf, roleFor, sheetOrder, type Fielded } from "@/lib/season";
+import { type Reply, type Selection } from "@/lib/selection";
 import { cn } from "@/lib/utils";
 import type { Match } from "@/lib/schema";
-
-/**
- * Why this player is above the next one, but only where it decided something.
- *
- * Two players in the same band, both playing, were not in competition: their
- * order between themselves changes nothing, and board order is settled later by
- * rating anyway. Explaining it there reads as a contest that never happened.
- * The comparison that matters is the one across a line, where somebody on one
- * side got a game and somebody on the other did not.
- */
-function reason(player: Ranked, next: Ranked | undefined): string {
-  if (!next || player.role === next.role) return "";
-  return KEY_LABEL[decidingKey(player, next)];
-}
 
 /**
  * Least available last: can play, then can reserve, then not sure, then the
@@ -32,6 +19,18 @@ function reason(player: Ranked, next: Ranked | undefined): string {
  * somebody who has actually engaged with the question.
  */
 const REPLY_ORDER: (Reply | null)[] = ["yes", "reserve", "unsure", null, "no"];
+
+/**
+ * A squad member by id, linked like everywhere else.
+ *
+ * This table works in ids because that is what the rule hands back, so the
+ * lookup happens here rather than the table quietly being the one place a
+ * player is not a link.
+ */
+function PlayerOf({ season, id }: { season: Season; id: string }) {
+  const player = playerById(season, id);
+  return player ? <PlayerLink player={player} className="font-medium" /> : <span className="font-medium">{id}</span>;
+}
 
 /**
  * The replies so far, with nothing decided.
@@ -68,7 +67,9 @@ function AvailabilityTable({ season, match, selection }: { season: Season; match
           <TableBody>
             {rows.map((player) => (
               <TableRow key={player.id}>
-                <TableCell className="font-medium">{player.name}</TableCell>
+                <TableCell>
+                  <PlayerLink player={player} className="font-medium" />
+                </TableCell>
                 <TableCell>
                   <ReplyBadge reply={replyOf(match, player.id)} />
                 </TableCell>
@@ -94,25 +95,31 @@ export function SelectionTable({
   season,
   match,
   selection,
+  fielded,
   settled,
 }: {
   season: Season;
   match: Match;
   selection: Selection;
+  fielded: Fielded;
   settled: boolean;
 }) {
   const name = (id: string) => playerName(season, id);
 
-  /**
-   * Was anybody actually turned away?
-   *
-   * Only if somebody who said they can play did not get a board. If everyone
-   * who asked for a game got one, there was no decision to explain and the
-   * whole column is noise dressed up as reasoning.
-   */
+  // Whether the rule had to separate anybody, which is what the note about the
+  // coin flip is for. Asked of the rule rather than of the team on the sheet:
+  // the flip either decided something or it did not.
   const contested = selection.order.some((player) => player.role !== "board" && player.reply === "yes");
 
   if (!settled) return <AvailabilityTable season={season} match={match} selection={selection} />;
+
+  const rows = match.result ? [...selection.standing] : sheetOrder(selection, fielded);
+
+  // Numbered down the page rather than read off the rule, so the column and the
+  // rows cannot disagree however they are ordered. On a played match the rows
+  // are the rule's own order, so the two are the same number. A dropout gets
+  // none: they are shown where they stood, not counted among those still in line.
+  let counted = 0;
 
   return (
     <div className="space-y-4">
@@ -159,52 +166,40 @@ export function SelectionTable({
               <TableHead>Replied</TableHead>
               <TableHead className="w-20 text-right">Games</TableHead>
               <TableHead className="w-28">Outcome</TableHead>
-              {contested && (
-                <TableHead className="hidden md:table-cell">Above the player below because they…</TableHead>
-              )}
             </TableRow>
           </TableHeader>
           <TableBody>
-            {selection.standing.map((player) => {
-              const dropped = player.role === "withdrawn";
+            {rows.map((player) => {
+              const role = roleFor(fielded, player);
+              const dropped = role === "withdrawn";
               const promoted = selection.promoted.includes(player);
-              // The list is the standing order, so a dropout still occupies the
-              // place it had. The cut line follows the players who are actually
-              // left, which is what makes the pull-up visible as a pull-up.
-              const next = player.position === null ? undefined : selection.order[player.position];
+              const number = dropped ? null : (counted += 1);
               return (
                 <TableRow
                   key={player.playerId}
                   className={cn(
-                    player.role === "board" && "bg-accent/40",
+                    role === "board" && "bg-accent/40",
                     dropped && "text-muted-foreground",
-                    player.position === selection.boards && "border-b-primary/40 border-b-2",
+                    number === selection.boards && "border-b-primary/40 border-b-2",
                   )}
                 >
-                  <TableCell className="tabular text-muted-foreground text-right text-xs">
-                    {player.position ?? "—"}
-                  </TableCell>
-                  <TableCell className={cn("font-medium", dropped && "line-through")}>
-                    {name(player.playerId)}
+                  <TableCell className="tabular text-muted-foreground text-right text-xs">{number ?? "—"}</TableCell>
+                  <TableCell className={cn(dropped && "line-through")}>
+                    <PlayerOf season={season} id={player.playerId} />
                   </TableCell>
                   <TableCell>
                     <ReplyBadge reply={player.reply} />
                   </TableCell>
                   <TableCell className="tabular text-right">{player.gamesPlayed}</TableCell>
                   <TableCell className="whitespace-nowrap">
-                    <RoleBadge role={player.role} />
-                    {promoted && (
+                    <RoleBadge role={role} />
+                    {promoted && (role === "board" || role === "reserve") && (
                       <span className="text-reply-yes ml-1.5 inline-flex items-center gap-0.5 text-[0.7rem] font-medium">
                         <ArrowUp className="size-3" />
                         moved up
                       </span>
                     )}
                   </TableCell>
-                  {contested && (
-                    <TableCell className="text-muted-foreground hidden text-xs md:table-cell">
-                      {dropped ? "Dropped out after replying" : reason(player, next)}
-                    </TableCell>
-                  )}
                 </TableRow>
               );
             })}
@@ -212,14 +207,14 @@ export function SelectionTable({
             {selection.unavailable.map((player) => (
               <TableRow key={player.playerId} className="text-muted-foreground">
                 <TableCell />
-                <TableCell>{name(player.playerId)}</TableCell>
+                <TableCell>
+                  <PlayerOf season={season} id={player.playerId} />
+                </TableCell>
                 <TableCell>
                   <ReplyBadge reply={replyOf(match, player.playerId)} />
                 </TableCell>
                 <TableCell className="tabular text-right">{player.gamesPlayed}</TableCell>
-                <TableCell colSpan={contested ? 2 : 1} className="text-xs">
-                  Not selectable
-                </TableCell>
+                <TableCell className="text-xs">Not selectable</TableCell>
               </TableRow>
             ))}
           </TableBody>

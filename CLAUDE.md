@@ -105,8 +105,12 @@ number. One ordering produces both the boards and the reserves, sorted by four k
   `withdrawn` block; `select` removes them from the order already built, so everyone below moves up
   exactly one place and the top reserve takes the board. Changing the reply to `no` would re-decide
   settled ties, which is why the loader rejects a withdrawal on any other reply.
-- **Explain a decision only where one was made.** The reason column and the group-chat line appear
-  only when somebody who said `yes` missed out; otherwise they describe a contest nobody was in.
+- **Explain a decision only where one was made.** The note under the selection table appears only
+  when somebody who said `yes` missed out; otherwise it describes a contest nobody was in. The
+  per-row reason column was removed: it explained pairs the rule never had to separate.
+- **An override is the captain's, and is not published.** Where a match carries a `lineup`, the
+  tables show the team he wrote down, in his order. What it changed is shown only when running
+  locally, because it names the player who lost their place and they have not been asked.
 
 `src/lib/selection.test.ts` is the most important file here after `selection.ts`: permutation
 invariance, seed stability, the overspill case, dropouts, and a fairness check over a thousand

@@ -7,6 +7,7 @@ import { DEFAULT_ENGINE_OPTIONS, type EngineOptions } from "@/hooks/use-engine";
 import { GameViewer } from "@/components/chess-board";
 import { Empty, Page, Section } from "@/components/page";
 import { PgnPanel } from "@/components/pgn-panel";
+import { PlayerCell } from "@/components/player-link";
 import { seasonPath, useSeason } from "@/components/season-context";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -14,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { findMatch, playerById } from "@/lib/data";
 import { taggedPgn } from "@/lib/links";
 import { GAME_RESULT_LABEL } from "@/lib/schema";
-import { orderedMatches } from "@/lib/season";
+import { orderedMatches, ratingOn } from "@/lib/season";
 import { formatShortDate } from "@/lib/time";
 
 import { cn } from "@/lib/utils";
@@ -70,13 +71,10 @@ export function Games() {
                         )}
                       </TableCell>
                       <TableCell className="tabular text-right">{game.board}</TableCell>
-                      <TableCell className="font-medium">{player?.name ?? game.playerId}</TableCell>
+                      <TableCell>{player ? <PlayerCell player={player} on={match.date} /> : game.playerId}</TableCell>
                       <TableCell className="text-muted-foreground text-sm capitalize">{game.colour}</TableCell>
                       <TableCell>
-                        {game.opponent}
-                        {game.opponentRating !== null && (
-                          <span className="text-muted-foreground tabular ml-2 text-xs">{game.opponentRating}</span>
-                        )}
+                        <PlayerCell player={game.opponent} />
                       </TableCell>
                       <TableCell>
                         <span
@@ -133,8 +131,9 @@ export function GamePage() {
   const player = playerById(season, game.playerId);
   const name = player?.name ?? game.playerId;
   const pgn = taggedPgn(match, game, name, season.team.name);
-  const white = game.colour === "white" ? name : game.opponent;
-  const black = game.colour === "white" ? game.opponent : name;
+  const opponentRating = ratingOn(game.opponent);
+  const white = game.colour === "white" ? name : game.opponent.name;
+  const black = game.colour === "white" ? game.opponent.name : name;
 
   return (
     <Page
@@ -155,8 +154,8 @@ export function GamePage() {
           <Badge variant="outline">
             {name} played {game.colour}
           </Badge>
-          {game.opponentRating !== null && <Badge variant="outline">Opponent {game.opponentRating}</Badge>}
-          {game.opponentJunior && <Badge variant="outline">Junior opponent</Badge>}
+          {opponentRating && <Badge variant="outline">Opponent {opponentRating.rating}</Badge>}
+          {game.opponent.junior && <Badge variant="outline">Junior opponent</Badge>}
         </div>
 
         {/* Everything that takes the game somewhere else, gathered on the right

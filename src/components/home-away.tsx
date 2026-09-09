@@ -13,13 +13,15 @@ import { cn } from "@/lib/utils";
  * a sentence. Beside a venue the place has already been named, so "Home" is
  * enough and "Home game" would be repeating the heading it sits under.
  */
-export function HomeAway({ home, size = "sm" }: { home: boolean; size?: "sm" | "lg" }) {
+export function HomeAway({ home, size = "sm" }: { home: boolean; size?: "xs" | "sm" | "lg" }) {
   return (
     <span
       className={cn(
         "rounded-md align-middle font-semibold whitespace-nowrap",
         home ? "bg-primary text-primary-foreground" : "bg-fixture-away text-fixture-away-foreground",
-        size === "lg" ? "mr-2.5 px-2.5 py-1 text-base sm:text-lg" : "ml-2 px-2 py-0.5 text-xs",
+        size === "lg" && "px-2.5 py-1 text-base sm:text-lg",
+        size === "sm" && "px-2 py-0.5 text-xs",
+        size === "xs" && "px-1.5 py-px text-[0.65rem]",
       )}
     >
       {size === "lg" ? (home ? "Home game" : "Away game") : home ? "Home" : "Away"}

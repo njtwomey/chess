@@ -8,9 +8,10 @@
  * ordering does. Getting that last one wrong would re-decide a settled place.
  */
 import { describe, expect, it } from "vitest";
+import { assignBoards } from "@/lib/boards";
 import { seasonById } from "@/lib/data";
 import { selectedTeam } from "@/lib/messages";
-import { fieldedFor, selectionFor } from "@/lib/season";
+import { fieldedFor, roleFor, selectionFor, sheetOrder } from "@/lib/season";
 import type { Match } from "@/lib/schema";
 
 const season = seasonById.get("demo")!;
@@ -148,5 +149,121 @@ describe("a shortlist that names only the boards", () => {
   it("never puts somebody on a board and in the reserves at once", () => {
     const boards = new Set(fielded.players.map((player) => player.id));
     expect(fielded.reserves.filter((player) => boards.has(player.id))).toEqual([]);
+  });
+});
+
+/**
+ * The two tables a match page shows, checked against each other.
+ *
+ * One lists everybody who replied with what became of them; the other lists the
+ * four boards. They are drawn from the same data but by different code, and the
+ * failure that matters is not either being wrong on its own: it is them
+ * disagreeing, so that a player reads "Playing" in one and is absent from the
+ * other. Every assertion here is about the pair.
+ */
+describe("the selection table and the board order agree", () => {
+  const boardsOf = (match: Match) => {
+    const rule = selectionFor(season, match);
+    const fielded = fieldedFor(season, match, rule);
+    return {
+      rule,
+      fielded,
+      /** Who the selection table shows as playing. */
+      playing: rule.standing.filter((player) => roleFor(fielded, player) === "board").map((p) => p.playerId),
+      /** Who the board order table lists. */
+      onBoards: assignBoards(fielded.players, {
+        timeControl: season.timeControl,
+        onDate: match.date,
+        keepOrder: fielded.ordered,
+      }).map((entry) => entry.player.id),
+    };
+  };
+
+  it("names the same four, whether or not a team was written down", () => {
+    for (const match of [
+      base,
+      withLineup([...ruled].reverse()),
+      withLineup([...ruled.slice(0, 3), rule.standby[0]!.playerId]),
+    ]) {
+      const { playing, onBoards } = boardsOf(match);
+      expect([...playing].sort()).toEqual([...onBoards].sort());
+    }
+  });
+
+  it("follows the written team rather than the rule when the two differ", () => {
+    const standby = rule.standby[0]!.playerId;
+    const shortlist = [...ruled.slice(0, 3), standby];
+    const { playing, onBoards, fielded } = boardsOf(withLineup(shortlist));
+
+    expect([...playing].sort()).toEqual([...shortlist].sort());
+    expect(onBoards).toEqual(shortlist);
+    // The player the rule picked and the captain did not is shown as not playing.
+    expect(playing).not.toContain(ruled[3]);
+    expect(fielded.fromRule).toBe(false);
+  });
+
+  it("never shows anybody as playing and as a reserve at once", () => {
+    for (const match of [base, withLineup([...ruled, ...rule.reservePlayers.map((p) => p.playerId)])]) {
+      const { rule: r, fielded } = boardsOf(match);
+      const roles = r.standing.map((player) => [player.playerId, roleFor(fielded, player)] as const);
+      const playing = roles.filter(([, role]) => role === "board").map(([id]) => id);
+      const reserves = roles.filter(([, role]) => role === "reserve").map(([id]) => id);
+      expect(playing.filter((id) => reserves.includes(id))).toEqual([]);
+      expect(new Set(playing).size).toBe(playing.length);
+    }
+  });
+
+  it("leaves a dropout and an unselectable player as the rule found them", () => {
+    // Neither is a fact about the team sheet: they are facts about the replies,
+    // and a hand-written team cannot make somebody available again.
+    const { rule: r, fielded } = boardsOf(base);
+    for (const player of r.withdrawn) expect(roleFor(fielded, player)).toBe("withdrawn");
+    for (const player of r.unavailable) expect(roleFor(fielded, player)).toBe("unavailable");
+  });
+
+  it("shows every player exactly once between the two tables", () => {
+    const { rule: r, onBoards } = boardsOf(withLineup([...ruled.slice(0, 3), rule.standby[0]!.playerId]));
+    const counted = [...r.standing, ...r.unavailable].map((player) => player.playerId);
+    expect(new Set(counted).size).toBe(counted.length);
+    for (const id of onBoards) expect(counted).toContain(id);
+  });
+});
+
+describe("the order a team sheet reads in", () => {
+  it("is the rule's own order when no team has been written down", () => {
+    const fielded = fieldedFor(season, base, rule);
+    expect(sheetOrder(rule, fielded)).toEqual(rule.standing);
+  });
+
+  it("leads with the team, in board order, once one has been written down", () => {
+    const shortlist = [...ruled.slice(0, 3), rule.standby[0]!.playerId];
+    const match = withLineup(shortlist);
+    const fielded = fieldedFor(season, match, rule);
+    const rows = sheetOrder(rule, fielded);
+
+    expect(rows.slice(0, shortlist.length).map((player) => player.playerId)).toEqual(shortlist);
+    // And every one of those rows says Playing, so the cut line lands right.
+    for (const player of rows.slice(0, season.boards)) expect(roleFor(fielded, player)).toBe("board");
+  });
+
+  it("puts the reserves next, then leaves everybody else in the rule's order", () => {
+    const shortlist = [...ruled.slice(0, 3), rule.standby[0]!.playerId];
+    const fielded = fieldedFor(season, withLineup(shortlist), rule);
+    const rows = sheetOrder(rule, fielded);
+
+    const reserves = rows.slice(season.boards, season.boards + fielded.reserves.length);
+    expect(reserves.map((player) => player.playerId)).toEqual(fielded.reserves.map((player) => player.id));
+
+    const rest = rows.slice(season.boards + fielded.reserves.length).map((player) => player.playerId);
+    const asRuled = rule.standing.map((player) => player.playerId).filter((id) => rest.includes(id));
+    expect(rest).toEqual(asRuled);
+  });
+
+  it("loses nobody and duplicates nobody, whichever order it is in", () => {
+    for (const match of [base, withLineup([...ruled].reverse())]) {
+      const fielded = fieldedFor(season, match, rule);
+      const rows = sheetOrder(rule, fielded).map((player) => player.playerId);
+      expect([...rows].sort()).toEqual(rule.standing.map((player) => player.playerId).sort());
+    }
   });
 });

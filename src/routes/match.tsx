@@ -6,6 +6,7 @@ import { seasonPath } from "@/components/season-context";
 import { Empty, Page, Section } from "@/components/page";
 import { CompetitionLink } from "@/components/competition-link";
 import { HomeAway } from "@/components/home-away";
+import { PlayerCell, PlayerLink } from "@/components/player-link";
 import { RatingLabel } from "@/components/rating";
 import { SelectionTable } from "@/components/selection-table";
 import { VenueMap } from "@/components/venue-map";
@@ -34,7 +35,11 @@ function Where({ season, match }: { season: Season; match: Match }) {
 
   return (
     <div className="bg-card grid gap-5 rounded-xl border p-5 sm:grid-cols-[minmax(0,1fr)_11rem] md:grid-cols-[minmax(0,1fr)_13rem]">
-      <div className="flex flex-col justify-center gap-5">
+      {/* When and where read as one line: they answer the same question, which
+          is whether you can get there. The links live underneath rather than
+          inside either, so the top of the card is facts and the bottom is
+          things to click. */}
+      <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <p className="text-muted-foreground flex items-center gap-2 text-xs font-medium tracking-wide uppercase">
             <Clock3 className="size-3.5" />
@@ -48,103 +53,69 @@ function Where({ season, match }: { season: Season; match: Match }) {
           </p>
         </div>
 
-        <div>
+        <div className="min-w-0">
           <p className="text-muted-foreground flex items-center gap-2 text-xs font-medium tracking-wide uppercase">
             <MapPin className="size-3.5" />
             Where
           </p>
           <p className="mt-1.5 text-lg font-semibold">
-            {venue?.name ?? "Venue to be confirmed"}
-            <HomeAway home={match.home} />
+            {venue?.name ?? "Venue to be confirmed"}{" "}
+            <span className="ml-1 align-middle">
+              <HomeAway home={match.home} />
+            </span>
           </p>
           <p className="text-muted-foreground text-sm">{place || "Address not confirmed yet"}</p>
-          {venue && (
-            <div className="mt-2 flex flex-wrap items-center gap-3">
-              <Button variant="outline" size="sm" asChild>
-                <a href={mapsUrl(venue)} target="_blank" rel="noreferrer">
-                  Open in Maps <ExternalLink className="size-3.5" />
-                </a>
-              </Button>
-              {venue.website && (
-                <a
-                  href={venue.website}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-primary text-xs hover:underline"
-                >
-                  Club website
-                </a>
-              )}
-            </div>
-          )}
         </div>
       </div>
 
-      {venue && <VenueMap venue={venue} className="w-full self-center" />}
+      {/* Down the side of both rows, so the column is not left empty under it
+          and the card is no taller than the map. */}
+      {venue && <VenueMap venue={venue} className="w-full self-start sm:row-span-2" />}
 
-      {/* The league's list is the authority on when and where a match is. This
-          page is a convenience built on top of it, so it says so and links
-          back: a fixture page with no way to the record it copied is one that
-          can be quietly wrong for weeks. */}
-      <p className="text-muted-foreground border-t pt-3 text-xs sm:col-span-2">
-        Times and venues come from{" "}
-        <a
-          href={season.team.links.fixtures}
-          target="_blank"
-          rel="noreferrer"
-          className="text-primary inline-flex items-center gap-1 hover:underline"
-        >
-          the league's fixture list
-          <ExternalLink className="size-3" />
-        </a>
-        . If the two disagree, the league is right.
-        {match.recordUrl && (
-          <>
-            {" "}
-            This match has{" "}
-            <a
-              href={match.recordUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-primary inline-flex items-center gap-1 hover:underline"
-            >
-              a record of its own
-              <ExternalLink className="size-3" />
-            </a>
-            , with the board order as submitted and both sides' ratings.
-          </>
-        )}
-      </p>
-    </div>
-  );
-}
+      <div className="space-y-2.5 border-t pt-3.5">
+        <div className="flex flex-wrap items-center gap-2">
+          {venue && (
+            <Button variant="outline" size="sm" asChild>
+              <a href={mapsUrl(venue)} target="_blank" rel="noreferrer">
+                Open in Maps <ExternalLink className="size-3.5" />
+              </a>
+            </Button>
+          )}
+          {match.recordUrl && (
+            <Button variant="outline" size="sm" asChild>
+              <a href={match.recordUrl} target="_blank" rel="noreferrer">
+                Fixture link <ExternalLink className="size-3.5" />
+              </a>
+            </Button>
+          )}
+          {venue?.website && (
+            <Button variant="ghost" size="sm" asChild>
+              <a href={venue.website} target="_blank" rel="noreferrer">
+                Club website <ExternalLink className="size-3.5" />
+              </a>
+            </Button>
+          )}
+        </div>
 
-/**
- * What the captain changed, and why.
- *
- * An override that simply replaced the rule's answer would be the one thing
- * this site is built not to do. The rule's answer stays on the page underneath;
- * this says what was done to it, in the names of the people it happened to,
- * because they are the ones who will want to know.
- */
-function Override({ fielded }: { fielded: Fielded }) {
-  const names = (players: { name: string }[]) => players.map((player) => player.name).join(", ");
-
-  return (
-    <div className="border-primary/30 bg-accent/40 space-y-1.5 rounded-lg border-l-4 px-5 py-4 text-sm/6">
-      <p className="font-medium">The captain has settled this team by hand.</p>
-      {fielded.added.length > 0 && (
-        <p>
-          <span className="text-muted-foreground">Playing although the rule did not pick them:</span>{" "}
-          {names(fielded.added)}.
+        {/* The league's list is the authority on when and where a match is. This
+            page is a convenience built on top of it, so it says so and links
+            back: a fixture page with no way to the record it copied is one that
+            can be quietly wrong for weeks. */}
+        <p className="text-muted-foreground text-xs">
+          Times and venues come from{" "}
+          <a
+            href={season.team.links.fixtures}
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary inline-flex items-center gap-1 hover:underline"
+          >
+            the league's fixture list
+            <ExternalLink className="size-3" />
+          </a>
+          . If the two disagree, the league is right. The fixture link is this match's own page there, with the board
+          order as submitted and both sides' ratings.
         </p>
-      )}
-      {fielded.dropped.length > 0 && (
-        <p>
-          <span className="text-muted-foreground">Picked by the rule and not playing:</span> {names(fielded.dropped)}.
-        </p>
-      )}
-      {fielded.note && <p className="text-muted-foreground">{fielded.note}</p>}
+      </div>
     </div>
   );
 }
@@ -208,6 +179,23 @@ function LocalComparison({
   return (
     <div className="border-reply-unsure/40 bg-reply-unsure-soft/40 mt-4 rounded-lg border p-4">
       <p className="text-reply-unsure mb-3 text-sm font-medium">Only visible to you, running locally.</p>
+      {!fielded.fromRule && (
+        <div className="mb-3 space-y-0.5 text-sm/6">
+          {fielded.added.length > 0 && (
+            <p>
+              <span className="text-muted-foreground">Playing although the rule did not pick them:</span>{" "}
+              {fielded.added.map((player) => player.name).join(", ")}.
+            </p>
+          )}
+          {fielded.dropped.length > 0 && (
+            <p>
+              <span className="text-muted-foreground">Picked by the rule and not playing:</span>{" "}
+              {fielded.dropped.map((player) => player.name).join(", ")}.
+            </p>
+          )}
+          {fielded.note && <p className="text-muted-foreground">{fielded.note}</p>}
+        </div>
+      )}
       <div className="flex flex-wrap gap-x-8 gap-y-4">
         {column("What the rule and the ratings give", ruled, settled)}
         {column("What you have settled", settled, ruled)}
@@ -236,7 +224,6 @@ function BoardOrder({ season, match, fielded }: { season: Season; match: Match; 
 
   return (
     <div className="space-y-3">
-      {!fielded.fromRule && <Override fielded={fielded} />}
       <div className="overflow-x-auto rounded-lg border">
         <Table>
           <TableHeader>
@@ -251,7 +238,9 @@ function BoardOrder({ season, match, fielded }: { season: Season; match: Match; 
             {boards.map((entry) => (
               <TableRow key={entry.player.id}>
                 <TableCell className="tabular font-medium">{entry.board}</TableCell>
-                <TableCell>{entry.player.name}</TableCell>
+                <TableCell>
+                  <PlayerLink player={entry.player} />
+                </TableCell>
                 <TableCell className="text-right">
                   <RatingLabel rating={entry.rating} />
                 </TableCell>
@@ -307,28 +296,14 @@ function Result({ season, match }: { season: Season; match: Match }) {
                 <TableRow key={game.board}>
                   <TableCell className="tabular font-medium">{game.board}</TableCell>
                   <TableCell>
-                    <span className="font-medium">{player?.name ?? game.playerId}</span>
+                    <span className="font-medium">{player ? <PlayerLink player={player} /> : game.playerId}</span>
                     <span className="text-muted-foreground ml-2 text-xs">
                       <RatingLabel rating={player ? ratingOn(player, match.date) : null} />
                     </span>
                   </TableCell>
                   <TableCell className="text-muted-foreground text-sm capitalize">{game.colour}</TableCell>
                   <TableCell>
-                    {game.opponentUrl ? (
-                      <a
-                        href={game.opponentUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="hover:text-primary hover:underline"
-                      >
-                        {game.opponent}
-                      </a>
-                    ) : (
-                      game.opponent
-                    )}
-                    {game.opponentRating !== null && (
-                      <span className="text-muted-foreground tabular ml-2 text-xs">{game.opponentRating}</span>
-                    )}
+                    <PlayerCell player={game.opponent} />
                   </TableCell>
                   <TableCell>
                     <span
@@ -484,22 +459,9 @@ export function MatchPage() {
         </Section>
       ) : (
         <>
-          <Section
-            title={match.result ? "How this team was picked" : showProposal ? "Selection" : "Availability"}
-            description={
-              match.result
-                ? "What the rule produced from the replies at the time. The team that actually took the field is above."
-                : showProposal
-                  ? "The order below is what the rule produces from the replies. It is a proposal: the captain fields the team."
-                  : "Who has said what so far. The team is picked nearer the match."
-            }
-            className="mt-8"
-          >
-            <SelectionTable season={season} match={match} selection={selection} settled={showProposal} />
-          </Section>
-
-          {/* Until the captain settles it the order exists but stays off the
-              page: a running order shared mid-week is one that will change. */}
+          {/* The team sheet first once there is one to show. Until the captain
+              settles it the order exists but stays off the page: a running
+              order shared mid-week is one that will change. */}
           {!match.result &&
             (showProposal ? (
               <Section
@@ -509,6 +471,7 @@ export function MatchPage() {
                     ? "Written down by the captain, so this is the order as it stands."
                     : "Now the four are settled, the league decides where they sit."
                 }
+                className="mt-8"
               >
                 <BoardOrder season={season} match={match} fielded={fielded} />
                 {import.meta.env.DEV && fielded.ordered && (
@@ -520,6 +483,27 @@ export function MatchPage() {
                 The board order is not settled yet, so it is not shown.
               </p>
             ))}
+
+          <Section
+            title={match.result ? "How this team was picked" : showProposal ? "Selection" : "Availability"}
+            description={
+              match.result
+                ? "What the rule produced from the replies at the time. The team that actually took the field is above."
+                : !showProposal
+                  ? "Who has said what so far. The team is picked nearer the match."
+                  : fielded.ordered
+                    ? "The team as it stands, then everybody else who replied."
+                    : "The order below is what the rule produces from the replies. It is a proposal: the captain fields the team."
+            }
+          >
+            <SelectionTable
+              season={season}
+              match={match}
+              selection={selection}
+              fielded={fielded}
+              settled={showProposal}
+            />
+          </Section>
         </>
       )}
     </Page>

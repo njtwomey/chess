@@ -1,6 +1,7 @@
 import { Clock, MapPin, Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
 import { seasonPath } from "@/components/season-context";
+import { HomeAway } from "@/components/home-away";
 import { Badge } from "@/components/ui/badge";
 import { venueById } from "@/lib/data";
 import { mapsUrl } from "@/lib/links";
@@ -51,14 +52,6 @@ export function TimeLine({ match, className }: { match: Match; className?: strin
         {formatLongDate(match.date)}, {match.time}
       </span>
     </span>
-  );
-}
-
-export function HomeAway({ home }: { home: boolean }) {
-  return (
-    <Badge variant={home ? "secondary" : "outline"} className="shrink-0">
-      {home ? "Home" : "Away"}
-    </Badge>
   );
 }
 

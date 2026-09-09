@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { compareRanked, decidingKey, select, type Candidate, type Reply } from "@/lib/selection";
+import { compareRanked, select, type Candidate, type Reply } from "@/lib/selection";
 
 const SEED = "test-seed";
 
@@ -345,16 +345,26 @@ describe("bad input", () => {
   });
 });
 
-describe("showing the working", () => {
-  it("names the key that separated two players", () => {
+describe("which key separates two players", () => {
+  // These were assertions about `decidingKey`, which the page no longer uses.
+  // The orderings it named are the rule itself, so they are asserted directly
+  // rather than through a helper that existed to describe them.
+  it("puts the player with fewer games first", () => {
     const selection = run([candidate("fewer", "yes", 0), candidate("more", "yes", 1)]);
-    expect(decidingKey(selection.order[0]!, selection.order[1]!)).toBe("games");
+    expect(selection.order.map((player) => player.playerId)).toEqual(["fewer", "more"]);
+  });
 
-    // The reply is asked first now, so it decides even against a game count.
-    const onReply = run([candidate("said-yes", "yes", 4), candidate("offered", "reserve", 0)]);
-    expect(decidingKey(onReply.order[0]!, onReply.order[1]!)).toBe("reply");
+  it("asks the reply first, so it beats a game count", () => {
+    const selection = run([candidate("said-yes", "yes", 4), candidate("offered", "reserve", 0)]);
+    expect(selection.order.map((player) => player.playerId)).toEqual(["said-yes", "offered"]);
+  });
 
-    const onToss = run([candidate("a", "yes", 1), candidate("b", "yes", 1)]);
-    expect(decidingKey(onToss.order[0]!, onToss.order[1]!)).toBe("tiebreak");
+  it("falls to the seeded toss when reply and games are level", () => {
+    const selection = run([candidate("a", "yes", 1), candidate("b", "yes", 1)]);
+    const [first, second] = selection.order;
+    expect(first!.reply).toBe(second!.reply);
+    expect(first!.gamesPlayed).toBe(second!.gamesPlayed);
+    expect(first!.tiebreak).not.toBe(second!.tiebreak);
+    expect(first!.tiebreak).toBeLessThan(second!.tiebreak);
   });
 });

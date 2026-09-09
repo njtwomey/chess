@@ -4,7 +4,7 @@
  * Everything here is a URL builder. Nothing fetches, and nothing analyses — the
  * site hands a game to a site that can analyse it and gets out of the way.
  */
-import type { Game, Match, Venue } from "@/lib/schema";
+import type { Game, Match, Player, Venue } from "@/lib/schema";
 
 /**
  * Where the match is, on a map.
@@ -53,8 +53,8 @@ export function chesscomUrl(pgn: string): string | null {
  * that keeps its context and a list of moves.
  */
 export function taggedPgn(match: Match, game: Game, playerName: string, team: string): string {
-  const white = game.colour === "white" ? playerName : game.opponent;
-  const black = game.colour === "white" ? game.opponent : playerName;
+  const white = game.colour === "white" ? playerName : game.opponent.name;
+  const black = game.colour === "white" ? game.opponent.name : playerName;
   const scores: Record<Game["result"], string> = {
     win: "1-0",
     "default-win": "1-0",
@@ -83,6 +83,19 @@ export function taggedPgn(match: Match, game: Game, playerName: string, team: st
   const movetext = body.length > 0 ? body : "*";
   const withResult = movetext.endsWith(result) || movetext.endsWith("*") ? movetext : `${movetext} ${result}`;
   return `${tags.map(([tag, value]) => `[${tag} "${value}"]`).join("\n")}\n\n${withResult}\n`;
+}
+
+/**
+ * Where a player's record lives, whoever's player they are.
+ *
+ * Ours are found by their ECF code, an opponent by the league page their rating
+ * was read off. Same question, two answers, and the page should not care which:
+ * a name that links on one side of the board and not the other reads as an
+ * oversight, because it is one.
+ */
+export function playerUrl(player: Player): string | null {
+  if (player.url) return player.url;
+  return player.ecfCode ? ecfUrl(player.ecfCode) : null;
 }
 
 /** A player's published record on the ECF rating site. */

@@ -263,6 +263,18 @@ function checkSeason(season: Season): string[] {
       const played = new Set<string>();
       for (const game of match.result.games) {
         if (!known(game.playerId)) note(`${at} records a game for "${game.playerId}", who is not on the roster`);
+
+        // An opponent is a player record too, and nothing else checks it: the
+        // per-season checks above only ever see our own roster.
+        const them = game.opponent;
+        if (playerIds.has(them.id)) note(`${at} gives its board ${game.board} opponent the id of one of ours`);
+        const dates = them.ratings.map((rating) => rating.date);
+        if (dates.some((date, index) => index > 0 && date <= (dates[index - 1] ?? ""))) {
+          note(`${at} has ratings for "${them.name}" that are not in ascending date order`);
+        }
+        if (dates.some((date) => date > match.date)) {
+          note(`${at} has a rating for "${them.name}" dated after the match was played`);
+        }
         if (boards.has(game.board)) note(`${at} has two games on board ${game.board}`);
         if (played.has(game.playerId)) note(`${at} has "${game.playerId}" playing twice`);
         if (game.board > season.boards)

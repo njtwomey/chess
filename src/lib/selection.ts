@@ -116,35 +116,6 @@ export interface Selection extends Omit<SelectionInput, "candidates"> {
   unfilled: number;
 }
 
-/** The sort keys, in the order they apply. Exported because the UI names them. */
-export const KEYS = ["reply", "games", "tiebreak", "id"] as const;
-export type Key = (typeof KEYS)[number];
-
-/**
- * Each of these completes "above the player below because they…", so every one
- * of them has to name the comparison rather than just a property. "Said yes"
- * on its own reads as a fact about the player; "said yes, and the next only
- * offered to reserve" reads as the reason they are in that order, which is the
- * question being asked.
- */
-export const KEY_LABEL: Record<Key, string> = {
-  reply: "said yes, and the next only offered to reserve",
-  games: "have played fewer games",
-  tiebreak: "won the coin flip",
-  id: "come first alphabetically, after a tie on everything else",
-};
-
-/**
- * Which key separated two players. Used to show the working beside a
- * selection, so nobody has to take the ordering on trust.
- */
-export function decidingKey(a: Ranked, b: Ranked): Key {
-  if (replyRank(a.reply) !== replyRank(b.reply)) return "reply";
-  if (a.gamesPlayed !== b.gamesPlayed) return "games";
-  if (a.tiebreak !== b.tiebreak) return "tiebreak";
-  return "id";
-}
-
 /**
  * The ordering, in full.
  *

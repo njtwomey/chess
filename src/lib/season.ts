@@ -7,7 +7,7 @@
  * exists, and the first time somebody corrects a result without correcting the
  * counter the fairest-looking selection in the season becomes wrong.
  */
-import { select, type Candidate, type Reply, type Selection } from "@/lib/selection";
+import { select, type Candidate, type Ranked, type Reply, type Role, type Selection } from "@/lib/selection";
 import { GAME_POINTS, type Game, type Match, type Player, type Rating, type Season } from "@/lib/schema";
 
 /** Chronological, with the round number settling two matches on one day. */
@@ -80,12 +80,64 @@ export function selectionFor(season: Season, match: Match): Selection {
   });
 }
 
+/**
+ * What a player is actually doing, which is not always what the rule said.
+ *
+ * Where the captain has written a team down, that team is the answer. A page
+ * showing one set of names as playing and a different set on the boards below
+ * is worse than either on its own, so this is the single place both tables ask.
+ * A dropout or somebody who was never selectable keeps what the rule gave them:
+ * those are facts about the replies rather than about the team.
+ */
+export function roleFor(fielded: Fielded, player: Ranked): Role {
+  if (player.role === "withdrawn" || player.role === "unavailable") return player.role;
+  return fielded.roles.get(player.playerId) ?? "standby";
+}
+
+/**
+ * The squad in the order a team sheet should read.
+ *
+ * With no team written down this is the rule's own order, dropouts included in
+ * the places they held, which is what makes a promotion visible as a move. Once
+ * a team is written down the sheet leads with it: a table whose first four rows
+ * are not the four who are playing reads as a mistake, whatever the outcome
+ * column says beside them. Everybody the captain did not name then follows in
+ * the rule's order, dropouts among them, so the only thing that moves is the
+ * team itself.
+ */
+export function sheetOrder(selection: Selection, fielded: Fielded): Ranked[] {
+  if (!fielded.ordered) return [...selection.standing];
+
+  const named = fielded.players.length + fielded.reserves.length;
+  const place = new Map<string, number>();
+  fielded.players.forEach((player, index) => place.set(player.id, index));
+  fielded.reserves.forEach((player, index) => place.set(player.id, fielded.players.length + index));
+
+  // Everybody else sorts by where the rule already had them, offset past the
+  // named players. A finite key on purpose: Infinity for both sides of a
+  // comparison gives NaN, and a comparator that returns NaN is only saved by a
+  // detail of how sorting treats an invalid answer.
+  const key = (player: Ranked, index: number) => place.get(player.playerId) ?? named + index;
+  return selection.standing
+    .map((player, index) => ({ player, key: key(player, index) }))
+    .sort((a, b) => a.key - b.key)
+    .map((entry) => entry.player);
+}
+
 /** The team that will actually take the field, and how it differs from the rule. */
 export interface Fielded {
   /** Who plays, in board order. */
   players: Player[];
   /** Who is next in line, in the order they would come in. */
   reserves: Player[];
+  /**
+   * Board or reserve, by player id, for everybody the team names.
+   *
+   * Built once rather than searched for per row: both tables ask this of every
+   * player they render, and two linear scans a row is the sort of thing that is
+   * fine right up until a season has a real squad in it.
+   */
+  roles: ReadonlyMap<string, Role>;
   /** Whether this is simply what the rule and the ratings produced, untouched. */
   fromRule: boolean;
   /** Whether the board order was written down rather than computed from ratings. */
@@ -131,10 +183,20 @@ export function fieldedFor(season: Season, match: Match, selection: Selection): 
 
   const ruled = selection.boardPlayers.map((player) => player.playerId);
 
+  const withRoles = (players: Player[], reserves: Player[]) => {
+    const roles = new Map<string, Role>();
+    for (const player of players) roles.set(player.id, "board");
+    for (const player of reserves) roles.set(player.id, "reserve");
+    return roles;
+  };
+
   if (!match.lineup) {
+    const players = look(ruled);
+    const reserves = look(selection.reservePlayers.map((player) => player.playerId));
     return {
-      players: look(ruled),
-      reserves: look(selection.reservePlayers.map((player) => player.playerId)),
+      players,
+      reserves,
+      roles: withRoles(players, reserves),
       fromRule: true,
       ordered: false,
       added: [],
@@ -166,9 +228,12 @@ export function fieldedFor(season: Season, match: Match, selection: Selection): 
           .slice(0, season.reserves)
           .map((player) => player.playerId);
 
+  const players = look(playing);
+  const inReserve = look(reserves);
   return {
-    players: look(playing),
-    reserves: look(reserves),
+    players,
+    reserves: inReserve,
+    roles: withRoles(players, inReserve),
     fromRule: playing.length === ruled.length && ruled.every((id) => onBoard.has(id)),
     ordered: true,
     added: look(playing.filter((id) => !picked.has(id))),

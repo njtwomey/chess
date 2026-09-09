@@ -5,7 +5,7 @@ import { useSeason } from "@/components/season-context";
 import { compareValues, SortableHead, useSort } from "@/components/sortable-table";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
-import { ecfUrl } from "@/lib/links";
+import { PlayerLink } from "@/components/player-link";
 import { coverage, statsFor, type PlayerStats } from "@/lib/season";
 import { cn } from "@/lib/utils";
 
@@ -112,7 +112,7 @@ export function Team() {
               {ordered.map((entry) => (
                 <TableRow key={entry.player.id} className={cn(entry.played === 0 && "bg-reply-unsure-soft/25")}>
                   <TableCell>
-                    <span className="font-medium">{entry.player.name}</span>
+                    <PlayerLink player={entry.player} className="font-medium" />
                     {entry.player.role !== "member" && (
                       <Badge variant="secondary" className="ml-2 text-[0.65rem]">
                         Captain
@@ -120,19 +120,7 @@ export function Team() {
                     )}
                   </TableCell>
                   <TableCell className="text-right whitespace-nowrap">
-                    {entry.player.ecfCode ? (
-                      <a
-                        href={ecfUrl(entry.player.ecfCode)}
-                        target="_blank"
-                        rel="noreferrer"
-                        title={`ECF record ${entry.player.ecfCode}`}
-                        className="hover:text-primary underline-offset-4 hover:underline"
-                      >
-                        <RatingLabel rating={entry.rating} />
-                      </a>
-                    ) : (
-                      <RatingLabel rating={entry.rating} />
-                    )}
+                    <RatingLabel rating={entry.rating} />
                     <RatingTrend ratings={entry.player.ratings} />
                   </TableCell>
                   <TableCell className="tabular text-right">{entry.played}</TableCell>

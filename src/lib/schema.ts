@@ -90,6 +90,15 @@ export const PlayerSchema = z.strictObject({
    * the date it was taken on.
    */
   junior: z.boolean().default(false),
+  /**
+   * Their page on the league's own site.
+   *
+   * Ours are found through `ecfCode`, which is the identifier that survives a
+   * name change. An opponent is usually met once, with no code to hand and no
+   * reason to go looking for one, so a link to the page the rating was read off
+   * is the honest amount of identity to keep about somebody else's player.
+   */
+  url: URL.nullable().default(null),
   note: z.string().optional(),
 });
 
@@ -115,21 +124,16 @@ export const GameSchema = z.strictObject({
   board: z.number().int().min(1).max(12),
   playerId: ID,
   colour: z.enum(["white", "black"]),
-  opponent: z.string().min(1),
-  opponentRating: z.number().int().min(0).max(3500).nullable().default(null),
   /**
-   * The league's page for this opponent, where their rating comes from.
+   * Who we played, in the same shape as one of ours.
    *
-   * Ours link out to their ECF record the same way, and for the same reason: a
-   * rating printed with no way to check it is a number somebody has to take on
-   * trust. Null whenever it has not been looked up, which is most of the time.
+   * A person is a person: they have a name, a rating with a date on it, and
+   * sometimes an age that shortens the clock. Keeping a second, flatter shape
+   * for the other side meant a rating on our side of the board could be read
+   * back and one on theirs could not. Their id is made up from the team and the
+   * name, because they have no id of ours to be known by.
    */
-  opponentUrl: URL.nullable().default(null),
-  /**
-   * Needed because the shorter clock applies to the board, not to the child.
-   * Ours can be adults and the board still be a 55+10 board.
-   */
-  opponentJunior: z.boolean().default(false),
+  opponent: PlayerSchema,
   result: z.enum(["win", "draw", "loss", "default-win", "default-loss"]),
   /** Null is normal: not every game gets written up. */
   pgn: z.string().nullable().default(null),

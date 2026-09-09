@@ -94,10 +94,18 @@
           "board": 1,
           "playerId": "theo",
           "colour": "black",
-          "opponent": "Sean Hubble",
-          "opponentRating": 1542,
-          "opponentUrl": "https://lms.englishchess.org.uk/lms/player/121305/view",
-          "opponentJunior": false,
+          "opponent": {
+            "id": "south-bristol-d-sean-hubble",
+            "name": "Sean Hubble",
+            "ratings": [
+              {
+                "date": "2026-09-08",
+                "rating": 1542,
+                "source": "ecf"
+              }
+            ],
+            "url": "https://lms.englishchess.org.uk/lms/player/121305/view"
+          },
           "result": "win",
           "pgn": null
         },
@@ -105,10 +113,18 @@
           "board": 2,
           "playerId": "jade",
           "colour": "white",
-          "opponent": "Michael Chaffey",
-          "opponentRating": 1488,
-          "opponentUrl": "https://lms.englishchess.org.uk/lms/player/112300/view",
-          "opponentJunior": false,
+          "opponent": {
+            "id": "south-bristol-d-michael-chaffey",
+            "name": "Michael Chaffey",
+            "ratings": [
+              {
+                "date": "2026-09-08",
+                "rating": 1488,
+                "source": "ecf"
+              }
+            ],
+            "url": "https://lms.englishchess.org.uk/lms/player/112300/view"
+          },
           "result": "loss",
           "pgn": null
         },
@@ -116,10 +132,18 @@
           "board": 3,
           "playerId": "mukhtar",
           "colour": "black",
-          "opponent": "Ryszard Dudko",
-          "opponentRating": 1475,
-          "opponentUrl": "https://lms.englishchess.org.uk/lms/player/129174/view",
-          "opponentJunior": false,
+          "opponent": {
+            "id": "south-bristol-d-ryszard-dudko",
+            "name": "Ryszard Dudko",
+            "ratings": [
+              {
+                "date": "2026-09-08",
+                "rating": 1475,
+                "source": "ecf"
+              }
+            ],
+            "url": "https://lms.englishchess.org.uk/lms/player/129174/view"
+          },
           "result": "loss",
           "pgn": null
         },
@@ -127,10 +151,18 @@
           "board": 4,
           "playerId": "niall",
           "colour": "white",
-          "opponent": "Alessandro Coppola",
-          "opponentRating": 1356,
-          "opponentUrl": "https://lms.englishchess.org.uk/lms/player/73812/view",
-          "opponentJunior": false,
+          "opponent": {
+            "id": "south-bristol-d-alessandro-coppola",
+            "name": "Alessandro Coppola",
+            "ratings": [
+              {
+                "date": "2026-09-08",
+                "rating": 1356,
+                "source": "ecf"
+              }
+            ],
+            "url": "https://lms.englishchess.org.uk/lms/player/73812/view"
+          },
           "result": "loss",
           "pgn": null
         }
@@ -210,9 +242,10 @@
     ],
     "settled": true,
     "lineup": {
-      "playerIds": ["max", "lorenzo", "will", "thomas"],
+      "playerIds": ["max", "lorenzo", "will", "steve"],
       "at": "2026-09-09"
     },
+    "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155244",
     "result": null
   },
   {
@@ -226,6 +259,7 @@
     "status": "scheduled",
     "availability": [],
     "settled": false,
+    "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155279",
     "result": null
   },
   {
@@ -239,6 +273,7 @@
     "status": "scheduled",
     "availability": [],
     "settled": false,
+    "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155308",
     "result": null
   },
   {
@@ -252,6 +287,7 @@
     "status": "scheduled",
     "availability": [],
     "settled": false,
+    "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155328",
     "result": null
   },
   {
@@ -265,6 +301,7 @@
     "status": "scheduled",
     "availability": [],
     "settled": false,
+    "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155394",
     "result": null
   },
   {
@@ -278,6 +315,7 @@
     "status": "scheduled",
     "availability": [],
     "settled": false,
+    "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155417",
     "result": null
   }
 ]
