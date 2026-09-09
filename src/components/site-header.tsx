@@ -1,7 +1,7 @@
 import { Check, ChevronDown, Crown, Menu, Moon, Sun } from "lucide-react";
 import * as React from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { seasonPath, useSeason } from "@/components/season-context";
+import { seasonPath, splitSeasonPath, useSeason } from "@/components/season-context";
 import { HomeAway } from "@/components/home-away";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -110,17 +110,21 @@ function SeasonPicker({ onNavigate }: { onNavigate?: () => void }) {
 /**
  * Schedule, with every fixture hanging off it.
  *
- * The label still goes to the list; the chevron opens the rounds. Getting to a
- * particular match was three clicks and is now one, which matters because a
- * match page is where the availability and the team actually live.
+ * The label still goes to the list; the chevron opens the fixtures. Getting to
+ * a particular fixture was three clicks and is now one, which matters because a
+ * fixture page is where the availability and the team actually live.
  */
 function ScheduleNav({ onNavigate }: { onNavigate?: () => void }) {
   const { season } = useSeason();
   const { pathname } = useLocation();
   const matches = orderedMatches(season);
-  const onSchedule = pathname.startsWith(seasonPath(season.id, "schedule")) || pathname.includes("/match/");
+  // A fixture belongs to the schedule, so its page keeps the schedule lit. Both
+  // questions come off the same split, because the season id has slashes in it
+  // and picking either out of the path by hand gets that wrong.
+  const page = splitSeasonPath(pathname)?.page ?? "";
+  const onSchedule = page === "schedule" || page.startsWith("fixture-");
   const now = today();
-  const currentId = /\/match\/([^/]+)/.exec(pathname)?.[1] ?? null;
+  const currentId = page.startsWith("fixture-") ? (page.split("/")[0] ?? null) : null;
 
   return (
     <span className="inline-flex items-center gap-0.5">
