@@ -261,10 +261,41 @@ function BoardOrder({ season, match, fielded }: { season: Season; match: Match; 
         </Table>
       </div>
 
+      {/* Under the boards rather than beside them, because a reserve is not a
+          board: they have no colour and no clock until somebody drops out. The
+          order is the order they come in, so it is numbered like the boards. */}
+      {fielded.reserves.length > 0 && (
+        <div className="bg-muted/30 overflow-x-auto rounded-lg border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-16">Reserve</TableHead>
+                <TableHead>Player</TableHead>
+                <TableHead className="w-24 text-right">Rating</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {fielded.reserves.map((player, index) => (
+                <TableRow key={player.playerId}>
+                  <TableCell className="tabular font-medium">{index + 1}</TableCell>
+                  <TableCell>
+                    <PlayerLink player={player} />
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <RatingLabel rating={ratingOn(player, match.date)} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
+
       <p className="text-muted-foreground text-xs/5">
         {fielded.ordered
           ? "Boards run strongest first, in the order the captain set. "
           : "Boards run strongest first, on the most recent rating; unrated players go below every graded one. "}
+        {fielded.reserves.length > 0 ? "Reserves are in the order they would come in. " : ""}
         Colours alternate down the sheet, with the home side on Black at board one. Games are{" "}
         {formatClock(season.timeControl.standard)}, but a junior on either side of a board can choose{" "}
         {formatClock(season.timeControl.junior)} instead
