@@ -5,12 +5,12 @@ description: Create a new season directory from a pasted league fixture list. Us
 
 # Starting a season
 
-A season is a directory under `content/seasons/<period>/<club>-<team>/` holding
+A season is a directory under `content/seasons/<period>/<club>/team-<letter>/` holding
 three files. Adding one is all it takes; the site discovers seasons by glob, so
 nothing needs registering anywhere.
 
 ```
-content/seasons/autumn-2026/bristol-clifton-g/
+content/seasons/autumn-2026/bristol-clifton/team-g/
   season.json    the season itself: dates, seed, boards, clocks, division
   teams.json     both sides: ours with its squad, and everybody we play
   matches.json   the fixtures

@@ -12,7 +12,7 @@ every season: one name, one ECF code, one rating history, whether they play for
 G this year and F the next. Opponents live here too, on their own club, for the
 same reason: somebody we meet twice is one man.
 
-**The pick** lives on a team in `content/seasons/<period>/<club>-<team>/teams.json`
+**The pick** lives on a team in `content/seasons/<period>/<club>/team-<letter>/teams.json`
 and is only about that season.
 
 ## Adding

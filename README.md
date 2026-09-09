@@ -57,14 +57,14 @@ which is the league's rule rather than the club's.
 ```
 content/clubs/<club>.json                 who they are, where they meet, and their people
 content/leagues.json                      the competitions, and their rules links
-content/seasons/<period>/<club>-<team>/
+content/seasons/<period>/<club>/team-<letter>/
   season.json                             dates, seed, boards, reserves, clocks
   teams.json                              both sides, each naming who it picked
   matches.json                            fixtures, availability, results, PGNs
 ```
 
-Two are present. **`autumn-2026/bristol-clifton-g`** holds the real seven-fixture autumn season.
-**`spring-2026/demo-club-d`** is entirely invented, in an invented league against invented clubs,
+Two are present. **`autumn-2026/bristol-clifton/team-g`** holds the real seven-fixture autumn season.
+**`spring-2026/demo-club/team-d`** is entirely invented, in an invented league against invented clubs,
 and is badged as a prototype throughout the UI; it exists so the site can be tried end to end. To
 switch which one the site opens on, move `"active": true`.
 

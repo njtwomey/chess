@@ -10,7 +10,7 @@ scatter of messages. This turns those into `availability` entries on one match.
 
 ## What you are editing
 
-`content/seasons/<period>/<club>-<team>/matches.json`, the `availability` array
+`content/seasons/<period>/<club>/team-<letter>/matches.json`, the `availability` array
 of one fixture. Nothing else. Never touch `result`, and never edit a player's
 game count: it is counted from results and does not exist as a field.
 

@@ -11,7 +11,7 @@
  * ```
  * content/clubs/<club>.json
  * content/leagues.json
- * content/seasons/<period>/<club>-<team>/{season,teams,matches}.json
+ * content/seasons/<period>/<club>/team-<letter>/{season,teams,matches}.json
  * ```
  *
  * Seasons are discovered by glob rather than listed somewhere that would have to
@@ -123,11 +123,15 @@ function loadSeasons(): Season[] {
     const directory = directoryOf(path);
     const meta = parse(SeasonSchema, raw, path);
 
-    // The directory is not the id: the id is four levels deep and carries the
-    // league, where a folder needs only to be unique and short enough to type.
+    // The directory is not the id: the id leads with the league, and a folder
+    // leads with the period, which is how somebody looks for a season and what
+    // puts a club's sides for one period together. Below that it is spelled the
+    // way every id is, because `bristol-clifton-g` cannot be read back into a
+    // club and a team without already knowing the club list.
+    //
     // It still has to say which season it holds, or a file can be edited in the
     // belief that it belongs to another one.
-    const expected = `${meta.period}/${meta.clubId}-${meta.teamId}`;
+    const expected = `${meta.period}/${meta.clubId}/team-${meta.teamId}`;
     if (directory !== expected) {
       problems.push(`${path}: this season belongs in "content/seasons/${expected}/", not "${directory}"`);
     }

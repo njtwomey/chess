@@ -11,7 +11,7 @@ than getting the moves right.
 
 ## What you are editing
 
-`content/seasons/<period>/<club>-<team>/matches.json`, one fixture:
+`content/seasons/<period>/<club>/team-<letter>/matches.json`, one fixture:
 
 - `status` becomes `"played"`.
 - `result` gains `ourScore`, `theirScore` and one `games` entry per board.

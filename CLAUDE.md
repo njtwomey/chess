@@ -42,7 +42,7 @@ file is the whole workflow.
 ```
 content/clubs/<club>.json                 who they are, where they meet, and their people
 content/leagues.json                      the competitions, and their rules links
-content/seasons/<period>/<club>-<team>/
+content/seasons/<period>/<club>/team-<letter>/
   season.json                             dates, seed, boards, reserves, clocks
   teams.json                              both sides, each naming who it picked
   matches.json                            fixtures, availability, results, PGNs
@@ -69,8 +69,10 @@ board     board-3                         within its fixture
 ```
 
 The season id is also the URL, so `/season/` takes a splat and the site splits it by the longest
-season id that prefixes it. The directory is not the id: it only has to be unique and typable, so it
-is the period and the team, and the loader checks the two agree.
+season id that prefixes it. The directory is not the id, because the id leads with the league and a
+folder leads with the period: that is how somebody looks for a season, and it puts a club's sides for
+one period together. Below the period it is spelled the way every id is, and the loader checks the
+directory against the record.
 
 A fixture names the other side by its team id and says whether we are at home. **The venue is the
 home club's**, derived rather than stored, and a game names both players by id rather than embedding
@@ -91,7 +93,7 @@ that renders a wrong team sheet is not, because nobody will notice.
 
 ### Two seasons, and never invent
 
-**`autumn-2026/bristol-clifton-g`** is real and active. **`spring-2026/demo-club-d`** is entirely
+**`autumn-2026/bristol-clifton/team-g`** is real and active. **`spring-2026/demo-club/team-d`** is entirely
 invented, in an invented league against invented clubs, flagged
 `prototype: true`, and badged as such throughout the UI. Never put a real person in the prototype or
 invented data in a real season; a test enforces that the two casts do not overlap.
