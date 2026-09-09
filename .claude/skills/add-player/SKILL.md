@@ -55,8 +55,9 @@ squad member is `{ "playerId": "gwen-tsai" }` and nothing else.
   re-decides past ties. Change `name`, never `playerId`.
 - **`name` is what we call them; `fullName` is what the league prints.** Alfie
   is Alfred Holton-Stoppani on the LMS, and neither can be derived from the
-  other. The site says Alfie everywhere; the id follows the LMS. `fullName` is
-  null where nobody has asked, and then the id follows `name`.
+  other. The site says Alfie everywhere and never prints the full form: it is
+  there to check a roster against, and because the id is the slug of it.
+  `fullName` is null where nobody has asked, and then the id follows `name`.
 - **Never use a placeholder.** If somebody's name is not known yet, ask before
   adding them: `player-a` with a display name of "A" is a person nobody has
   checked on, and it will still be there in October. Two people whose names

@@ -154,6 +154,10 @@ export const PersonSchema = z.strictObject({
    * Alfred Holton-Stoppani, and neither can be derived from the other. Null
    * where nobody has needed it, and for an opponent, whose `name` is already
    * the published form.
+   *
+   * The site never prints it. It is here to be checked against the league's own
+   * roster, and because it is what `playerId` is the slug of: it is the reason
+   * Will is `william-blatchford` and still reads as Will everywhere.
    */
   fullName: z.string().min(1).nullable().default(null),
   /**

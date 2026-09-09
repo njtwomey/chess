@@ -118,12 +118,6 @@ export function Team() {
                         Captain
                       </Badge>
                     )}
-                    {/* The league's own form of the name, under the one we use.
-                        This is the page somebody checks a roster against, and
-                        the LMS lists Alfred Holton-Stoppani where we say Alfie. */}
-                    {entry.player.fullName && entry.player.fullName !== entry.player.name && (
-                      <span className="text-muted-foreground block text-xs">{entry.player.fullName}</span>
-                    )}
                   </TableCell>
                   <TableCell className="text-right whitespace-nowrap">
                     <RatingLabel rating={entry.rating} />
