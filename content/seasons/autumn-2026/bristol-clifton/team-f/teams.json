@@ -1,0 +1,110 @@
+[
+  {
+    "clubId": "bristol-clifton",
+    "teamId": "f",
+    "name": "Bristol & Clifton F",
+    "links": {
+      "fixtures": "https://lms.englishchess.org.uk/lms/team/30201/fixtures"
+    },
+    "players": [
+      {
+        "playerId": "tarun-pamunuwa"
+      },
+      {
+        "playerId": "afshein-keshmiri"
+      },
+      {
+        "playerId": "adam-mussa"
+      },
+      {
+        "playerId": "james-wotherspoon"
+      },
+      {
+        "playerId": "brandon-curtis",
+        "role": "captain"
+      },
+      {
+        "playerId": "jack-giltrap"
+      },
+      {
+        "playerId": "alex-zervudachi"
+      }
+    ]
+  },
+  {
+    "clubId": "bristol-cabot",
+    "teamId": "a",
+    "name": "Bristol Cabot A",
+    "links": {
+      "fixtures": null
+    },
+    "players": [
+      {
+        "playerId": "alastair-drummond"
+      },
+      {
+        "playerId": "alastair-jd-marston"
+      },
+      {
+        "playerId": "jon-j-green"
+      },
+      {
+        "playerId": "oleksii-novakov"
+      }
+    ]
+  },
+  {
+    "clubId": "bristol-cabot",
+    "teamId": "b",
+    "name": "Bristol Cabot B",
+    "links": {
+      "fixtures": null
+    },
+    "players": []
+  },
+  {
+    "clubId": "bristol-university",
+    "teamId": "c",
+    "name": "Bristol University C",
+    "links": {
+      "fixtures": null
+    },
+    "players": []
+  },
+  {
+    "clubId": "clevedon",
+    "teamId": "c",
+    "name": "Clevedon C",
+    "links": {
+      "fixtures": null
+    },
+    "players": []
+  },
+  {
+    "clubId": "horfield-redland",
+    "teamId": "d",
+    "name": "Horfield & Redland D",
+    "links": {
+      "fixtures": null
+    },
+    "players": []
+  },
+  {
+    "clubId": "thornbury",
+    "teamId": "b",
+    "name": "Thornbury B",
+    "links": {
+      "fixtures": null
+    },
+    "players": []
+  },
+  {
+    "clubId": "uwe",
+    "teamId": "a",
+    "name": "UWE A",
+    "links": {
+      "fixtures": null
+    },
+    "players": []
+  }
+]

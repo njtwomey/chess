@@ -1,0 +1,83 @@
+{
+  "id": "bristol-cabot",
+  "name": "Bristol Cabot",
+  "links": {
+    "website": null
+  },
+  "venue": {
+    "name": null,
+    "address": null,
+    "postcode": null,
+    "maps": null,
+    "lat": null,
+    "lon": null
+  },
+  "players": [
+    {
+      "playerId": "alastair-drummond",
+      "name": "Alastair Drummond",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-09-07",
+          "rating": 1661,
+          "source": "ecf"
+        }
+      ],
+      "codes": [
+        {
+          "source": "lms",
+          "code": "6075"
+        }
+      ]
+    },
+    {
+      "playerId": "alastair-jd-marston",
+      "name": "Alastair JD Marston",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-09-07",
+          "rating": 1662,
+          "source": "ecf"
+        }
+      ],
+      "codes": [
+        {
+          "source": "lms",
+          "code": "6064"
+        }
+      ]
+    },
+    {
+      "playerId": "jon-j-green",
+      "name": "Jon J Green",
+      "fullName": null,
+      "ratings": [],
+      "codes": [
+        {
+          "source": "lms",
+          "code": "139025"
+        }
+      ]
+    },
+    {
+      "playerId": "oleksii-novakov",
+      "name": "Oleksii Novakov",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-09-07",
+          "rating": 1678,
+          "source": "ecf"
+        }
+      ],
+      "codes": [
+        {
+          "source": "lms",
+          "code": "5937"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "clevedon",
+  "name": "Clevedon",
+  "links": {
+    "website": null
+  },
+  "venue": {
+    "name": null,
+    "address": null,
+    "postcode": null,
+    "maps": null,
+    "lat": null,
+    "lon": null
+  },
+  "players": []
+}

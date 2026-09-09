@@ -1,0 +1,16 @@
+{
+  "id": "bristol-university",
+  "name": "Bristol University",
+  "links": {
+    "website": null
+  },
+  "venue": {
+    "name": null,
+    "address": null,
+    "postcode": null,
+    "maps": null,
+    "lat": null,
+    "lon": null
+  },
+  "players": []
+}

@@ -1,0 +1,123 @@
+[
+  {
+    "number": 1,
+    "opponentTeamId": "bristol-cabot/team-a",
+    "home": false,
+    "date": "2026-09-07",
+    "time": "19:30",
+    "status": "played",
+    "availability": [],
+    "settled": false,
+    "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155236",
+    "result": {
+      "ourScore": 1,
+      "theirScore": 3,
+      "games": [
+        {
+          "board": 1,
+          "playerId": "bristol-clifton/adam-mussa",
+          "opponentId": "bristol-cabot/oleksii-novakov",
+          "colour": "white",
+          "result": "win",
+          "pgn": null
+        },
+        {
+          "board": 2,
+          "playerId": "bristol-clifton/alex-zervudachi",
+          "opponentId": "bristol-cabot/alastair-drummond",
+          "colour": "black",
+          "result": "loss",
+          "pgn": null
+        },
+        {
+          "board": 3,
+          "playerId": "bristol-clifton/james-wotherspoon",
+          "opponentId": "bristol-cabot/alastair-jd-marston",
+          "colour": "white",
+          "result": "loss",
+          "pgn": null
+        },
+        {
+          "board": 4,
+          "playerId": "bristol-clifton/brandon-curtis",
+          "opponentId": "bristol-cabot/jon-j-green",
+          "colour": "black",
+          "result": "loss",
+          "pgn": null
+        }
+      ]
+    }
+  },
+  {
+    "number": 2,
+    "opponentTeamId": "thornbury/team-b",
+    "home": false,
+    "date": "2026-09-17",
+    "time": "19:30",
+    "status": "scheduled",
+    "availability": [],
+    "settled": false,
+    "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155251",
+    "result": null
+  },
+  {
+    "number": 3,
+    "opponentTeamId": "horfield-redland/team-d",
+    "home": true,
+    "date": "2026-09-29",
+    "time": "19:30",
+    "status": "scheduled",
+    "availability": [],
+    "settled": false,
+    "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155267",
+    "result": null
+  },
+  {
+    "number": 4,
+    "opponentTeamId": "bristol-university/team-c",
+    "home": true,
+    "date": "2026-11-03",
+    "time": "19:30",
+    "status": "scheduled",
+    "availability": [],
+    "settled": false,
+    "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155332",
+    "result": null
+  },
+  {
+    "number": 5,
+    "opponentTeamId": "bristol-cabot/team-b",
+    "home": true,
+    "date": "2026-11-10",
+    "time": "19:30",
+    "status": "scheduled",
+    "availability": [],
+    "settled": false,
+    "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155350",
+    "result": null
+  },
+  {
+    "number": 6,
+    "opponentTeamId": "uwe/team-a",
+    "home": false,
+    "date": "2026-11-25",
+    "time": "19:30",
+    "status": "scheduled",
+    "availability": [],
+    "settled": false,
+    "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155377",
+    "result": null
+  },
+  {
+    "number": 7,
+    "opponentTeamId": "clevedon/team-c",
+    "home": true,
+    "date": "2026-12-08",
+    "time": "19:30",
+    "status": "scheduled",
+    "availability": [],
+    "settled": false,
+    "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155404",
+    "result": null
+  }
+]

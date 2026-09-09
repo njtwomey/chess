@@ -15,6 +15,46 @@
   },
   "players": [
     {
+      "playerId": "adam-mussa",
+      "name": "Adam",
+      "fullName": "Adam Mussa",
+      "ratings": [
+        {
+          "date": "2026-08-31",
+          "rating": 1602,
+          "source": "ecf"
+        }
+      ],
+      "codes": [
+        {
+          "source": "ecf",
+          "code": "349006D"
+        },
+        {
+          "source": "lms",
+          "code": "99701"
+        }
+      ]
+    },
+    {
+      "playerId": "afshein-keshmiri",
+      "name": "Afshein",
+      "fullName": "Afshein Keshmiri",
+      "ratings": [
+        {
+          "date": "2026-08-31",
+          "rating": 1595,
+          "source": "ecf"
+        }
+      ],
+      "codes": [
+        {
+          "source": "ecf",
+          "code": "379480F"
+        }
+      ]
+    },
+    {
       "playerId": "alex-zervudachi",
       "name": "Alex",
       "fullName": "Alex Zervudachi",
@@ -29,6 +69,10 @@
         {
           "source": "ecf",
           "code": "386591F"
+        },
+        {
+          "source": "lms",
+          "code": "132289"
         }
       ]
     },
@@ -69,11 +113,51 @@
       ]
     },
     {
+      "playerId": "brandon-curtis",
+      "name": "Brandon",
+      "fullName": "Brandon Curtis",
+      "ratings": [
+        {
+          "date": "2026-08-31",
+          "rating": 1429,
+          "source": "ecf"
+        }
+      ],
+      "codes": [
+        {
+          "source": "ecf",
+          "code": "346525B"
+        },
+        {
+          "source": "lms",
+          "code": "57099"
+        }
+      ]
+    },
+    {
       "playerId": "george",
       "name": "George",
       "fullName": null,
       "ratings": [],
       "codes": []
+    },
+    {
+      "playerId": "jack-giltrap",
+      "name": "Jack",
+      "fullName": "Jack Giltrap",
+      "ratings": [
+        {
+          "date": "2026-08-31",
+          "rating": 1413,
+          "source": "ecf"
+        }
+      ],
+      "codes": [
+        {
+          "source": "ecf",
+          "code": "345962H"
+        }
+      ]
     },
     {
       "playerId": "jade-redpath-aislabie",
@@ -84,6 +168,28 @@
         {
           "source": "lms",
           "code": "140727"
+        }
+      ]
+    },
+    {
+      "playerId": "james-wotherspoon",
+      "name": "James",
+      "fullName": "James Wotherspoon",
+      "ratings": [
+        {
+          "date": "2026-08-31",
+          "rating": 1557,
+          "source": "ecf"
+        }
+      ],
+      "codes": [
+        {
+          "source": "ecf",
+          "code": "371924J"
+        },
+        {
+          "source": "lms",
+          "code": "105765"
         }
       ]
     },
@@ -189,6 +295,24 @@
         {
           "source": "ecf",
           "code": "368493D"
+        }
+      ]
+    },
+    {
+      "playerId": "tarun-pamunuwa",
+      "name": "Tarun",
+      "fullName": "Tarun Pamunuwa",
+      "ratings": [
+        {
+          "date": "2026-08-31",
+          "rating": 1610,
+          "source": "ecf"
+        }
+      ],
+      "codes": [
+        {
+          "source": "ecf",
+          "code": "359161L"
         }
       ]
     },

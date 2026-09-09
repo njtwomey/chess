@@ -1,0 +1,27 @@
+{
+  "leagueId": "bristol-district",
+  "clubId": "bristol-clifton",
+  "teamId": "f",
+  "period": "autumn-2026",
+  "name": "Autumn 2026",
+  "division": 5,
+  "start": "2026-09-01",
+  "end": "2026-12-31",
+  "seed": "bristol-clifton-f-2026-autumn",
+  "boards": 4,
+  "reserves": 2,
+  "timeControl": {
+    "standard": {
+      "minutes": 80,
+      "increment": 10
+    },
+    "junior": {
+      "minutes": 55,
+      "increment": 10
+    },
+    "juniorUnder": 16,
+    "juniorOn": "2026-09-01"
+  },
+  "active": false,
+  "prototype": false
+}
