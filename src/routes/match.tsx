@@ -16,7 +16,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { assignBoards, expectedColour, formatClock, type BoardAssignment } from "@/lib/boards";
 import { findMatch, playerById } from "@/lib/data";
 import { addressLines, mapsUrl, taggedPgn } from "@/lib/links";
-import { GAME_RESULT_LABEL, boardSlug, type Match, type Season } from "@/lib/schema";
+import { GAME_RESULT_LABEL, boardSlug, type Match, type Player, type Season } from "@/lib/schema";
 import {
   fieldedFor,
   matchScore,
@@ -213,6 +213,49 @@ function LocalComparison({
 }
 
 /**
+ * Who was next in line, under whichever table names the four who played.
+ *
+ * Under the boards rather than beside them, because a reserve is not a board:
+ * they have no colour and no clock until somebody drops out. Numbered, because
+ * the order is the answer to "who comes in first".
+ *
+ * Shown on a played fixture as well. Standing by is what somebody did that
+ * evening whether or not they got a game, and dropping them from the page once
+ * the result arrives would quietly rewrite it as though only four had turned
+ * out.
+ */
+function Reserves({ match, reserves }: { match: Match; reserves: Player[] }) {
+  if (reserves.length === 0) return null;
+
+  return (
+    <div className="bg-muted/30 overflow-x-auto rounded-lg border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-16">Reserve</TableHead>
+            <TableHead>Player</TableHead>
+            <TableHead className="w-24 text-right">Rating</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {reserves.map((player, index) => (
+            <TableRow key={player.playerId}>
+              <TableCell className="tabular font-medium">{index + 1}</TableCell>
+              <TableCell>
+                <PlayerLink player={player} />
+              </TableCell>
+              <TableCell className="text-right">
+                <RatingLabel rating={ratingOn(player, match.date)} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
+/**
  * The proposed board order, which is a different question from who plays.
  *
  * Kept visually separate from the selection table for the same reason it is a
@@ -261,35 +304,7 @@ function BoardOrder({ season, match, fielded }: { season: Season; match: Match; 
         </Table>
       </div>
 
-      {/* Under the boards rather than beside them, because a reserve is not a
-          board: they have no colour and no clock until somebody drops out. The
-          order is the order they come in, so it is numbered like the boards. */}
-      {fielded.reserves.length > 0 && (
-        <div className="bg-muted/30 overflow-x-auto rounded-lg border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-16">Reserve</TableHead>
-                <TableHead>Player</TableHead>
-                <TableHead className="w-24 text-right">Rating</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {fielded.reserves.map((player, index) => (
-                <TableRow key={player.playerId}>
-                  <TableCell className="tabular font-medium">{index + 1}</TableCell>
-                  <TableCell>
-                    <PlayerLink player={player} />
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <RatingLabel rating={ratingOn(player, match.date)} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      )}
+      <Reserves match={match} reserves={fielded.reserves} />
 
       <p className="text-muted-foreground text-xs/5">
         {fielded.ordered
@@ -468,7 +483,10 @@ export function MatchPage({ seasonId, matchId }: { seasonId: string; matchId: st
           and it is what somebody would want to look back at months later. */}
       {match.result && (
         <Section title="Results" className="mt-8">
-          <Result season={season} match={match} />
+          <div className="space-y-3">
+            <Result season={season} match={match} />
+            <Reserves match={match} reserves={fielded.reserves} />
+          </div>
         </Section>
       )}
 
