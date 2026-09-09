@@ -188,7 +188,7 @@ export function SelectionTable({
                     <PlayerOf season={season} id={player.playerId} />
                   </TableCell>
                   <TableCell>
-                    <ReplyBadge reply={player.reply} />
+                    <ReplyBadge reply={player.reply} quiet />
                   </TableCell>
                   <TableCell className="tabular text-right">{player.gamesPlayed}</TableCell>
                   <TableCell className="whitespace-nowrap">
@@ -211,7 +211,7 @@ export function SelectionTable({
                   <PlayerOf season={season} id={player.playerId} />
                 </TableCell>
                 <TableCell>
-                  <ReplyBadge reply={replyOf(match, player.playerId)} />
+                  <ReplyBadge reply={replyOf(match, player.playerId)} quiet />
                 </TableCell>
                 <TableCell className="tabular text-right">{player.gamesPlayed}</TableCell>
                 <TableCell className="text-xs">Not selectable</TableCell>

@@ -16,28 +16,35 @@ const REPLY_STYLE: Record<Reply, { className: string; Icon: typeof Check }> = {
   no: { className: "bg-reply-no-soft text-reply-no", Icon: X },
 };
 
-export function ReplyBadge({ reply, className }: { reply: Reply | null; className?: string }) {
-  if (reply === null) {
+/**
+ * What somebody said, and once a team is settled, quietly.
+ *
+ * `quiet` drops the colour and keeps the icon and the words. Before the team is
+ * settled a reply is the only thing the page knows, so it is the loudest thing
+ * on the row. Afterwards the answer is what the player is doing, and two
+ * columns in the same four colours means neither of them owns the colour: a
+ * green "can play" beside a blue "reserve" invites the reader to work out which
+ * one is the verdict, when only one of them is.
+ */
+export function ReplyBadge({ reply, quiet, className }: { reply: Reply | null; quiet?: boolean; className?: string }) {
+  const Icon = reply === null ? Minus : REPLY_STYLE[reply].Icon;
+  const label = reply === null ? "No reply" : REPLY_LABEL[reply];
+
+  if (quiet) {
     return (
-      <span
-        className={cn(
-          "text-muted-foreground inline-flex items-center gap-1.5 rounded-full border border-dashed px-2 py-0.5 text-xs",
-          className,
-        )}
-      >
-        <Minus className="size-3" />
-        No reply
+      <span className={cn("text-muted-foreground inline-flex items-center gap-1.5 text-xs", className)}>
+        <Icon className="size-3" />
+        {label}
       </span>
     );
   }
 
-  const { className: tone, Icon } = REPLY_STYLE[reply];
+  const tone =
+    reply === null ? "text-muted-foreground border border-dashed" : `${REPLY_STYLE[reply].className} font-medium`;
   return (
-    <span
-      className={cn("inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium", tone, className)}
-    >
+    <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs", tone, className)}>
       <Icon className="size-3" />
-      {REPLY_LABEL[reply]}
+      {label}
     </span>
   );
 }
