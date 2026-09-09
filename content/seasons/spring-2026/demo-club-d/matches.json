@@ -8,32 +8,32 @@
     "status": "played",
     "availability": [
       {
-        "playerId": "demo-club/team-d/ada-mercer",
+        "playerId": "demo-club/ada-mercer",
         "reply": "yes",
         "at": "2026-03-01"
       },
       {
-        "playerId": "demo-club/team-d/bruno-halliday",
+        "playerId": "demo-club/bruno-halliday",
         "reply": "yes",
         "at": "2026-03-01"
       },
       {
-        "playerId": "demo-club/team-d/cass-oyelaran",
+        "playerId": "demo-club/cass-oyelaran",
         "reply": "yes",
         "at": "2026-03-02"
       },
       {
-        "playerId": "demo-club/team-d/dermot-kavanagh",
+        "playerId": "demo-club/dermot-kavanagh",
         "reply": "yes",
         "at": "2026-03-02"
       },
       {
-        "playerId": "demo-club/team-d/elin-pryce",
+        "playerId": "demo-club/elin-pryce",
         "reply": "no",
         "at": "2026-03-01"
       },
       {
-        "playerId": "demo-club/team-d/farid-nassar",
+        "playerId": "demo-club/farid-nassar",
         "reply": "reserve",
         "at": "2026-03-03"
       }
@@ -45,32 +45,32 @@
       "games": [
         {
           "board": 1,
-          "playerId": "demo-club/team-d/ada-mercer",
-          "opponentId": "demo-north/team-d/r-whitlock",
+          "playerId": "demo-club/ada-mercer",
+          "opponentId": "demo-north/r-whitlock",
           "colour": "white",
           "result": "win",
           "pgn": "1. e4 e5 2. Bc4 Nc6 3. Qh5 Nf6 4. Qxf7# 1-0"
         },
         {
           "board": 2,
-          "playerId": "demo-club/team-d/bruno-halliday",
-          "opponentId": "demo-north/team-d/p-ndiaye",
+          "playerId": "demo-club/bruno-halliday",
+          "opponentId": "demo-north/p-ndiaye",
           "colour": "black",
           "result": "draw",
           "pgn": "1. e4 e5 2. Nf3 Nf6 3. Nxe5 d6 4. Nf3 Nxe4 5. Qe2 Qe7 6. d3 Nf6 7. Bg5 Qxe2+ 8. Bxe2 Be7 9. Nc3 c6 10. O-O-O Na6 1/2-1/2"
         },
         {
           "board": 3,
-          "playerId": "demo-club/team-d/cass-oyelaran",
-          "opponentId": "demo-north/team-d/t-ashworth",
+          "playerId": "demo-club/cass-oyelaran",
+          "opponentId": "demo-north/t-ashworth",
           "colour": "white",
           "result": "loss",
           "pgn": null
         },
         {
           "board": 4,
-          "playerId": "demo-club/team-d/dermot-kavanagh",
-          "opponentId": "demo-north/team-d/s-ellery",
+          "playerId": "demo-club/dermot-kavanagh",
+          "opponentId": "demo-north/s-ellery",
           "colour": "black",
           "result": "win",
           "pgn": "1. f3 e5 2. g4 Qh4# 0-1"
@@ -87,27 +87,27 @@
     "status": "played",
     "availability": [
       {
-        "playerId": "demo-club/team-d/ada-mercer",
+        "playerId": "demo-club/ada-mercer",
         "reply": "yes",
         "at": "2026-03-15"
       },
       {
-        "playerId": "demo-club/team-d/bruno-halliday",
+        "playerId": "demo-club/bruno-halliday",
         "reply": "yes",
         "at": "2026-03-15"
       },
       {
-        "playerId": "demo-club/team-d/elin-pryce",
+        "playerId": "demo-club/elin-pryce",
         "reply": "yes",
         "at": "2026-03-16"
       },
       {
-        "playerId": "demo-club/team-d/farid-nassar",
+        "playerId": "demo-club/farid-nassar",
         "reply": "yes",
         "at": "2026-03-16"
       },
       {
-        "playerId": "demo-club/team-d/cass-oyelaran",
+        "playerId": "demo-club/cass-oyelaran",
         "reply": "no",
         "at": "2026-03-15"
       }
@@ -119,32 +119,32 @@
       "games": [
         {
           "board": 1,
-          "playerId": "demo-club/team-d/ada-mercer",
-          "opponentId": "demo-east/team-e/m-kerslake",
+          "playerId": "demo-club/ada-mercer",
+          "opponentId": "demo-east/m-kerslake",
           "colour": "white",
           "result": "draw",
           "pgn": null
         },
         {
           "board": 2,
-          "playerId": "demo-club/team-d/bruno-halliday",
-          "opponentId": "demo-east/team-e/d-brough",
+          "playerId": "demo-club/bruno-halliday",
+          "opponentId": "demo-east/d-brough",
           "colour": "black",
           "result": "loss",
           "pgn": null
         },
         {
           "board": 3,
-          "playerId": "demo-club/team-d/elin-pryce",
-          "opponentId": "demo-east/team-e/a-fenwick",
+          "playerId": "demo-club/elin-pryce",
+          "opponentId": "demo-east/a-fenwick",
           "colour": "white",
           "result": "win",
           "pgn": "1. e4 e5 2. Nf3 d6 3. Bc4 Bg4 4. Nc3 g6 5. Nxe5 Bxd1 6. Bxf7+ Ke7 7. Nd5# 1-0"
         },
         {
           "board": 4,
-          "playerId": "demo-club/team-d/farid-nassar",
-          "opponentId": "demo-east/team-e/j-peart",
+          "playerId": "demo-club/farid-nassar",
+          "opponentId": "demo-east/j-peart",
           "colour": "black",
           "result": "loss",
           "pgn": null
@@ -161,27 +161,27 @@
     "status": "played",
     "availability": [
       {
-        "playerId": "demo-club/team-d/ada-mercer",
+        "playerId": "demo-club/ada-mercer",
         "reply": "yes",
         "at": "2026-04-10"
       },
       {
-        "playerId": "demo-club/team-d/cass-oyelaran",
+        "playerId": "demo-club/cass-oyelaran",
         "reply": "yes",
         "at": "2026-04-10"
       },
       {
-        "playerId": "demo-club/team-d/gwen-tsai",
+        "playerId": "demo-club/gwen-tsai",
         "reply": "yes",
         "at": "2026-04-11"
       },
       {
-        "playerId": "demo-club/team-d/hollis-barr",
+        "playerId": "demo-club/hollis-barr",
         "reply": "yes",
         "at": "2026-04-11"
       },
       {
-        "playerId": "demo-club/team-d/bruno-halliday",
+        "playerId": "demo-club/bruno-halliday",
         "reply": "unsure",
         "at": "2026-04-10"
       }
@@ -193,32 +193,32 @@
       "games": [
         {
           "board": 1,
-          "playerId": "demo-club/team-d/ada-mercer",
-          "opponentId": "demo-west/team-c/v-okonjo",
+          "playerId": "demo-club/ada-mercer",
+          "opponentId": "demo-west/v-okonjo",
           "colour": "black",
           "result": "win",
           "pgn": "1. d4 Nf6 2. c4 e6 3. Nc3 Bb4 4. e3 O-O 5. Bd3 d5 6. Nf3 c5 7. O-O Nc6 8. a3 Bxc3 9. bxc3 dxc4 10. Bxc4 Qc7 0-1"
         },
         {
           "board": 2,
-          "playerId": "demo-club/team-d/cass-oyelaran",
-          "opponentId": "demo-west/team-c/h-trelawny",
+          "playerId": "demo-club/cass-oyelaran",
+          "opponentId": "demo-west/h-trelawny",
           "colour": "white",
           "result": "win",
           "pgn": null
         },
         {
           "board": 3,
-          "playerId": "demo-club/team-d/gwen-tsai",
-          "opponentId": "demo-west/team-c/n-prowse",
+          "playerId": "demo-club/gwen-tsai",
+          "opponentId": "demo-west/n-prowse",
           "colour": "black",
           "result": "draw",
           "pgn": null
         },
         {
           "board": 4,
-          "playerId": "demo-club/team-d/hollis-barr",
-          "opponentId": "demo-west/team-c/c-bramley",
+          "playerId": "demo-club/hollis-barr",
+          "opponentId": "demo-west/c-bramley",
           "colour": "white",
           "result": "loss",
           "pgn": null
@@ -235,27 +235,27 @@
     "status": "played",
     "availability": [
       {
-        "playerId": "demo-club/team-d/bruno-halliday",
+        "playerId": "demo-club/bruno-halliday",
         "reply": "yes",
         "at": "2026-05-01"
       },
       {
-        "playerId": "demo-club/team-d/dermot-kavanagh",
+        "playerId": "demo-club/dermot-kavanagh",
         "reply": "yes",
         "at": "2026-05-01"
       },
       {
-        "playerId": "demo-club/team-d/imre-solt",
+        "playerId": "demo-club/imre-solt",
         "reply": "yes",
         "at": "2026-05-02"
       },
       {
-        "playerId": "demo-club/team-d/jonah-kestrel",
+        "playerId": "demo-club/jonah-kestrel",
         "reply": "yes",
         "at": "2026-05-02"
       },
       {
-        "playerId": "demo-club/team-d/keeley-monrove",
+        "playerId": "demo-club/keeley-monrove",
         "reply": "reserve",
         "at": "2026-05-03"
       }
@@ -267,32 +267,32 @@
       "games": [
         {
           "board": 1,
-          "playerId": "demo-club/team-d/imre-solt",
-          "opponentId": "demo-south/team-f/g-passmore",
+          "playerId": "demo-club/imre-solt",
+          "opponentId": "demo-south/g-passmore",
           "colour": "white",
           "result": "win",
           "pgn": "1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. Be3 e5 7. Nb3 Be6 8. f3 Be7 9. Qd2 O-O 10. O-O-O Nbd7 1-0"
         },
         {
           "board": 2,
-          "playerId": "demo-club/team-d/bruno-halliday",
-          "opponentId": "demo-south/team-f/l-cadbury",
+          "playerId": "demo-club/bruno-halliday",
+          "opponentId": "demo-south/l-cadbury",
           "colour": "black",
           "result": "loss",
           "pgn": null
         },
         {
           "board": 3,
-          "playerId": "demo-club/team-d/dermot-kavanagh",
-          "opponentId": "demo-south/team-f/e-standfast",
+          "playerId": "demo-club/dermot-kavanagh",
+          "opponentId": "demo-south/e-standfast",
           "colour": "white",
           "result": "draw",
           "pgn": null
         },
         {
           "board": 4,
-          "playerId": "demo-club/team-d/jonah-kestrel",
-          "opponentId": "demo-south/team-f/w-culliford",
+          "playerId": "demo-club/jonah-kestrel",
+          "opponentId": "demo-south/w-culliford",
           "colour": "black",
           "result": "default-win",
           "pgn": null
@@ -309,12 +309,12 @@
     "status": "scheduled",
     "availability": [
       {
-        "playerId": "demo-club/team-d/keeley-monrove",
+        "playerId": "demo-club/keeley-monrove",
         "reply": "yes",
         "at": "2026-09-02"
       },
       {
-        "playerId": "demo-club/team-d/mira-vance",
+        "playerId": "demo-club/mira-vance",
         "reply": "yes",
         "at": "2026-09-02",
         "withdrawn": {
@@ -323,64 +323,64 @@
         }
       },
       {
-        "playerId": "demo-club/team-d/noor-abadi",
+        "playerId": "demo-club/noor-abadi",
         "reply": "reserve",
         "at": "2026-09-03",
         "note": "Can play if you are short."
       },
       {
-        "playerId": "demo-club/team-d/liam-ferrers",
+        "playerId": "demo-club/liam-ferrers",
         "reply": "unsure",
         "at": "2026-09-03",
         "note": "Waiting to hear about a work trip."
       },
       {
-        "playerId": "demo-club/team-d/elin-pryce",
+        "playerId": "demo-club/elin-pryce",
         "reply": "yes",
         "at": "2026-09-02"
       },
       {
-        "playerId": "demo-club/team-d/farid-nassar",
+        "playerId": "demo-club/farid-nassar",
         "reply": "yes",
         "at": "2026-09-04"
       },
       {
-        "playerId": "demo-club/team-d/gwen-tsai",
+        "playerId": "demo-club/gwen-tsai",
         "reply": "yes",
         "at": "2026-09-04"
       },
       {
-        "playerId": "demo-club/team-d/jonah-kestrel",
+        "playerId": "demo-club/jonah-kestrel",
         "reply": "yes",
         "at": "2026-09-05"
       },
       {
-        "playerId": "demo-club/team-d/hollis-barr",
+        "playerId": "demo-club/hollis-barr",
         "reply": "reserve",
         "at": "2026-09-05"
       },
       {
-        "playerId": "demo-club/team-d/dermot-kavanagh",
+        "playerId": "demo-club/dermot-kavanagh",
         "reply": "reserve",
         "at": "2026-09-06"
       },
       {
-        "playerId": "demo-club/team-d/imre-solt",
+        "playerId": "demo-club/imre-solt",
         "reply": "no",
         "at": "2026-09-02"
       },
       {
-        "playerId": "demo-club/team-d/cass-oyelaran",
+        "playerId": "demo-club/cass-oyelaran",
         "reply": "no",
         "at": "2026-09-03"
       },
       {
-        "playerId": "demo-club/team-d/ada-mercer",
+        "playerId": "demo-club/ada-mercer",
         "reply": "yes",
         "at": "2026-09-02"
       },
       {
-        "playerId": "demo-club/team-d/bruno-halliday",
+        "playerId": "demo-club/bruno-halliday",
         "reply": "yes",
         "at": "2026-09-02"
       }
@@ -397,27 +397,27 @@
     "status": "scheduled",
     "availability": [
       {
-        "playerId": "demo-club/team-d/ada-mercer",
+        "playerId": "demo-club/ada-mercer",
         "reply": "yes",
         "at": "2026-09-28"
       },
       {
-        "playerId": "demo-club/team-d/liam-ferrers",
+        "playerId": "demo-club/liam-ferrers",
         "reply": "yes",
         "at": "2026-09-28"
       },
       {
-        "playerId": "demo-club/team-d/gwen-tsai",
+        "playerId": "demo-club/gwen-tsai",
         "reply": "reserve",
         "at": "2026-09-29"
       },
       {
-        "playerId": "demo-club/team-d/keeley-monrove",
+        "playerId": "demo-club/keeley-monrove",
         "reply": "unsure",
         "at": "2026-09-29"
       },
       {
-        "playerId": "demo-club/team-d/noor-abadi",
+        "playerId": "demo-club/noor-abadi",
         "reply": "no",
         "at": "2026-09-30"
       }

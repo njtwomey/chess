@@ -1,0 +1,73 @@
+{
+  "id": "demo-east",
+  "name": "Demo East Club",
+  "links": {
+    "website": null
+  },
+  "venue": {
+    "name": null,
+    "address": "3 Sample Street, Demoville",
+    "postcode": null,
+    "maps": null,
+    "lat": null,
+    "lon": null
+  },
+  "players": [
+    {
+      "playerId": "a-fenwick",
+      "name": "A. Fenwick",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-03-24",
+          "rating": 1420,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": null
+    },
+    {
+      "playerId": "d-brough",
+      "name": "D. Brough",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-03-24",
+          "rating": 1533,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": null
+    },
+    {
+      "playerId": "j-peart",
+      "name": "J. Peart",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-03-24",
+          "rating": 1398,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": null
+    },
+    {
+      "playerId": "m-kerslake",
+      "name": "M. Kerslake",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-03-24",
+          "rating": 1571,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": null
+    }
+  ]
+}

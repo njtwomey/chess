@@ -1,0 +1,16 @@
+{
+  "id": "downend-fishponds",
+  "name": "Downend & Fishponds Chess Club",
+  "links": {
+    "website": "https://downendchess.com/"
+  },
+  "venue": {
+    "name": "The Fishponds Club",
+    "address": "761 Fishponds Road, Fishponds",
+    "postcode": "BS16 3UP",
+    "maps": "https://maps.app.goo.gl/UnQEUBPusnaTDzX47",
+    "lat": 51.480931,
+    "lon": -2.529006
+  },
+  "players": []
+}

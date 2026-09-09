@@ -27,8 +27,10 @@ than getting the moves right.
 }
 ```
 
-Both sides are references. The opponent themselves goes on their own team in
-that season's `teams.json`, in exactly the shape one of ours takes:
+Both sides are references. The opponent themselves goes on their **club**, in
+`content/clubs/<club>.json`, in exactly the shape one of ours takes, and their
+team in that season's `teams.json` gains a `{ "playerId": ... }` entry saying
+they were picked:
 
 ```json
 {
@@ -59,12 +61,11 @@ conversion; do not pre-convert.
 - **Record who actually played, not who was selected.** If a reserve stepped in,
   the reserve is in `games`. Their game count follows from this entry, so
   crediting the wrong person quietly corrupts every later selection.
-- **An opponent is a player record, the same shape as ours, and it lives on
-  their team.** Add them to that team's `players` once; an opponent met twice is
-  one person with one rating history, which is the whole reason they are
-  referenced rather than copied into each game. Their `playerId` is the slug of
-  their name. Everything else is optional and usually absent: they have no ECF
-  code we know and no role in this club.
+- **An opponent is a person, on their club, the same shape as ours.** Add them
+  once and reference them thereafter; somebody we meet in two seasons is one man
+  with one rating history, which is the whole reason they are not copied into
+  each game. Their `playerId` is the slug of their name. Everything else is
+  optional and usually absent: they have no ECF code we know.
 - **`junior` on the opponent matters** even when our player is an adult: one
   junior on either side makes that board the shorter clock.
 - **Date an opponent's rating on or before the match.** It is the rating that
@@ -83,7 +84,7 @@ the order for the next fixture.
 
 ## Ratings
 
-A result is often when new grades appear. Those go on the player in
-`teams.json` as a new
+A result is often when new grades appear. Those go on the person in
+`content/clubs/<club>.json` as a new
 `{ date, rating, source }` **appended** to the player's list, never as an edit to
 the existing entry. The history is the point.

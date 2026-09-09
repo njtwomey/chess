@@ -40,17 +40,19 @@ There is no server and no database. Everything the site shows is derived from JS
 file is the whole workflow.
 
 ```
-content/clubs.json                        who we play and where they meet
+content/clubs/<club>.json                 who they are, where they meet, and their people
 content/leagues.json                      the competitions, and their rules links
 content/seasons/<period>/<club>-<team>/
   season.json                             dates, seed, boards, reserves, clocks
-  teams.json                              both sides, each with its squad
+  teams.json                              both sides, each naming who it picked
   matches.json                            fixtures, availability, results, PGNs
 ```
 
-Clubs and leagues are global, because they outlive a season. Teams and players are per season,
-because who turns out for Team G this autumn is not who turned out last spring. Seasons are found by
-glob, so adding a directory is all it takes.
+Clubs and leagues are global, because they outlive a season, and **a person is held by their club**:
+one name, one ECF code, one rating history, however many seasons they play. A team is per season and
+says only who it picked, plus the two things that are true of a season rather than of a person,
+`junior` (age is taken on the league's cut-off date) and `role: captain`. Clubs and seasons are both
+found by glob, so adding a file or a directory is all it takes.
 
 **Ids are paths, composed from the parts the records store and never written down whole.** A slug
 names its parent, then itself: `-` inside a segment, `/` between them, and a segment says what it is.
@@ -59,7 +61,8 @@ names its parent, then itself: `-` inside a segment, `/` between them, and a seg
 league    bristol-district
 club      bristol-clifton
 team      bristol-clifton/team-g          from clubId "bristol-clifton", teamId "g"
-player    bristol-clifton/team-g/niall-twomey    from the team, plus a playerId
+player    bristol-clifton/niall-twomey    the club, not the team: moving from G to F
+                                          is not becoming somebody else
 season    bristol-district/bristol-clifton/team-g/autumn-2026
 fixture   fixture-1                       unique within its season
 board     board-3                         within its fixture
@@ -71,7 +74,7 @@ is the period and the team, and the loader checks the two agree.
 
 A fixture names the other side by its team id and says whether we are at home. **The venue is the
 home club's**, derived rather than stored, and a game names both players by id rather than embedding
-one of them.
+one of them. A club's filename is its id, checked, the same guarantee a season's directory gives.
 
 **A new feature is nearly always a new derivation, not new state.** Before adding a field, check
 whether it can be computed. Games played is the standing example: counted from recorded results

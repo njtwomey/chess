@@ -9,186 +9,49 @@
     "players": [
       {
         "playerId": "ada-mercer",
-        "name": "Ada Mercer",
-        "fullName": null,
-        "role": "captain",
-        "junior": false,
-        "ratings": [
-          {
-            "date": "2026-01-01",
-            "rating": 1580,
-            "source": "ecf"
-          },
-          {
-            "date": "2026-06-01",
-            "rating": 1602,
-            "source": "ecf"
-          }
-        ]
+        "role": "captain"
       },
       {
         "playerId": "bruno-halliday",
-        "name": "Bruno Halliday",
-        "fullName": null,
-        "role": "captain",
-        "junior": false,
-        "ratings": [
-          {
-            "date": "2026-01-01",
-            "rating": 1495,
-            "source": "ecf"
-          },
-          {
-            "date": "2026-06-01",
-            "rating": 1511,
-            "source": "ecf"
-          }
-        ]
+        "role": "captain"
       },
       {
-        "playerId": "cass-oyelaran",
-        "name": "Cass Oyelaran",
-        "fullName": null,
-        "junior": false,
-        "ratings": [
-          {
-            "date": "2026-01-01",
-            "rating": 1720,
-            "source": "ecf"
-          }
-        ]
+        "playerId": "cass-oyelaran"
       },
       {
-        "playerId": "dermot-kavanagh",
-        "name": "Dermot Kavanagh",
-        "fullName": null,
-        "junior": false,
-        "ratings": [
-          {
-            "date": "2026-01-01",
-            "rating": 1340,
-            "source": "ecf"
-          }
-        ]
+        "playerId": "dermot-kavanagh"
       },
       {
-        "playerId": "elin-pryce",
-        "name": "Elin Pryce",
-        "fullName": null,
-        "junior": false,
-        "ratings": [],
-        "note": "Joined in February, no published grade yet."
+        "playerId": "elin-pryce"
       },
       {
-        "playerId": "farid-nassar",
-        "name": "Farid Nassar",
-        "fullName": null,
-        "junior": false,
-        "ratings": [
-          {
-            "date": "2026-02-01",
-            "rating": 1455,
-            "source": "estimated"
-          }
-        ]
+        "playerId": "farid-nassar"
       },
       {
         "playerId": "gwen-tsai",
-        "name": "Gwen Tsai",
-        "fullName": null,
-        "junior": true,
-        "ratings": [
-          {
-            "date": "2026-01-01",
-            "rating": 1290,
-            "source": "ecf"
-          },
-          {
-            "date": "2026-06-01",
-            "rating": 1325,
-            "source": "ecf"
-          }
-        ]
+        "junior": true
       },
       {
-        "playerId": "hollis-barr",
-        "name": "Hollis Barr",
-        "fullName": null,
-        "junior": false,
-        "ratings": []
+        "playerId": "hollis-barr"
       },
       {
-        "playerId": "imre-solt",
-        "name": "Imre Solt",
-        "fullName": null,
-        "junior": false,
-        "ratings": [
-          {
-            "date": "2026-01-01",
-            "rating": 1610,
-            "source": "fide"
-          }
-        ]
+        "playerId": "imre-solt"
       },
       {
         "playerId": "jonah-kestrel",
-        "name": "Jonah Kestrel",
-        "fullName": null,
-        "junior": true,
-        "ratings": [
-          {
-            "date": "2026-01-01",
-            "rating": 1180,
-            "source": "ecf"
-          }
-        ],
-        "note": "Under 16, so any board he plays is on the shorter clock."
+        "junior": true
       },
       {
-        "playerId": "keeley-monrove",
-        "name": "Keeley Monrove",
-        "fullName": null,
-        "junior": false,
-        "ratings": [
-          {
-            "date": "2026-01-01",
-            "rating": 1405,
-            "source": "ecf"
-          }
-        ]
+        "playerId": "keeley-monrove"
       },
       {
-        "playerId": "liam-ferrers",
-        "name": "Liam Ferrers",
-        "fullName": null,
-        "junior": false,
-        "ratings": []
+        "playerId": "liam-ferrers"
       },
       {
-        "playerId": "mira-vance",
-        "name": "Mira Vance",
-        "fullName": null,
-        "junior": false,
-        "ratings": [
-          {
-            "date": "2026-01-01",
-            "rating": 1530,
-            "source": "ecf"
-          }
-        ]
+        "playerId": "mira-vance"
       },
       {
-        "playerId": "noor-abadi",
-        "name": "Noor Abadi",
-        "fullName": null,
-        "junior": false,
-        "ratings": [
-          {
-            "date": "2026-02-01",
-            "rating": 1365,
-            "source": "estimated"
-          }
-        ]
+        "playerId": "noor-abadi"
       }
     ]
   },
@@ -210,60 +73,16 @@
     },
     "players": [
       {
-        "playerId": "m-kerslake",
-        "name": "M. Kerslake",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-03-24",
-            "rating": 1571,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": null
+        "playerId": "m-kerslake"
       },
       {
-        "playerId": "d-brough",
-        "name": "D. Brough",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-03-24",
-            "rating": 1533,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": null
+        "playerId": "d-brough"
       },
       {
-        "playerId": "a-fenwick",
-        "name": "A. Fenwick",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-03-24",
-            "rating": 1420,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": null
+        "playerId": "a-fenwick"
       },
       {
-        "playerId": "j-peart",
-        "name": "J. Peart",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-03-24",
-            "rating": 1398,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": null
+        "playerId": "j-peart"
       }
     ]
   },
@@ -276,60 +95,16 @@
     },
     "players": [
       {
-        "playerId": "r-whitlock",
-        "name": "R. Whitlock",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-03-10",
-            "rating": 1544,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": null
+        "playerId": "r-whitlock"
       },
       {
-        "playerId": "p-ndiaye",
-        "name": "P. Ndiaye",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-03-10",
-            "rating": 1502,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": null
+        "playerId": "p-ndiaye"
       },
       {
-        "playerId": "t-ashworth",
-        "name": "T. Ashworth",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-03-10",
-            "rating": 1688,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": null
+        "playerId": "t-ashworth"
       },
       {
-        "playerId": "s-ellery",
-        "name": "S. Ellery",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-03-10",
-            "rating": 1301,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": null
+        "playerId": "s-ellery"
       }
     ]
   },
@@ -360,60 +135,16 @@
     },
     "players": [
       {
-        "playerId": "g-passmore",
-        "name": "G. Passmore",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-05-12",
-            "rating": 1590,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": null
+        "playerId": "g-passmore"
       },
       {
-        "playerId": "l-cadbury",
-        "name": "L. Cadbury",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-05-12",
-            "rating": 1548,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": null
+        "playerId": "l-cadbury"
       },
       {
-        "playerId": "e-standfast",
-        "name": "E. Standfast",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-05-12",
-            "rating": 1362,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": null
+        "playerId": "e-standfast"
       },
       {
-        "playerId": "w-culliford",
-        "name": "W. Culliford",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-05-12",
-            "rating": 1205,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": null
+        "playerId": "w-culliford"
       }
     ]
   },
@@ -426,54 +157,16 @@
     },
     "players": [
       {
-        "playerId": "v-okonjo",
-        "name": "V. Okonjo",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-04-20",
-            "rating": 1612,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": null
+        "playerId": "v-okonjo"
       },
       {
-        "playerId": "h-trelawny",
-        "name": "H. Trelawny",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-04-20",
-            "rating": 1655,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": null
+        "playerId": "h-trelawny"
       },
       {
-        "playerId": "n-prowse",
-        "name": "N. Prowse",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-04-20",
-            "rating": 1310,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": null
+        "playerId": "n-prowse"
       },
       {
-        "playerId": "c-bramley",
-        "name": "C. Bramley",
-        "fullName": null,
-        "ratings": [],
-        "ecfCode": null,
-        "url": null
+        "playerId": "c-bramley"
       }
     ]
   }

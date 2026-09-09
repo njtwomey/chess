@@ -1,0 +1,73 @@
+{
+  "id": "demo-south",
+  "name": "Demo South Club",
+  "links": {
+    "website": null
+  },
+  "venue": {
+    "name": null,
+    "address": "5 Sample Street, Demoville",
+    "postcode": null,
+    "maps": null,
+    "lat": null,
+    "lon": null
+  },
+  "players": [
+    {
+      "playerId": "e-standfast",
+      "name": "E. Standfast",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-05-12",
+          "rating": 1362,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": null
+    },
+    {
+      "playerId": "g-passmore",
+      "name": "G. Passmore",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-05-12",
+          "rating": 1590,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": null
+    },
+    {
+      "playerId": "l-cadbury",
+      "name": "L. Cadbury",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-05-12",
+          "rating": 1548,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": null
+    },
+    {
+      "playerId": "w-culliford",
+      "name": "W. Culliford",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-05-12",
+          "rating": 1205,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": null
+    }
+  ]
+}

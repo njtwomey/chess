@@ -55,11 +55,11 @@ which is the league's rule rather than the club's.
 ## Seasons
 
 ```
-content/clubs.json                        who we play and where they meet
+content/clubs/<club>.json                 who they are, where they meet, and their people
 content/leagues.json                      the competitions, and their rules links
 content/seasons/<period>/<club>-<team>/
   season.json                             dates, seed, boards, reserves, clocks
-  teams.json                              both sides, each with its squad
+  teams.json                              both sides, each naming who it picked
   matches.json                            fixtures, availability, results, PGNs
 ```
 

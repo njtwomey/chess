@@ -1,0 +1,74 @@
+{
+  "id": "south-bristol",
+  "name": "South Bristol Chess Club",
+  "links": {
+    "website": "https://www.southbristolchess.com/"
+  },
+  "venue": {
+    "name": "Bristol Independent Gaming",
+    "address": "16 Cater Road, Bishopsworth",
+    "postcode": "BS13 7TW",
+    "maps": "https://maps.app.goo.gl/6u5Shrm81V4z2SNv7",
+    "lat": 51.415681,
+    "lon": -2.609972,
+    "note": "The club meets inside Bristol Independent Gaming, which is a games shop with its own separate identity. Map pin is a street-level fix; Bristol Independent Gaming is not a numbered address in OpenStreetMap."
+  },
+  "players": [
+    {
+      "playerId": "alessandro-coppola",
+      "name": "Alessandro Coppola",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-09-08",
+          "rating": 1356,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": "https://lms.englishchess.org.uk/lms/player/73812/view"
+    },
+    {
+      "playerId": "michael-chaffey",
+      "name": "Michael Chaffey",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-09-08",
+          "rating": 1488,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": "https://lms.englishchess.org.uk/lms/player/112300/view"
+    },
+    {
+      "playerId": "ryszard-dudko",
+      "name": "Ryszard Dudko",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-09-08",
+          "rating": 1475,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": "https://lms.englishchess.org.uk/lms/player/129174/view"
+    },
+    {
+      "playerId": "sean-hubble",
+      "name": "Sean Hubble",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-09-08",
+          "rating": 1542,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": "https://lms.englishchess.org.uk/lms/player/121305/view"
+    }
+  ]
+}

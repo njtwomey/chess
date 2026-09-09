@@ -1,0 +1,17 @@
+{
+  "id": "uwe",
+  "name": "UWE Chess Club",
+  "links": {
+    "website": "https://chessit.co.uk/Clubs/UWE/UWE.htm"
+  },
+  "venue": {
+    "name": "Room 3X110, Bristol Business School",
+    "address": "Frenchay Campus, South Gloucestershire",
+    "postcode": "BS16 1QY",
+    "maps": "https://maps.app.goo.gl/S4kqaeT4vrVTsAAa8",
+    "lat": 51.501142,
+    "lon": -2.550009,
+    "note": "From the main entrance by the Atrium Cafe, go up one floor to Floor 3 by stairs or the central lifts, then find Room 3X110. Map pin is the Bristol Business School building on Frenchay Campus."
+  },
+  "players": []
+}

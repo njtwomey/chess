@@ -1,0 +1,73 @@
+{
+  "id": "demo-north",
+  "name": "Demo North Club",
+  "links": {
+    "website": null
+  },
+  "venue": {
+    "name": "The North Hall",
+    "address": "2 Sample Street, Demoville",
+    "postcode": null,
+    "maps": null,
+    "lat": null,
+    "lon": null
+  },
+  "players": [
+    {
+      "playerId": "p-ndiaye",
+      "name": "P. Ndiaye",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-03-10",
+          "rating": 1502,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": null
+    },
+    {
+      "playerId": "r-whitlock",
+      "name": "R. Whitlock",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-03-10",
+          "rating": 1544,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": null
+    },
+    {
+      "playerId": "s-ellery",
+      "name": "S. Ellery",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-03-10",
+          "rating": 1301,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": null
+    },
+    {
+      "playerId": "t-ashworth",
+      "name": "T. Ashworth",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-03-10",
+          "rating": 1688,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": null
+    }
+  ]
+}

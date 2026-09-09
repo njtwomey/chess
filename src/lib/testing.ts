@@ -21,6 +21,7 @@ import {
   MatchSchema,
   PlayerSchema,
   SeasonSchema,
+  SquadMemberSchema,
   TeamSchema,
   playerSlug,
   teamSlug,
@@ -39,10 +40,13 @@ import type { Reply } from "@/lib/selection";
 /** The side every built fixture is against, unless a test says otherwise. */
 export const THEIR_TEAM = "their-club/team-b";
 
-/** The id a squad member of the default team ends up with. */
-export const ours = (playerId: string) => `our-club/team-a/${playerId}`;
-/** The same for a player on the side they are playing. */
-export const theirs = (playerId: string) => `${THEIR_TEAM}/${playerId}`;
+/** The id somebody at the default club ends up with. The club, not the team. */
+export const ours = (playerId: string) => `our-club/${playerId}`;
+/** The same for a player at the club we are playing. */
+export const theirs = (playerId: string) => `their-club/${playerId}`;
+
+/** The last segment of an id, which is what a record actually stores. */
+const bare = (playerId: string) => playerId.split("/").at(-1) ?? playerId;
 
 let counter = 0;
 /** Distinct without being meaningful: a test that cares names the thing itself. */
@@ -64,20 +68,46 @@ export function aLeague(over: Partial<League> = {}): League {
  * sees, and would pass while the real loader disagreed with it.
  */
 export function aTeam(over: Partial<Team> = {}): Team {
-  const { id, club, ...rest } = over;
+  const { id, club, players, ...rest } = over;
   void id;
-  const record = TeamSchema.parse({ clubId: "our-club", teamId: "a", name: "Our Team", ...rest });
+  const squad = players ?? [];
+  const record = TeamSchema.parse({
+    clubId: "our-club",
+    teamId: "a",
+    name: "Our Team",
+    ...rest,
+    players: squad.map(({ playerId, role, junior }) => ({ playerId: bare(playerId), role, junior })),
+  });
+  // The people go on the club and the picks on the team, which is where they
+  // live, and then the loader's own join is repeated here so a test is looking
+  // at the same object the site would.
+  const home: Club = {
+    ...(club ?? aClub({ id: record.clubId, name: "Our Club" })),
+    players: squad.map(({ role, junior, ...person }) => ({ ...person, playerId: bare(person.playerId) })),
+  };
   return {
     ...record,
     id: teamSlug(record),
-    club: club ?? aClub({ id: record.clubId, name: "Our Club" }),
-    players: record.players.map((player) => ({ ...player, playerId: playerSlug(record, player) })),
+    club: home,
+    players: squad.map((player) => ({ ...player, playerId: playerSlug(home, { playerId: bare(player.playerId) }) })),
   };
 }
 
+/**
+ * A player as a season sees them: the person, and what was true of them that
+ * season. Both halves go through their own schema, because they live in
+ * different files and only meet in the loader.
+ */
 export function aPlayer(over: Partial<Player> = {}): Player {
-  const playerId = over.playerId ?? next("player");
-  return PlayerSchema.parse({ playerId, name: over.name ?? playerId, ...over });
+  const { role, junior, ...rest } = over;
+  const playerId = bare(rest.playerId ?? next("player"));
+  const person = PlayerSchema.parse({ ...rest, playerId, name: rest.name ?? playerId });
+  const member = SquadMemberSchema.parse({
+    playerId,
+    ...(role === undefined ? {} : { role }),
+    ...(junior === undefined ? {} : { junior }),
+  });
+  return { ...person, role: member.role, junior: member.junior };
 }
 
 /** A squad of `count` players, all unrated, ids `p1`, `p2`, … */

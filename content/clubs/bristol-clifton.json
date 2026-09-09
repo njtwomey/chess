@@ -1,0 +1,169 @@
+{
+  "id": "bristol-clifton",
+  "name": "Bristol & Clifton Chess Club",
+  "links": {
+    "website": "https://bristolandcliftonchess.club/"
+  },
+  "venue": {
+    "name": null,
+    "address": "99 Oldfield Road, Hotwells",
+    "postcode": "BS8 4QQ",
+    "maps": "https://maps.app.goo.gl/1gBZP8mgdUhoXYJH7",
+    "lat": 51.449421,
+    "lon": -2.620344,
+    "note": "Our home venue. Free parking around the club after 7pm."
+  },
+  "players": [
+    {
+      "playerId": "alex-zervudachi",
+      "name": "Alex",
+      "fullName": "Alex Zervudachi",
+      "ratings": [
+        {
+          "date": "2026-08-31",
+          "rating": 1840,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": "386591F"
+    },
+    {
+      "playerId": "alexandra-bicknell",
+      "name": "Alexandra",
+      "fullName": "Alexandra Bicknell",
+      "ratings": [
+        {
+          "date": "2026-08-31",
+          "rating": 1080,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": "380878G"
+    },
+    {
+      "playerId": "alfred-holton-stoppani",
+      "name": "Alfie",
+      "fullName": "Alfred Holton-Stoppani",
+      "ratings": [
+        {
+          "date": "2026-08-31",
+          "rating": 1382,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": "364477H"
+    },
+    {
+      "playerId": "george",
+      "name": "George",
+      "fullName": null,
+      "ratings": []
+    },
+    {
+      "playerId": "jade-redpath-aislabie",
+      "name": "Jade",
+      "fullName": "Jade Redpath-Aislabie",
+      "ratings": []
+    },
+    {
+      "playerId": "john",
+      "name": "John",
+      "fullName": null,
+      "ratings": []
+    },
+    {
+      "playerId": "lorenzo-milleri",
+      "name": "Lorenzo",
+      "fullName": "Lorenzo Milleri",
+      "ratings": []
+    },
+    {
+      "playerId": "mark",
+      "name": "Mark",
+      "fullName": null,
+      "ratings": []
+    },
+    {
+      "playerId": "max-pester",
+      "name": "Max",
+      "fullName": "Max Pester",
+      "ratings": []
+    },
+    {
+      "playerId": "mukhtar-hasan",
+      "name": "Mukhtar",
+      "fullName": "Mukhtar Hasan",
+      "ratings": [
+        {
+          "date": "2026-08-31",
+          "rating": 1284,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": "389043A"
+    },
+    {
+      "playerId": "niall-twomey",
+      "name": "Niall",
+      "fullName": "Niall Twomey",
+      "ratings": []
+    },
+    {
+      "playerId": "shaan-thomas",
+      "name": "Shaan",
+      "fullName": "Shaan Thomas",
+      "ratings": [
+        {
+          "date": "2026-08-31",
+          "rating": 1459,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": "380146K"
+    },
+    {
+      "playerId": "sonny-hancock",
+      "name": "Sonny",
+      "fullName": "Sonny Hancock",
+      "ratings": []
+    },
+    {
+      "playerId": "stephen-hinde",
+      "name": "Steve",
+      "fullName": "Stephen Hinde",
+      "ratings": [
+        {
+          "date": "2026-08-31",
+          "rating": 1214,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": "368493D"
+    },
+    {
+      "playerId": "theo-wright",
+      "name": "Theo",
+      "fullName": "Theo Wright",
+      "ratings": []
+    },
+    {
+      "playerId": "thomas-booth",
+      "name": "Thomas",
+      "fullName": "Thomas Booth",
+      "ratings": [
+        {
+          "date": "2026-08-31",
+          "rating": 1350,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": "220762L"
+    },
+    {
+      "playerId": "william-blatchford",
+      "name": "Will",
+      "fullName": "William Blatchford",
+      "ratings": []
+    }
+  ]
+}

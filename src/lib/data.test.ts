@@ -19,8 +19,8 @@ import { select } from "@/lib/selection";
 
 /** The prototype, by the id its league, club, team and period spell out. */
 const DEMO = "demo-league/demo-club/team-d/spring-2026";
-/** A prototype player, by the whole path the loader gives them. */
-const who = (playerId: string) => `demo-club/team-d/${playerId}`;
+/** A prototype player, by the whole path the loader gives them: club, not team. */
+const who = (playerId: string) => `demo-club/${playerId}`;
 
 describe("the season files load", () => {
   it("loads the prototype season, flagged as one", () => {

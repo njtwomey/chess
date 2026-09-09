@@ -5,10 +5,12 @@ description: Add or correct a club — its venue address, postcode, Google Maps 
 
 # Club and venue details
 
-`content/clubs.json` is shared across every season, because the same clubs come
-round each year. A club is who they are; the venue nested inside it is where
-they meet, and the two are separate facts: Bristol Grendel is a club and it
-happens to meet in a pub.
+One file per club, `content/clubs/<id>.json`, shared across every season because
+the same clubs come round each year. The filename is the id and the loader
+checks it. A club is who they are; the venue nested inside it is where they
+meet, and the two are separate facts: Bristol Grendel is a club and it happens
+to meet in a pub. The club also holds its people, which the `add-player` skill
+covers.
 
 ```json
 {
@@ -63,6 +65,6 @@ and ask rather than picking one.
 
 ## Afterwards
 
-Run `make check`: the loader refuses a team whose `clubId` is not here. Then
+Run `make check`: the loader refuses a team whose `clubId` names no club. Then
 check the venue block on a fixture page, and confirm the calendar download
 carries the address, since that is where most people will read it.

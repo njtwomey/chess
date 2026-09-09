@@ -1,0 +1,17 @@
+{
+  "id": "horfield-redland",
+  "name": "Horfield & Redland Chess Club",
+  "links": {
+    "website": "https://horfieldchessclub.com/"
+  },
+  "venue": {
+    "name": null,
+    "address": "1 Redland Park, Redland",
+    "postcode": "BS6 6SA",
+    "maps": "https://maps.app.goo.gl/87rTFRzKWfE5dFup6",
+    "lat": 51.467921,
+    "lon": -2.6124,
+    "note": "Next to the United Reformed Church, off Whiteladies Road."
+  },
+  "players": []
+}

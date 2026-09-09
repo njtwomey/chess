@@ -2,13 +2,14 @@
  * Loading the content files, and refusing to load broken ones.
  *
  * Clubs and leagues are global, because they outlive any season: the same
- * handful of clubs come round every year. Teams and players are per season,
- * because who turns out for Team G this autumn is not who turned out last
- * spring, and both sides of the board are the same shape so that a rating on
- * theirs can be read back exactly as one on ours.
+ * handful of clubs come round every year, and so do the people in them. A club
+ * holds its people, so a rating history belongs to a person rather than to one
+ * season's copy of them, and both sides of the board are the same shape so that
+ * a rating on theirs can be read back exactly as one on ours. A season's team
+ * says only who it picked, and what was true of them that season.
  *
  * ```
- * content/clubs.json
+ * content/clubs/<club>.json
  * content/leagues.json
  * content/seasons/<period>/<club>-<team>/{season,teams,matches}.json
  * ```
@@ -26,7 +27,7 @@
  * is not, because nobody will notice.
  */
 import {
-  ClubsFileSchema,
+  ClubSchema,
   GAME_POINTS,
   LeaguesFileSchema,
   MatchesFileSchema,
@@ -45,7 +46,7 @@ import { fieldedFor, opponentTeam, selectionFor, venueFor } from "@/lib/season";
 
 type RawFiles = Record<string, unknown>;
 
-const clubFiles = import.meta.glob("/content/clubs.json", { eager: true, import: "default" }) as RawFiles;
+const clubFiles = import.meta.glob("/content/clubs/*.json", { eager: true, import: "default" }) as RawFiles;
 const leagueFiles = import.meta.glob("/content/leagues.json", { eager: true, import: "default" }) as RawFiles;
 const seasonFiles = import.meta.glob("/content/seasons/**/season.json", { eager: true, import: "default" }) as RawFiles;
 const teamFiles = import.meta.glob("/content/seasons/**/teams.json", { eager: true, import: "default" }) as RawFiles;
@@ -71,14 +72,33 @@ function only<T>(files: RawFiles, schema: { parse: (value: unknown) => T }, name
   return parse(schema, raw, path);
 }
 
-export const clubs: Club[] = only(clubFiles, ClubsFileSchema, "clubs.json");
+/**
+ * One file per club, because a club now carries its people.
+ *
+ * The filename is the id, checked rather than assumed: a club edited in the
+ * belief that it was another one is the kind of mistake that shows up as
+ * somebody else's address on a fixture card.
+ */
+function loadClubs(): Club[] {
+  return Object.entries(clubFiles)
+    .map(([path, raw]) => {
+      const club = parse(ClubSchema, raw, path);
+      const named = path.replace(/^\/content\/clubs\//, "").replace(/\.json$/, "");
+      if (club.id !== named) throw new Error(`${path}: holds club "${club.id}", so it belongs in ${named}.json`);
+      return club;
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export const clubs: Club[] = loadClubs();
 export const leagues: League[] = only(leagueFiles, LeaguesFileSchema, "leagues.json");
 
 for (const club of clubs) {
   const venue = club.venue;
+  const where = `content/clubs/${club.id}.json`;
   // Half a coordinate pair would silently place a marker on the prime meridian.
   if ((venue.lat === null) !== (venue.lon === null)) {
-    throw new Error(`content/clubs.json: "${club.id}" has only one half of a lat/lon pair`);
+    throw new Error(`${where}: only one half of a lat/lon pair`);
   }
   // A map link with no path is a half-copied short link. It passes for a URL,
   // opens a blank map, and is worse than the name search it displaced, so it
@@ -86,7 +106,7 @@ for (const club of clubs) {
   // applies only to the map.
   if (venue.maps && new URL(venue.maps).pathname.replace(/\/+$/, "") === "") {
     throw new Error(
-      `content/clubs.json: "${club.id}" has a map link with no place in it (${venue.maps}). ` +
+      `${where}: the map link has no place in it (${venue.maps}). ` +
         `Paste the full short link, or set it to null and let the map search by name.`,
     );
   }
@@ -123,19 +143,30 @@ function loadSeasons(): Season[] {
 
     const teams: Team[] = records.map((record) => {
       const club = clubById.get(record.clubId);
-      if (!club)
-        problems.push(`${teamsPath}: "${teamSlug(record)}" is at club "${record.clubId}", which is not in clubs.json`);
-      // A player's id is spelled out here, once, from the team that owns the
-      // record and the segment stored on it. Everything downstream, the
-      // availability entries and the games alike, refers to that whole path, so
-      // there is exactly one way to name a person and no scope for a bare
-      // "theo" to mean whichever Theo the reader had in mind.
-      return {
-        ...record,
-        id: teamSlug(record),
-        club: club ?? fallbackClub,
-        players: record.players.map((player) => ({ ...player, playerId: playerSlug(record, player) })),
-      };
+      if (!club) {
+        problems.push(`${teamsPath}: "${teamSlug(record)}" is at club "${record.clubId}", which is not a club`);
+      }
+      const people = new Map((club ?? fallbackClub).players.map((person) => [person.playerId, person]));
+
+      // A squad entry names somebody in the club and adds what was true of them
+      // that season. The two halves are put together here, once, and the id is
+      // spelled out from the club: everything downstream, the availability
+      // entries and the games alike, refers to that whole path, so there is
+      // exactly one way to name a person and no scope for a bare "theo" to mean
+      // whichever Theo the reader had in mind.
+      const players = record.players.flatMap((member) => {
+        const person = people.get(member.playerId);
+        if (!person) {
+          problems.push(
+            `${teamsPath}: "${teamSlug(record)}" picks "${member.playerId}", who is not at ${record.clubId}`,
+          );
+          return [];
+        }
+        const { playerId: _, ...season } = member;
+        return [{ ...person, ...season, playerId: playerSlug(club ?? fallbackClub, person) }];
+      });
+
+      return { ...record, id: teamSlug(record), club: club ?? fallbackClub, players };
     });
 
     const league = leagueById.get(meta.leagueId);
@@ -158,6 +189,7 @@ function loadSeasons(): Season[] {
     } satisfies Season;
   });
 
+  for (const club of clubs) problems.push(...checkClub(club));
   for (const season of loaded) problems.push(...checkSeason(season));
 
   // No made-up player on a real team sheet, and no real person in the
@@ -207,15 +239,21 @@ function slug(name: string): string {
     .replace(/^-|-$/g, "");
 }
 
-/** Whoever a team fields, checked the same way whichever side of the board they are on. */
-function checkRoster(team: Team, note: (message: string) => void): Set<string> {
+/**
+ * The people at a club, checked once each rather than once per season.
+ *
+ * These are facts about a person, so they belong beside the person. What a
+ * season can get wrong is who it picks, which is checked where the picking is.
+ */
+function checkClub(club: Club): string[] {
+  const problems: string[] = [];
+  const where = `content/clubs/${club.id}.json`;
+  const note = (message: string) => problems.push(`${where}: ${message}`);
   const ids = new Set<string>();
-  const where = `team "${team.id}"`;
-  for (const player of team.players) {
-    if (ids.has(player.playerId)) note(`${where} has two players with the id "${player.playerId}"`);
+
+  for (const player of club.players) {
+    if (ids.has(player.playerId)) note(`two people share the id "${player.playerId}"`);
     ids.add(player.playerId);
-    // The stored segment, which is the part a person types into a file.
-    const bare = player.playerId.split("/").at(-1) ?? player.playerId;
 
     // The convention, so an id can be read and typed from a name. It follows
     // the fullest name we hold, which is the league's own form where there is
@@ -225,23 +263,23 @@ function checkRoster(team: Team, note: (message: string) => void): Set<string> {
     // rename after a fixture has been played needs a deliberate decision rather
     // than a tidy-up.
     const named = player.fullName ?? player.name;
-    if (bare !== slug(named)) {
-      note(`${where}: "${bare}" is not the slug of "${named}", which would be "${slug(named)}"`);
+    if (player.playerId !== slug(named)) {
+      note(`"${player.playerId}" is not the slug of "${named}", which would be "${slug(named)}"`);
     }
 
     // "player-a" and a display name of "A" were both stand-ins for somebody
-    // whose name nobody had asked for yet. One that survives into a season is a
-    // person nobody has checked on.
-    if (/^player-/.test(bare) || player.name.length < 2) {
-      note(`${where}: "${bare}" still looks like a placeholder rather than a person`);
+    // whose name nobody had asked for yet. One that survives is a person nobody
+    // has checked on.
+    if (/^player-/.test(player.playerId) || player.name.length < 2) {
+      note(`"${player.playerId}" still looks like a placeholder rather than a person`);
     }
 
     const dates = player.ratings.map((rating) => rating.date);
     if (dates.some((date, index) => index > 0 && date <= (dates[index - 1] ?? ""))) {
-      note(`${where}: "${player.playerId}" has ratings that are not in ascending date order`);
+      note(`"${player.playerId}" has ratings that are not in ascending date order`);
     }
   }
-  return ids;
+  return problems;
 }
 
 /** Everything the schemas cannot see, because it spans two files or two records. */
@@ -257,7 +295,28 @@ function checkSeason(season: Season): string[] {
   for (const team of season.teams) {
     if (teamIds.has(team.id)) note(`two teams share the id "${team.id}"`);
     teamIds.add(team.id);
-    rosters.set(team.id, checkRoster(team, note));
+
+    const picked = new Set<string>();
+    for (const player of team.players) {
+      if (picked.has(player.playerId)) note(`team "${team.id}" picks "${player.playerId}" twice`);
+      picked.add(player.playerId);
+    }
+    rosters.set(team.id, picked);
+  }
+
+  // Two sides of one club cannot both field the same person in one season, and
+  // the ids no longer say which team somebody is in, so this is what catches it.
+  const seen = new Map<string, string>();
+  for (const team of season.teams) {
+    for (const player of team.players) {
+      const already = seen.get(player.playerId);
+      // Not the same team twice: that is the check above, and "in both G and G"
+      // reads as nonsense beside it.
+      if (already && already !== team.id) {
+        note(`"${player.playerId}" is in both "${already}" and "${team.id}"`);
+      }
+      seen.set(player.playerId, team.id);
+    }
   }
 
   const ours = rosters.get(season.team.id) ?? new Set<string>();
@@ -316,7 +375,13 @@ function checkSeason(season: Season): string[] {
     // Settling is what puts a running order in front of the squad, so the thing
     // worth catching is a short one: a published sheet with a board nobody is on
     // is worse than saying nothing yet.
-    if (match.settled && match.result === null) {
+    //
+    // Only once everything above has come back clean, because this is the one
+    // check that runs the rule rather than reading the data, and the rule throws
+    // on input it has already been told is impossible. A stack trace out of
+    // `select` in place of the list of problems would hide the very thing that
+    // caused it.
+    if (match.settled && match.result === null && problems.length === 0) {
       const unfilled = fieldedFor(season, match, selectionFor(season, match)).unfilled;
       if (unfilled > 0) note(`${at} is settled but ${unfilled} of its boards have nobody on them`);
     }

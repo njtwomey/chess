@@ -8,174 +8,58 @@
     },
     "players": [
       {
-        "playerId": "alex-zervudachi",
-        "name": "Alex",
-        "fullName": "Alex Zervudachi",
-        "junior": false,
-        "ratings": [
-          {
-            "date": "2026-08-31",
-            "rating": 1840,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": "386591F"
+        "playerId": "alex-zervudachi"
       },
       {
-        "playerId": "alexandra-bicknell",
-        "name": "Alexandra",
-        "fullName": "Alexandra Bicknell",
-        "junior": false,
-        "ratings": [
-          {
-            "date": "2026-08-31",
-            "rating": 1080,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": "380878G"
+        "playerId": "alexandra-bicknell"
       },
       {
         "playerId": "alfred-holton-stoppani",
-        "name": "Alfie",
-        "fullName": "Alfred Holton-Stoppani",
-        "role": "captain",
-        "junior": false,
-        "ratings": [
-          {
-            "date": "2026-08-31",
-            "rating": 1382,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": "364477H"
+        "role": "captain"
       },
       {
-        "playerId": "george",
-        "name": "George",
-        "fullName": null,
-        "junior": false,
-        "ratings": []
+        "playerId": "george"
       },
       {
-        "playerId": "jade-redpath-aislabie",
-        "name": "Jade",
-        "fullName": "Jade Redpath-Aislabie",
-        "junior": false,
-        "ratings": []
+        "playerId": "jade-redpath-aislabie"
       },
       {
-        "playerId": "john",
-        "name": "John",
-        "fullName": null,
-        "junior": false,
-        "ratings": []
+        "playerId": "john"
       },
       {
-        "playerId": "lorenzo-milleri",
-        "name": "Lorenzo",
-        "fullName": "Lorenzo Milleri",
-        "junior": false,
-        "ratings": []
+        "playerId": "lorenzo-milleri"
       },
       {
-        "playerId": "mark",
-        "name": "Mark",
-        "fullName": null,
-        "junior": false,
-        "ratings": []
+        "playerId": "mark"
       },
       {
-        "playerId": "max-pester",
-        "name": "Max",
-        "fullName": "Max Pester",
-        "junior": false,
-        "ratings": []
+        "playerId": "max-pester"
       },
       {
-        "playerId": "mukhtar-hasan",
-        "name": "Mukhtar",
-        "fullName": "Mukhtar Hasan",
-        "junior": false,
-        "ratings": [
-          {
-            "date": "2026-08-31",
-            "rating": 1284,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": "389043A"
+        "playerId": "mukhtar-hasan"
       },
       {
         "playerId": "niall-twomey",
-        "name": "Niall",
-        "fullName": "Niall Twomey",
-        "role": "captain",
-        "junior": false,
-        "ratings": []
+        "role": "captain"
       },
       {
-        "playerId": "shaan-thomas",
-        "name": "Shaan",
-        "fullName": "Shaan Thomas",
-        "junior": false,
-        "ratings": [
-          {
-            "date": "2026-08-31",
-            "rating": 1459,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": "380146K"
+        "playerId": "shaan-thomas"
       },
       {
         "playerId": "sonny-hancock",
-        "name": "Sonny",
-        "fullName": "Sonny Hancock",
-        "junior": true,
-        "ratings": []
+        "junior": true
       },
       {
-        "playerId": "stephen-hinde",
-        "name": "Steve",
-        "fullName": "Stephen Hinde",
-        "junior": false,
-        "ratings": [
-          {
-            "date": "2026-08-31",
-            "rating": 1214,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": "368493D"
+        "playerId": "stephen-hinde"
       },
       {
-        "playerId": "theo-wright",
-        "name": "Theo",
-        "fullName": "Theo Wright",
-        "junior": false,
-        "ratings": []
+        "playerId": "theo-wright"
       },
       {
-        "playerId": "thomas-booth",
-        "name": "Thomas",
-        "fullName": "Thomas Booth",
-        "junior": false,
-        "ratings": [
-          {
-            "date": "2026-08-31",
-            "rating": 1350,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": "220762L"
+        "playerId": "thomas-booth"
       },
       {
-        "playerId": "william-blatchford",
-        "name": "Will",
-        "fullName": "William Blatchford",
-        "junior": false,
-        "ratings": []
+        "playerId": "william-blatchford"
       }
     ]
   },
@@ -224,60 +108,16 @@
     },
     "players": [
       {
-        "playerId": "sean-hubble",
-        "name": "Sean Hubble",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-09-08",
-            "rating": 1542,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": "https://lms.englishchess.org.uk/lms/player/121305/view"
+        "playerId": "sean-hubble"
       },
       {
-        "playerId": "michael-chaffey",
-        "name": "Michael Chaffey",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-09-08",
-            "rating": 1488,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": "https://lms.englishchess.org.uk/lms/player/112300/view"
+        "playerId": "michael-chaffey"
       },
       {
-        "playerId": "ryszard-dudko",
-        "name": "Ryszard Dudko",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-09-08",
-            "rating": 1475,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": "https://lms.englishchess.org.uk/lms/player/129174/view"
+        "playerId": "ryszard-dudko"
       },
       {
-        "playerId": "alessandro-coppola",
-        "name": "Alessandro Coppola",
-        "fullName": null,
-        "ratings": [
-          {
-            "date": "2026-09-08",
-            "rating": 1356,
-            "source": "ecf"
-          }
-        ],
-        "ecfCode": null,
-        "url": "https://lms.englishchess.org.uk/lms/player/73812/view"
+        "playerId": "alessandro-coppola"
       }
     ]
   },

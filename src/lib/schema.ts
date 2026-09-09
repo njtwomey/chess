@@ -74,19 +74,32 @@ export const RatingSchema = z.strictObject({
   source: z.enum(RATING_SOURCES),
 });
 
+/**
+ * A person, held by their club rather than by a team.
+ *
+ * A club is what somebody belongs to; a team is where the club put them this
+ * season. Keeping the person here means one name, one ECF code and one rating
+ * history however many seasons they play and whichever side they are picked
+ * for, which is the difference between a rating series and several copies of
+ * one that can disagree.
+ *
+ * What is deliberately not here is anything only true of a season: see
+ * `SquadMemberSchema`.
+ */
 export const PlayerSchema = z.strictObject({
   /**
-   * Stored as the bare segment, `niall`, and loaded as the whole path,
-   * `bristol-clifton/team-g/niall`.
+   * Stored as the bare segment, `niall-twomey`, and loaded as the whole path,
+   * `bristol-clifton/niall-twomey`.
    *
-   * The record carries only its own part, because the team around it supplies
+   * The record carries only its own part, because the club around it supplies
    * the rest and two copies of a fact eventually disagree. Everything that
    * refers to a player, availability, a shortlist, a game, uses the full path:
    * a fixture has two squads in it, and a bare name is only unambiguous until
    * both sides field a Theo.
    *
-   * It also feeds the selection tiebreak, so it is fixed once a fixture has
-   * been played: see CLAUDE.md.
+   * The club and not the team, because moving from G to F is not becoming
+   * somebody else. It also feeds the selection tiebreak, so it is fixed once a
+   * fixture has been played: see CLAUDE.md.
    */
   playerId: ID,
   /** What we call them, which is what the site says everywhere. */
@@ -100,12 +113,6 @@ export const PlayerSchema = z.strictObject({
    * the published form.
    */
   fullName: z.string().min(1).nullable().default(null),
-  /**
-   * Captain, or not. There is no separate co-captain: the club runs with more
-   * than one and they do the same job, so a second word would be a distinction
-   * without a difference.
-   */
-  role: z.enum(["captain", "member"]).default("member"),
   /**
    * Ascending by date. An empty list means unrated, which is a normal state for
    * a new member and not a missing value to paper over with a zero.
@@ -124,6 +131,35 @@ export const PlayerSchema = z.strictObject({
     .nullable()
     .default(null),
   /**
+   * Their page on the league's own site.
+   *
+   * Ours are found through `ecfCode`, which is the identifier that survives a
+   * name change. An opponent is usually met once, with no code to hand and no
+   * reason to go looking for one, so a link to the page the rating was read off
+   * is the honest amount of identity to keep about somebody else's player.
+   */
+  url: URL.nullable().default(null),
+  note: z.string().optional(),
+});
+
+/**
+ * One person's place in one team, for one season.
+ *
+ * The two facts here are the ones that are true of a season rather than of a
+ * person. Age is taken once, on the league's cut-off date, so somebody is a
+ * junior for a whole season and then is not. A captain captains a side, and the
+ * club has more than one side.
+ */
+export const SquadMemberSchema = z.strictObject({
+  /** Into the club's own list of people, bare. */
+  playerId: ID,
+  /**
+   * Captain, or not. There is no separate co-captain: the club runs with more
+   * than one and they do the same job, so a second word would be a distinction
+   * without a difference.
+   */
+  role: z.enum(["captain", "member"]).default("member"),
+  /**
    * Under the league's junior age on the season's cut-off date, which shortens
    * the clock on their board.
    *
@@ -134,16 +170,6 @@ export const PlayerSchema = z.strictObject({
    * the date it was taken on.
    */
   junior: z.boolean().default(false),
-  /**
-   * Their page on the league's own site.
-   *
-   * Ours are found through `ecfCode`, which is the identifier that survives a
-   * name change. An opponent is usually met once, with no code to hand and no
-   * reason to go looking for one, so a link to the page the rating was read off
-   * is the honest amount of identity to keep about somebody else's player.
-   */
-  url: URL.nullable().default(null),
-  note: z.string().optional(),
 });
 
 export const AvailabilitySchema = z.strictObject({
@@ -313,7 +339,8 @@ export const TeamSchema = z.strictObject({
    * to hold.
    */
   links: z.strictObject({ fixtures: URL.nullable().default(null) }).default({ fixtures: null }),
-  players: z.array(PlayerSchema).default([]),
+  /** Who was in the squad this season, by reference into the club's own list. */
+  players: z.array(SquadMemberSchema).default([]),
 });
 
 /**
@@ -398,6 +425,15 @@ export const ClubSchema = z.strictObject({
   name: z.string().min(1),
   links: z.strictObject({ website: URL.nullable().default(null) }).default({ website: null }),
   venue: VenueSchema,
+  /**
+   * Everybody who has played for the club, ours and theirs alike.
+   *
+   * Held here rather than on a season's team because a person outlives both:
+   * they may play for G this year and F the next, and an opponent we meet twice
+   * is one man with one rating history rather than two records that can
+   * disagree. A season says who was picked; this says who they are.
+   */
+  players: z.array(PlayerSchema).default([]),
 });
 
 /**
@@ -417,13 +453,20 @@ export const LeagueSchema = z.strictObject({
 
 export const MatchesFileSchema = z.array(MatchSchema);
 export const TeamsFileSchema = z.array(TeamSchema);
-export const ClubsFileSchema = z.array(ClubSchema);
 export const LeaguesFileSchema = z.array(LeagueSchema);
 
 export type Clock = z.infer<typeof ClockSchema>;
 export type TimeControl = z.infer<typeof TimeControlSchema>;
 export type Rating = z.infer<typeof RatingSchema>;
-export type Player = z.infer<typeof PlayerSchema>;
+export type Person = z.infer<typeof PlayerSchema>;
+export type SquadMember = z.infer<typeof SquadMemberSchema>;
+
+/**
+ * A person as one season's squad knows them: who they are, plus the two things
+ * that were true of them that season. Assembled by the loader, because neither
+ * half is the whole player.
+ */
+export interface Player extends Person, Omit<SquadMember, "playerId"> {}
 export type Availability = z.infer<typeof AvailabilitySchema>;
 export type Game = z.infer<typeof GameSchema>;
 export type Result = z.infer<typeof ResultSchema>;
@@ -451,8 +494,8 @@ export function teamSlug(team: { clubId: string; teamId: string }): string {
   return `${team.clubId}/team-${team.teamId}`;
 }
 
-export function playerSlug(team: { clubId: string; teamId: string }, player: { playerId: string }): string {
-  return `${teamSlug(team)}/${player.playerId}`;
+export function playerSlug(club: { id: string }, player: { playerId: string }): string {
+  return `${club.id}/${player.playerId}`;
 }
 
 /** Which fixture of the season this is, read back off its id. */
@@ -469,10 +512,11 @@ export function seasonSlug(season: { leagueId: string; clubId: string; teamId: s
   return `${season.leagueId}/${teamSlug(season)}/${season.period}`;
 }
 
-/** A team with its club resolved and its id spelled out. */
-export interface Team extends TeamRecord {
+/** A team with its club resolved, its id spelled out and its squad filled in. */
+export interface Team extends Omit<TeamRecord, "players"> {
   id: string;
   club: Club;
+  players: Player[];
 }
 
 /** A season with its files loaded, everything resolved and everything cross-checked. */

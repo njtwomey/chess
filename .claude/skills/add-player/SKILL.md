@@ -5,38 +5,52 @@ description: Add someone to a season roster, or update a player's rating or juni
 
 # Adding and updating players
 
-Rosters live in `content/seasons/<period>/<club>-<team>/teams.json`, inside the
-`players` array of the team they turn out for. They are per season on purpose:
-the team changes each year, and a player who did not play last season should not
-appear in last season's tables.
+A player is two records in two files, and which one you are editing matters.
 
-Both sides of the board are the same shape. Our squad and an opponent's are
-entries in the same file, differing only in which team holds them.
+**The person** lives on their club, `content/clubs/<club>.json`, and outlives
+every season: one name, one ECF code, one rating history, whether they play for
+G this year and F the next. Opponents live here too, on their own club, for the
+same reason: somebody we meet twice is one man.
+
+**The pick** lives on a team in `content/seasons/<period>/<club>-<team>/teams.json`
+and is only about that season.
 
 ## Adding
+
+In `content/clubs/bristol-clifton.json`, under `players`:
 
 ```json
 {
   "playerId": "gwen-tsai",
   "name": "Gwen",
   "fullName": "Gwen Tsai",
-  "role": "member",
-  "junior": true,
   "ratings": [{ "date": "2026-01-01", "rating": 1290, "source": "ecf" }],
   "ecfCode": "364477H",
   "note": "Optional, only for something a captain would otherwise have to remember."
 }
 ```
 
+Then in the season's `teams.json`, on the team that picked them:
+
+```json
+{ "playerId": "gwen-tsai", "junior": true, "role": "member" }
+```
+
+**`junior` and `role` belong to the season, not to the person.** Age is taken
+once, on the league's cut-off date, so somebody is a junior for a whole season
+and then is not; and a captain captains one side. Both default, so an ordinary
+squad member is `{ "playerId": "gwen-tsai" }` and nothing else.
+
 - **`playerId` is the slug of the fullest name held**, so `fullName` where there
   is one and `name` otherwise, and permanent once a fixture has been played.
   `Gwen Tsai` is `gwen-tsai`; a member whose surname nobody has given is `alex`.
   The loader enforces it, and it is the same rule on both sides of the board: an
   opponent is `sean-hubble` for exactly the same reason.
-- **It is stored bare and read as a path.** The team around it supplies the
-  rest, so `gwen-tsai` in Team G's roster is `bristol-clifton/team-g/gwen-tsai`
+- **It is stored bare and read as a path.** The club around it supplies the
+  rest, so `gwen-tsai` at Bristol & Clifton is `bristol-clifton/gwen-tsai`
   everywhere else: in an availability entry, in a shortlist, in a game. Write
-  the bare segment here and the whole path there.
+  the bare segment in both files and the whole path in a reference. The club and
+  not the team, so an id survives a move from G to F.
 - **That path feeds the tiebreak hash**, so changing it after a result
   re-decides past ties. Change `name`, never `playerId`.
 - **`name` is what we call them; `fullName` is what the league prints.** Alfie
@@ -57,9 +71,9 @@ list.
   is displayed as "Unrated". Never substitute a zero or an invented estimate; if
   you have a genuine estimate, record it with `"source": "estimated"` so the site
   can label it as one.
-- **`junior: true`** if they are under the league's junior age on the season's
-  cut-off date. It shortens the clock on whichever board they play, for both
-  players.
+- **`junior: true`**, on the season's team entry, if they are under the
+  league's junior age on the cut-off date. It shortens the clock on whichever
+  board they play, for both players.
 
 ## Updating a rating
 
@@ -72,21 +86,22 @@ list.
 ]
 ```
 
-Ascending by date, no duplicate dates; the loader checks both. Keeping the series
-is what lets a past match card show the rating that was true at the time, and
-what the trend arrow on the team page reads.
+On the person, in `content/clubs/<club>.json`. Ascending by date, no duplicate
+dates; the loader checks both. Keeping the series is what lets a past match card
+show the rating that was true at the time, and what the trend arrow on the team
+page reads, and holding it once means two seasons cannot disagree about it.
 
 ## A player turning 16
 
-Change `junior` to `false` in the next season's roster. Do not edit a past
-season: the clock that was used on the night was the right one, and each season
-holds its own roster precisely so that last year's facts stay last year's.
+Leave `junior` off the next season's team entry. Do not edit a past season: the
+clock that was used on the night was the right one, and the flag sits on the
+season precisely so that last year's facts stay last year's.
 
 ## What you must never do
 
 - Invent a rating, a grade or an age.
-- Delete a player who has played. Their games are referenced by results, and the
-  loader will refuse to start. If somebody has left, leave them on the roster;
-  they simply never appear as available.
+- Delete a person who has played. Their games are referenced by results, and the
+  loader will refuse to start. If somebody has left, drop them from next
+  season's team and leave the person on the club.
 - Add a real person to the prototype season, which is invented data in an
   invented league.

@@ -1,0 +1,16 @@
+{
+  "id": "demo-riverside",
+  "name": "Demo Riverside Club",
+  "links": {
+    "website": null
+  },
+  "venue": {
+    "name": "Riverside Community Centre",
+    "address": "7 Sample Street, Demoville",
+    "postcode": null,
+    "maps": null,
+    "lat": null,
+    "lon": null
+  },
+  "players": []
+}

@@ -8,72 +8,72 @@
     "status": "played",
     "availability": [
       {
-        "playerId": "bristol-clifton/team-g/niall-twomey",
+        "playerId": "bristol-clifton/niall-twomey",
         "reply": "yes",
         "at": "2026-08-31"
       },
       {
-        "playerId": "bristol-clifton/team-g/stephen-hinde",
+        "playerId": "bristol-clifton/stephen-hinde",
         "reply": "yes",
         "at": "2026-08-31"
       },
       {
-        "playerId": "bristol-clifton/team-g/lorenzo-milleri",
+        "playerId": "bristol-clifton/lorenzo-milleri",
         "reply": "yes",
         "at": "2026-08-31"
       },
       {
-        "playerId": "bristol-clifton/team-g/jade-redpath-aislabie",
+        "playerId": "bristol-clifton/jade-redpath-aislabie",
         "reply": "yes",
         "at": "2026-08-31"
       },
       {
-        "playerId": "bristol-clifton/team-g/alex-zervudachi",
+        "playerId": "bristol-clifton/alex-zervudachi",
         "reply": "reserve",
         "at": "2026-08-31"
       },
       {
-        "playerId": "bristol-clifton/team-g/max-pester",
+        "playerId": "bristol-clifton/max-pester",
         "reply": "reserve",
         "at": "2026-08-31"
       },
       {
-        "playerId": "bristol-clifton/team-g/alfred-holton-stoppani",
+        "playerId": "bristol-clifton/alfred-holton-stoppani",
         "reply": "no",
         "at": "2026-08-31"
       },
       {
-        "playerId": "bristol-clifton/team-g/alexandra-bicknell",
+        "playerId": "bristol-clifton/alexandra-bicknell",
         "reply": "no",
         "at": "2026-08-31"
       },
       {
-        "playerId": "bristol-clifton/team-g/george",
+        "playerId": "bristol-clifton/george",
         "reply": "no",
         "at": "2026-08-31"
       },
       {
-        "playerId": "bristol-clifton/team-g/shaan-thomas",
+        "playerId": "bristol-clifton/shaan-thomas",
         "reply": "no",
         "at": "2026-08-31"
       },
       {
-        "playerId": "bristol-clifton/team-g/thomas-booth",
+        "playerId": "bristol-clifton/thomas-booth",
         "reply": "unsure",
         "at": "2026-08-31"
       },
       {
-        "playerId": "bristol-clifton/team-g/theo-wright",
+        "playerId": "bristol-clifton/theo-wright",
         "reply": "yes",
         "at": "2026-08-31"
       },
       {
-        "playerId": "bristol-clifton/team-g/william-blatchford",
+        "playerId": "bristol-clifton/william-blatchford",
         "reply": "unsure",
         "at": "2026-08-31"
       },
       {
-        "playerId": "bristol-clifton/team-g/mukhtar-hasan",
+        "playerId": "bristol-clifton/mukhtar-hasan",
         "reply": "yes",
         "at": "2026-08-31"
       }
@@ -81,10 +81,10 @@
     "settled": true,
     "lineup": {
       "playerIds": [
-        "bristol-clifton/team-g/theo-wright",
-        "bristol-clifton/team-g/jade-redpath-aislabie",
-        "bristol-clifton/team-g/mukhtar-hasan",
-        "bristol-clifton/team-g/niall-twomey"
+        "bristol-clifton/theo-wright",
+        "bristol-clifton/jade-redpath-aislabie",
+        "bristol-clifton/mukhtar-hasan",
+        "bristol-clifton/niall-twomey"
       ],
       "at": "2026-08-31"
     },
@@ -95,32 +95,32 @@
       "games": [
         {
           "board": 1,
-          "playerId": "bristol-clifton/team-g/theo-wright",
-          "opponentId": "south-bristol/team-d/sean-hubble",
+          "playerId": "bristol-clifton/theo-wright",
+          "opponentId": "south-bristol/sean-hubble",
           "colour": "black",
           "result": "win",
           "pgn": null
         },
         {
           "board": 2,
-          "playerId": "bristol-clifton/team-g/jade-redpath-aislabie",
-          "opponentId": "south-bristol/team-d/michael-chaffey",
+          "playerId": "bristol-clifton/jade-redpath-aislabie",
+          "opponentId": "south-bristol/michael-chaffey",
           "colour": "white",
           "result": "loss",
           "pgn": null
         },
         {
           "board": 3,
-          "playerId": "bristol-clifton/team-g/mukhtar-hasan",
-          "opponentId": "south-bristol/team-d/ryszard-dudko",
+          "playerId": "bristol-clifton/mukhtar-hasan",
+          "opponentId": "south-bristol/ryszard-dudko",
           "colour": "black",
           "result": "loss",
           "pgn": null
         },
         {
           "board": 4,
-          "playerId": "bristol-clifton/team-g/niall-twomey",
-          "opponentId": "south-bristol/team-d/alessandro-coppola",
+          "playerId": "bristol-clifton/niall-twomey",
+          "opponentId": "south-bristol/alessandro-coppola",
           "colour": "white",
           "result": "loss",
           "pgn": null
@@ -137,62 +137,62 @@
     "status": "scheduled",
     "availability": [
       {
-        "playerId": "bristol-clifton/team-g/niall-twomey",
+        "playerId": "bristol-clifton/niall-twomey",
         "reply": "yes",
         "at": "2026-09-04"
       },
       {
-        "playerId": "bristol-clifton/team-g/stephen-hinde",
+        "playerId": "bristol-clifton/stephen-hinde",
         "reply": "yes",
         "at": "2026-09-04"
       },
       {
-        "playerId": "bristol-clifton/team-g/alex-zervudachi",
+        "playerId": "bristol-clifton/alex-zervudachi",
         "reply": "yes",
         "at": "2026-09-04"
       },
       {
-        "playerId": "bristol-clifton/team-g/thomas-booth",
+        "playerId": "bristol-clifton/thomas-booth",
         "reply": "yes",
         "at": "2026-09-04"
       },
       {
-        "playerId": "bristol-clifton/team-g/max-pester",
+        "playerId": "bristol-clifton/max-pester",
         "reply": "yes",
         "at": "2026-09-04"
       },
       {
-        "playerId": "bristol-clifton/team-g/lorenzo-milleri",
+        "playerId": "bristol-clifton/lorenzo-milleri",
         "reply": "yes",
         "at": "2026-09-05"
       },
       {
-        "playerId": "bristol-clifton/team-g/william-blatchford",
+        "playerId": "bristol-clifton/william-blatchford",
         "reply": "yes",
         "at": "2026-09-05"
       },
       {
-        "playerId": "bristol-clifton/team-g/theo-wright",
+        "playerId": "bristol-clifton/theo-wright",
         "reply": "yes",
         "at": "2026-09-08"
       },
       {
-        "playerId": "bristol-clifton/team-g/alfred-holton-stoppani",
+        "playerId": "bristol-clifton/alfred-holton-stoppani",
         "reply": "no",
         "at": "2026-09-04"
       },
       {
-        "playerId": "bristol-clifton/team-g/alexandra-bicknell",
+        "playerId": "bristol-clifton/alexandra-bicknell",
         "reply": "no",
         "at": "2026-09-04"
       },
       {
-        "playerId": "bristol-clifton/team-g/mukhtar-hasan",
+        "playerId": "bristol-clifton/mukhtar-hasan",
         "reply": "no",
         "at": "2026-09-07"
       },
       {
-        "playerId": "bristol-clifton/team-g/mark",
+        "playerId": "bristol-clifton/mark",
         "reply": "reserve",
         "at": "2026-09-05"
       }
@@ -200,10 +200,10 @@
     "settled": true,
     "lineup": {
       "playerIds": [
-        "bristol-clifton/team-g/max-pester",
-        "bristol-clifton/team-g/lorenzo-milleri",
-        "bristol-clifton/team-g/william-blatchford",
-        "bristol-clifton/team-g/stephen-hinde"
+        "bristol-clifton/max-pester",
+        "bristol-clifton/lorenzo-milleri",
+        "bristol-clifton/william-blatchford",
+        "bristol-clifton/stephen-hinde"
       ],
       "at": "2026-09-09"
     },

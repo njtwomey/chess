@@ -1,0 +1,16 @@
+{
+  "id": "bristol-grendel",
+  "name": "Bristol Grendel Chess Club",
+  "links": {
+    "website": "https://www.bristolchess.co.uk/grendel"
+  },
+  "venue": {
+    "name": "The Sportsman's Bar (downstairs)",
+    "address": "40 Colston Street",
+    "postcode": "BS1 5AE",
+    "maps": "https://maps.app.goo.gl/4sjvwaVRYLvjGhhBA",
+    "lat": 51.455629,
+    "lon": -2.597346
+  },
+  "players": []
+}

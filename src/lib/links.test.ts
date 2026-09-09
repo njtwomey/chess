@@ -6,6 +6,7 @@ const club = (overrides: Partial<Venue> = {}): Club => ({
   id: "bristol-clifton",
   name: "Bristol & Clifton Chess Club",
   links: { website: null },
+  players: [],
   venue: { name: null, address: null, postcode: null, maps: null, lat: null, lon: null, ...overrides },
 });
 
@@ -65,8 +66,8 @@ describe("exporting a PGN", () => {
 
   const game: Game = {
     board: 1,
-    playerId: "demo-club/team-d/ada-mercer",
-    opponentId: "bristol-grendel/team-c/v-okonjo",
+    playerId: "demo-club/ada-mercer",
+    opponentId: "bristol-grendel/v-okonjo",
     colour: "black",
     result: "win",
     pgn: "1. d4 Nf6 2. c4 e6 0-1",

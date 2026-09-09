@@ -1,0 +1,16 @@
+{
+  "id": "demo-central",
+  "name": "Demo Central Club",
+  "links": {
+    "website": null
+  },
+  "venue": {
+    "name": "Room 1A, Demo University",
+    "address": "6 Sample Street, Demoville",
+    "postcode": null,
+    "maps": null,
+    "lat": null,
+    "lon": null
+  },
+  "players": []
+}

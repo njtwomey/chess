@@ -42,7 +42,7 @@ const them = aTeam({
   club: aClub({ id: "their-club", name: "Their Chess Club" }),
 });
 
-const theirs = (playerId: string) => `${them.id}/${playerId}`;
+const theirs = (playerId: string) => `${them.clubId}/${playerId}`;
 
 const home = { home: true, opponentTeamId: them.id };
 const awayAt = { home: false, opponentTeamId: them.id };

@@ -68,7 +68,7 @@ Ours first, then a record for every side we are drawn against.
     "teamId": "g",
     "name": "Bristol & Clifton G",
     "links": { "fixtures": "https://lms.englishchess.org.uk/lms/team/30209/fixtures" },
-    "players": [{ "playerId": "niall-twomey", "name": "Niall", "fullName": "Niall Twomey", "ratings": [] }]
+    "players": [{ "playerId": "niall-twomey", "role": "captain" }, { "playerId": "theo-wright" }]
   },
   { "clubId": "south-bristol", "teamId": "d", "name": "South Bristol D", "players": [] }
 ]
@@ -78,9 +78,12 @@ Ours first, then a record for every side we are drawn against.
   own record, and every fixture page points back at it, because this site is a
   convenience built on top of the league's list and has to say where its facts
   came from.
+- **A squad entry is a reference**, into the club's own list of people in
+  `content/clubs/<club>.json`, plus `junior` and `role` where they apply. Ask
+  for the roster; do not carry the previous season's over on your own.
 - **An opponent starts with an empty squad.** That is honest: it is a record of
   who turned up, filled in as we meet them, not a claim to know their team.
-- **Every `clubId` must be in `content/clubs.json`.** A new opponent club means
+- **Every `clubId` must be a club under `content/clubs/`.** A new opponent means
   adding the club first, with its venue: see the `venue-details` skill. The
   address must come from the league site or the club, never from a guess.
 

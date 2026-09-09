@@ -1,0 +1,67 @@
+{
+  "id": "demo-west",
+  "name": "Demo West Club",
+  "links": {
+    "website": null
+  },
+  "venue": {
+    "name": "The West Arms (upstairs)",
+    "address": "4 Sample Street, Demoville",
+    "postcode": null,
+    "maps": null,
+    "lat": null,
+    "lon": null
+  },
+  "players": [
+    {
+      "playerId": "c-bramley",
+      "name": "C. Bramley",
+      "fullName": null,
+      "ratings": [],
+      "ecfCode": null,
+      "url": null
+    },
+    {
+      "playerId": "h-trelawny",
+      "name": "H. Trelawny",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-04-20",
+          "rating": 1655,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": null
+    },
+    {
+      "playerId": "n-prowse",
+      "name": "N. Prowse",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-04-20",
+          "rating": 1310,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": null
+    },
+    {
+      "playerId": "v-okonjo",
+      "name": "V. Okonjo",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-04-20",
+          "rating": 1612,
+          "source": "ecf"
+        }
+      ],
+      "ecfCode": null,
+      "url": null
+    }
+  ]
+}

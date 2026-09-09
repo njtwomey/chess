@@ -1,0 +1,17 @@
+{
+  "id": "hanham-folk-centre",
+  "name": "Hanham Folk Centre",
+  "links": {
+    "website": "https://hanhamchess.wixsite.com/home"
+  },
+  "venue": {
+    "name": "Hanham Community Centre",
+    "address": "118-124 High Street, Hanham",
+    "postcode": "BS15 3EJ",
+    "maps": "https://maps.app.goo.gl/g15gqen5bz71KL4a7",
+    "lat": 51.447852,
+    "lon": -2.51485,
+    "note": "Play is in the Somerset Room, with ample free parking. The club is registered with the league as Hanham Folk Centre but calls itself Hanham Chess Club."
+  },
+  "players": []
+}
