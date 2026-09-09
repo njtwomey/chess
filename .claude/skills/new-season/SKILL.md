@@ -68,7 +68,7 @@ Ours first, then a record for every side we are drawn against.
     "teamId": "g",
     "name": "Bristol & Clifton G",
     "links": { "fixtures": "https://lms.englishchess.org.uk/lms/team/30209/fixtures" },
-    "players": [{ "playerId": "niall", "name": "Niall", "junior": false, "ratings": [] }]
+    "players": [{ "playerId": "niall-twomey", "name": "Niall", "fullName": "Niall Twomey", "ratings": [] }]
   },
   { "clubId": "south-bristol", "teamId": "d", "name": "South Bristol D", "players": [] }
 ]

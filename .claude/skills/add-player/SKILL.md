@@ -17,7 +17,7 @@ entries in the same file, differing only in which team holds them.
 
 ```json
 {
-  "playerId": "gwen",
+  "playerId": "gwen-tsai",
   "name": "Gwen",
   "fullName": "Gwen Tsai",
   "role": "member",
@@ -28,17 +28,21 @@ entries in the same file, differing only in which team holds them.
 }
 ```
 
-- **`playerId` is the slug of `name`**, and permanent once a fixture has been
-  played. `Alex` is `alex`; `Ada Mercer` is `ada-mercer`. The loader enforces it.
+- **`playerId` is the slug of the fullest name held**, so `fullName` where there
+  is one and `name` otherwise, and permanent once a fixture has been played.
+  `Gwen Tsai` is `gwen-tsai`; a member whose surname nobody has given is `alex`.
+  The loader enforces it, and it is the same rule on both sides of the board: an
+  opponent is `sean-hubble` for exactly the same reason.
 - **It is stored bare and read as a path.** The team around it supplies the
-  rest, so `gwen` in Team G's roster is `bristol-clifton/team-g/gwen` everywhere
-  else: in an availability entry, in a shortlist, in a game. Write the bare
-  segment here and the whole path there.
+  rest, so `gwen-tsai` in Team G's roster is `bristol-clifton/team-g/gwen-tsai`
+  everywhere else: in an availability entry, in a shortlist, in a game. Write
+  the bare segment here and the whole path there.
 - **That path feeds the tiebreak hash**, so changing it after a result
   re-decides past ties. Change `name`, never `playerId`.
 - **`name` is what we call them; `fullName` is what the league prints.** Alfie
   is Alfred Holton-Stoppani on the LMS, and neither can be derived from the
-  other. `fullName` is null where nobody has needed it.
+  other. The site says Alfie everywhere; the id follows the LMS. `fullName` is
+  null where nobody has asked, and then the id follows `name`.
 - **Never use a placeholder.** If somebody's name is not known yet, ask before
   adding them: `player-a` with a display name of "A" is a person nobody has
   checked on, and it will still be there in October. Two people whose names

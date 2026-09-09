@@ -19,7 +19,7 @@ than getting the moves right.
 ```json
 {
   "board": 1,
-  "playerId": "bristol-clifton/team-g/theo",
+  "playerId": "bristol-clifton/team-g/theo-wright",
   "opponentId": "south-bristol/team-d/sean-hubble",
   "colour": "white",
   "result": "win",

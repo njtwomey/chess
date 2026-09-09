@@ -59,7 +59,7 @@ names its parent, then itself: `-` inside a segment, `/` between them, and a seg
 league    bristol-district
 club      bristol-clifton
 team      bristol-clifton/team-g          from clubId "bristol-clifton", teamId "g"
-player    bristol-clifton/team-g/niall    from the team, plus playerId "niall"
+player    bristol-clifton/team-g/niall-twomey    from the team, plus a playerId
 season    bristol-district/bristol-clifton/team-g/autumn-2026
 fixture   fixture-1                       unique within its season
 board     board-3                         within its fixture
@@ -102,8 +102,10 @@ plausible wrong address sends somebody to the wrong side of Bristol on a Tuesday
 
 The repository is public. A player is a **first name**, the league's own fuller form of it in
 `fullName`, a junior flag, and where they have one a rating and an ECF code. **Never an email
-address, a phone number or a home address.** `playerId` is the slug of `name` (`Alex` is `alex`),
-enforced by the loader, and placeholders such as `player-a` must not survive into a season.
+address, a phone number or a home address.** `playerId` is the slug of the fullest name held, so
+`fullName` where there is one and `name` otherwise, enforced by the loader: Will Blatchford is
+`william-blatchford` and shows as "Will". Placeholders such as `player-a` must not survive into a
+season.
 
 ## Selection, and the things that quietly break it
 

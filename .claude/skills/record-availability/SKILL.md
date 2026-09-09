@@ -16,7 +16,7 @@ game count: it is counted from results and does not exist as a field.
 
 ```json
 {
-  "playerId": "bristol-clifton/team-g/gwen",
+  "playerId": "bristol-clifton/team-g/gwen-tsai",
   "reply": "yes",
   "at": "2026-09-04",
   "note": "Might be ten minutes late."

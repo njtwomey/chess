@@ -8,7 +8,7 @@
     },
     "players": [
       {
-        "playerId": "alex",
+        "playerId": "alex-zervudachi",
         "name": "Alex",
         "fullName": "Alex Zervudachi",
         "junior": false,
@@ -22,7 +22,7 @@
         "ecfCode": "386591F"
       },
       {
-        "playerId": "alexandra",
+        "playerId": "alexandra-bicknell",
         "name": "Alexandra",
         "fullName": "Alexandra Bicknell",
         "junior": false,
@@ -36,7 +36,7 @@
         "ecfCode": "380878G"
       },
       {
-        "playerId": "alfie",
+        "playerId": "alfred-holton-stoppani",
         "name": "Alfie",
         "fullName": "Alfred Holton-Stoppani",
         "role": "captain",
@@ -58,7 +58,7 @@
         "ratings": []
       },
       {
-        "playerId": "jade",
+        "playerId": "jade-redpath-aislabie",
         "name": "Jade",
         "fullName": "Jade Redpath-Aislabie",
         "junior": false,
@@ -72,7 +72,7 @@
         "ratings": []
       },
       {
-        "playerId": "lorenzo",
+        "playerId": "lorenzo-milleri",
         "name": "Lorenzo",
         "fullName": "Lorenzo Milleri",
         "junior": false,
@@ -86,14 +86,14 @@
         "ratings": []
       },
       {
-        "playerId": "max",
+        "playerId": "max-pester",
         "name": "Max",
         "fullName": "Max Pester",
         "junior": false,
         "ratings": []
       },
       {
-        "playerId": "mukhtar",
+        "playerId": "mukhtar-hasan",
         "name": "Mukhtar",
         "fullName": "Mukhtar Hasan",
         "junior": false,
@@ -107,7 +107,7 @@
         "ecfCode": "389043A"
       },
       {
-        "playerId": "niall",
+        "playerId": "niall-twomey",
         "name": "Niall",
         "fullName": "Niall Twomey",
         "role": "captain",
@@ -115,7 +115,7 @@
         "ratings": []
       },
       {
-        "playerId": "shaan",
+        "playerId": "shaan-thomas",
         "name": "Shaan",
         "fullName": "Shaan Thomas",
         "junior": false,
@@ -129,14 +129,14 @@
         "ecfCode": "380146K"
       },
       {
-        "playerId": "sonny",
+        "playerId": "sonny-hancock",
         "name": "Sonny",
         "fullName": "Sonny Hancock",
         "junior": true,
         "ratings": []
       },
       {
-        "playerId": "steve",
+        "playerId": "stephen-hinde",
         "name": "Steve",
         "fullName": "Stephen Hinde",
         "junior": false,
@@ -150,14 +150,14 @@
         "ecfCode": "368493D"
       },
       {
-        "playerId": "theo",
+        "playerId": "theo-wright",
         "name": "Theo",
         "fullName": "Theo Wright",
         "junior": false,
         "ratings": []
       },
       {
-        "playerId": "thomas",
+        "playerId": "thomas-booth",
         "name": "Thomas",
         "fullName": "Thomas Booth",
         "junior": false,
@@ -171,7 +171,7 @@
         "ecfCode": "220762L"
       },
       {
-        "playerId": "will",
+        "playerId": "william-blatchford",
         "name": "Will",
         "fullName": "William Blatchford",
         "junior": false,

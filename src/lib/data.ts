@@ -217,11 +217,16 @@ function checkRoster(team: Team, note: (message: string) => void): Set<string> {
     // The stored segment, which is the part a person types into a file.
     const bare = player.playerId.split("/").at(-1) ?? player.playerId;
 
-    // The convention, so an id can be read and typed from a name. It is also
-    // what feeds the tiebreak hash, which is why a rename after a match has
-    // been played needs a deliberate decision rather than a tidy-up.
-    if (bare !== slug(player.name)) {
-      note(`${where}: "${bare}" is not the slug of "${player.name}", which would be "${slug(player.name)}"`);
+    // The convention, so an id can be read and typed from a name. It follows
+    // the fullest name we hold, which is the league's own form where there is
+    // one: our squad is known to each other as Will and Alfie, and an id of
+    // `will` beside an opponent's `sean-hubble` was our own side written to a
+    // different rule. It is also what feeds the tiebreak hash, which is why a
+    // rename after a fixture has been played needs a deliberate decision rather
+    // than a tidy-up.
+    const named = player.fullName ?? player.name;
+    if (bare !== slug(named)) {
+      note(`${where}: "${bare}" is not the slug of "${named}", which would be "${slug(named)}"`);
     }
 
     // "player-a" and a display name of "A" were both stand-ins for somebody
