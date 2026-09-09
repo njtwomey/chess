@@ -76,23 +76,6 @@
   --fixture-away: oklch(0.5 0.1 200);
   --fixture-away-foreground: oklch(0.99 0.005 200);
 
-  /*
-   * The band across the top of a team.
-   *
-   * Coloured rather than another shade of the page, because a card whose
-   * heading is the same black as the background behind it reads as more of the
-   * background. Green, a little cooler and quieter than the green a "can play"
-   * badge uses, so it belongs to the same site without being taken for an
-   * answer: the two never share a page, because this is the way in and the
-   * replies live inside a fixture.
-   *
-   * Tinted rather than filled: this is a heading on a page of them, not a badge
-   * answering a question, and at the width of a card a solid colour stops being
-   * an accent and becomes the design.
-   */
-  --team: oklch(0.45 0.1 158);
-  --team-soft: oklch(0.95 0.03 158);
-
   /* The board, and the two squares nobody should have to think about. */
   --board-light: oklch(0.9 0.03 80);
   --board-dark: oklch(0.62 0.06 55);
@@ -144,9 +127,6 @@
   --fixture-away: oklch(0.72 0.11 200);
   --fixture-away-foreground: oklch(0.2 0.03 200);
 
-  --team: oklch(0.78 0.1 158);
-  --team-soft: oklch(0.3 0.045 158);
-
   --board-light: oklch(0.66 0.035 80);
   --board-dark: oklch(0.42 0.045 55);
 }
@@ -183,8 +163,6 @@
 
   --color-fixture-away: var(--fixture-away);
   --color-fixture-away-foreground: var(--fixture-away-foreground);
-  --color-team: var(--team);
-  --color-team-soft: var(--team-soft);
 
   --color-board-light: var(--board-light);
   --color-board-dark: var(--board-dark);

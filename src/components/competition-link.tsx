@@ -1,5 +1,4 @@
 import type { Season } from "@/lib/schema";
-import { cn } from "@/lib/utils";
 
 /**
  * The competition, linking out to the league's own fixture list.
@@ -18,7 +17,7 @@ export function competitionLabel(season: Season): string {
   return season.division === null ? season.league.name : `${season.league.name}, Division ${season.division}`;
 }
 
-export function CompetitionLink({ season, className }: { season: Season; className?: string }) {
+export function CompetitionLink({ season }: { season: Season }) {
   const label = competitionLabel(season);
   if (!season.team.links.fixtures) return <>{label}</>;
 
@@ -27,10 +26,7 @@ export function CompetitionLink({ season, className }: { season: Season; classNa
       href={season.team.links.fixtures}
       target="_blank"
       rel="noreferrer"
-      className={cn(
-        "underline decoration-dotted underline-offset-4 transition-colors",
-        className ?? "hover:text-foreground",
-      )}
+      className="hover:text-foreground underline decoration-dotted underline-offset-4 transition-colors"
     >
       {label}
     </a>
