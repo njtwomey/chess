@@ -86,12 +86,6 @@ export const RatingSchema = z.strictObject({
  */
 export const CODE_SOURCES = ["ecf", "fide", "lms"] as const;
 
-export const CODE_SOURCE_LABEL: Record<(typeof CODE_SOURCES)[number], string> = {
-  ecf: "ECF",
-  fide: "FIDE",
-  lms: "League management site",
-};
-
 /**
  * One registration: who knows them, and the number they know them by.
  *
