@@ -10,7 +10,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -58,49 +57,59 @@ function ThemeToggle() {
 function SeasonPicker({ onNavigate }: { onNavigate?: () => void }) {
   const { season, seasons, inSeason } = useSeason();
 
-  // Grouped by the side whose campaign it is, in the order the seasons come in,
-  // which is newest first. Taken from the seasons themselves because a team is
-  // a fact about a season now: there is no separate list to fall behind.
-  const sides = [...new Map(seasons.map((entry) => [entry.team.id, entry.team.name])).entries()];
-
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="hover:text-foreground inline-flex items-center gap-1.5 rounded-md text-sm font-medium transition-colors">
-        {inSeason ? season.name : "Choose a season"}
-        <ChevronDown className="size-3.5 opacity-60" />
+      <DropdownMenuTrigger className="hover:text-foreground inline-flex min-w-0 items-center gap-1.5 rounded-md text-sm font-medium transition-colors">
+        {inSeason ? (
+          <>
+            <span className="truncate">{season.team.name}</span>
+            {season.division !== null && (
+              <span className="text-muted-foreground hidden font-normal sm:inline">Division {season.division}</span>
+            )}
+          </>
+        ) : (
+          "Choose a team"
+        )}
+        <ChevronDown className="size-3.5 shrink-0 opacity-60" />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-60">
-        {sides.map(([teamId, name]) => (
-          <React.Fragment key={teamId}>
-            <DropdownMenuLabel className="text-muted-foreground text-xs font-normal">{name}</DropdownMenuLabel>
-            {seasons
-              .filter((entry) => entry.team.id === teamId)
-              .map((entry) => {
-                const here = inSeason && entry.id === season.id;
-                return (
-                  <DropdownMenuItem key={entry.id} asChild>
-                    <Link
-                      to={seasonPath(entry.id)}
-                      onClick={onNavigate}
-                      className={cn(
-                        "text-muted-foreground focus:text-foreground cursor-pointer text-sm",
-                        here && "text-foreground bg-accent font-medium",
-                      )}
-                    >
-                      <span className="flex-1 truncate">{entry.name}</span>
-                      {entry.prototype && (
-                        <Badge variant="outline" className="text-[0.6rem]">
-                          demo
-                        </Badge>
-                      )}
-                      {here && <Check className="size-3.5" />}
-                    </Link>
-                  </DropdownMenuItem>
-                );
-              })}
-            <DropdownMenuSeparator className="last:hidden" />
-          </React.Fragment>
-        ))}
+      <DropdownMenuContent align="start" className="w-72">
+        <DropdownMenuLabel className="text-muted-foreground text-xs font-normal">
+          Every side, and the season it is playing
+        </DropdownMenuLabel>
+        {/* One row per season, led by the side rather than the date. Two teams
+            of one club both run an "Autumn 2026", so a list of season names is
+            a list of the same words: the team and the division are what tell
+            them apart, and the season goes underneath. */}
+        {seasons.map((entry) => {
+          const here = inSeason && entry.id === season.id;
+          return (
+            <DropdownMenuItem key={entry.id} asChild>
+              <Link
+                to={seasonPath(entry.id)}
+                onClick={onNavigate}
+                className={cn("cursor-pointer items-start gap-2 py-2", here && "bg-accent")}
+              >
+                <span className="min-w-0 flex-1">
+                  <span className={cn("block truncate text-sm", here ? "font-semibold" : "font-medium")}>
+                    {entry.team.name}
+                  </span>
+                  {/* The division rather than the whole competition: the
+                      league's name is the same on every row that matters and
+                      eats the width the season needs. */}
+                  <span className="text-muted-foreground block truncate text-xs">
+                    {entry.division === null ? entry.league.name : `Division ${entry.division}`} · {entry.name}
+                  </span>
+                </span>
+                {entry.prototype && (
+                  <Badge variant="outline" className="mt-0.5 text-[0.6rem]">
+                    demo
+                  </Badge>
+                )}
+                {here && <Check className="mt-0.5 size-3.5 shrink-0" />}
+              </Link>
+            </DropdownMenuItem>
+          );
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -239,8 +248,8 @@ export function SiteHeader() {
       <div className="mx-auto flex h-14 w-full max-w-5xl items-center gap-4 px-5 sm:px-6">
         <NavLink to="/" className="flex shrink-0 items-center gap-2 font-semibold tracking-tight">
           <Crown className="text-primary size-4.5" />
-          <span className="hidden sm:inline">Bristol &amp; Clifton G</span>
-          <span className="sm:hidden">B&amp;C G</span>
+          <span className="hidden sm:inline">Bristol &amp; Clifton</span>
+          <span className="sm:hidden">B&amp;C</span>
         </NavLink>
 
         {/* Everything but the name hugs the right, in one run: the club's own

@@ -130,7 +130,12 @@ export function SelectionTable({
 
   return (
     <div className="space-y-4">
-      {selection.unfilled > 0 && (
+      {/* Only while there is still something to do about it. A fixture that has
+          been played cannot have boards that "cannot be filled": whoever turned
+          up is in the result above, and where no replies were ever recorded the
+          rule has nothing to work from and would otherwise announce that the
+          whole team was missing. */}
+      {selection.unfilled > 0 && match.result === null && (
         <div className="border-reply-unsure/40 bg-reply-unsure-soft/50 text-reply-unsure flex items-start gap-2.5 rounded-lg border px-4 py-3 text-sm">
           <TriangleAlert className="mt-0.5 size-4 shrink-0" />
           <p>

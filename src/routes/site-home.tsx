@@ -1,7 +1,8 @@
-import { ArrowRight, BookOpen, CalendarDays, ExternalLink, Scale } from "lucide-react";
+import { ArrowRight, BookOpen, ExternalLink, Scale } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Page, Section } from "@/components/page";
 import { CompetitionLink } from "@/components/competition-link";
+import { HomeAway } from "@/components/home-away";
 import { seasonPath } from "@/components/season-context";
 import { Badge } from "@/components/ui/badge";
 import { seasons } from "@/lib/data";
@@ -10,13 +11,13 @@ import { coverage, nextMatch, opponentTeam, orderedMatches } from "@/lib/season"
 import { formatShortDate, today } from "@/lib/time";
 
 /**
- * The way into a season, with enough on it to choose.
+ * One season, as a row inside its team's card.
  *
  * A season is mostly a name and a date range, which is not much to pick from,
- * so each card carries what actually distinguishes one: how far through it is
- * and what happens next.
+ * so the row carries what actually distinguishes one: how far through it is and
+ * what happens next.
  */
-function SeasonCard({ season }: { season: (typeof seasons)[number] }) {
+function SeasonRow({ season }: { season: Season }) {
   const next = nextMatch(season, today());
   const spread = coverage(season);
   const played = orderedMatches(season).filter((match) => match.status === "played").length;
@@ -24,27 +25,26 @@ function SeasonCard({ season }: { season: (typeof seasons)[number] }) {
   return (
     <Link
       to={seasonPath(season.id)}
-      className="hover:border-primary/40 hover:bg-accent/40 group block rounded-lg border p-4 transition-colors"
+      className="hover:bg-accent/40 group flex flex-wrap items-center justify-between gap-x-6 gap-y-1 px-5 py-3.5 transition-colors"
     >
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="font-medium">{season.name}</span>
-        {season.active && <Badge variant="secondary">Current</Badge>}
+      <div className="min-w-0">
+        <span className="flex flex-wrap items-center gap-2">
+          <span className="font-medium">{season.name}</span>
+          {season.active && <Badge variant="secondary">Current</Badge>}
+        </span>
+        <span className="text-muted-foreground block text-sm">
+          {season.matches.length} fixtures, {played} played · {spread.players} players
+        </span>
       </div>
 
-      <p className="text-muted-foreground mt-1 text-sm">
-        {season.matches.length} fixtures, {played} played · {spread.players} players
-      </p>
-
       {next && (
-        <p className="mt-3 flex items-center gap-1.5 text-sm">
+        <span className="flex items-center gap-2 text-sm">
           <span className="text-muted-foreground">Next:</span>
-          <span className="font-medium">
-            {next.home ? "" : "away to "}
-            {opponentTeam(season, next).name}
-          </span>
+          <HomeAway home={next.home} size="xs" />
+          <span className="font-medium">{opponentTeam(season, next).name}</span>
           <span className="text-muted-foreground tabular">{formatShortDate(next.date)}</span>
           <ArrowRight className="text-muted-foreground size-3.5 transition-transform group-hover:translate-x-0.5" />
-        </p>
+        </span>
       )}
     </Link>
   );
@@ -72,12 +72,6 @@ const real = seasons.filter((season) => !season.prototype);
 function LeagueLinks({ season }: { season: Season }) {
   const links = [
     {
-      href: season.team.links.fixtures,
-      label: "Fixtures",
-      Icon: CalendarDays,
-      blurb: "The league's own table. If it and this site disagree, it is right.",
-    },
-    {
       href: season.league.links.rules,
       label: "League rules",
       Icon: Scale,
@@ -93,7 +87,7 @@ function LeagueLinks({ season }: { season: Season }) {
   if (links.length === 0) return null;
 
   return (
-    <div className="grid gap-3 sm:grid-cols-3">
+    <div className="grid gap-3 sm:grid-cols-2">
       {links.map(({ href, label, Icon, blurb }) => (
         <a
           key={label}
@@ -114,14 +108,37 @@ function LeagueLinks({ season }: { season: Season }) {
   );
 }
 
-function TeamBlock({ teamId }: { teamId: string }) {
+/**
+ * A team, and every season it has played.
+ *
+ * The card is the team rather than the season, because two sides of one club
+ * both run an "Autumn 2026" and a page of cards with that written on each of
+ * them says nothing at all. The name and the division go across the top, where
+ * somebody looking for their own team will find them, and the seasons are rows
+ * underneath.
+ */
+function TeamCard({ teamId }: { teamId: string }) {
+  const played = real.filter((season) => season.team.id === teamId);
+  // The newest, for the heading: a team's division is a fact about a season and
+  // moves with promotion, so the current one is the one worth putting at the top.
+  const current = played[0];
+  if (!current) return null;
+
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
-      {real
-        .filter((season) => season.team.id === teamId)
-        .map((season) => (
-          <SeasonCard key={season.id} season={season} />
+    <div className="overflow-hidden rounded-lg border">
+      {/* The two together, stacked, because they are the pair that identifies
+          the side: "Autumn 2026" is true of every team at the club at once. */}
+      <div className="bg-team-soft border-b px-5 py-4">
+        <h3 className="text-lg leading-tight font-semibold">{current.team.name}</h3>
+        <p className="text-team mt-0.5 text-sm">
+          <CompetitionLink season={current} className="hover:opacity-75" />
+        </p>
+      </div>
+      <div className="divide-y">
+        {played.map((season) => (
+          <SeasonRow key={season.id} season={season} />
         ))}
+      </div>
     </div>
   );
 }
@@ -136,32 +153,33 @@ function TeamBlock({ teamId }: { teamId: string }) {
  * from the header.
  */
 export function SiteHome() {
-  // The most recent real season speaks for the club: the team's name, its club
-  // and the competition it is in are all facts about a season now, so there is
-  // no separate record of them to fall out of step.
+  // The club, not one of its sides. The front page used to be titled after the
+  // most recent season's team, which named G and said nothing about F: the two
+  // are equally the club's, and a player arriving here should not have to read
+  // past somebody else's team to find their own.
   const current = real[0];
-  // Only sides that have a season to show, so no heading stands over an empty
-  // grid. Newest first, which is the order the seasons come in.
+  const leagues = [...new Set(real.map((season) => season.league.name))];
+  // Only sides that have a season to show, so no card stands over an empty one.
+  // Newest first, which is the order the seasons come in.
   const sides = [...new Set(real.map((season) => season.team.id))];
 
   return (
-    <Page
-      title={current?.team.name ?? "Chess"}
-      lede={
-        current ? (
-          <>
-            {current.club.name} · <CompetitionLink season={current} />
-          </>
-        ) : undefined
-      }
-    >
-      {current && <LeagueLinks season={current} />}
-
-      <Section title="Seasons" description="Fixtures, availability and results live inside a season.">
-        {sides.map((teamId) => (
-          <TeamBlock key={teamId} teamId={teamId} />
-        ))}
+    <Page title={current?.club.name ?? "Chess"} lede={leagues.join(" · ") || undefined}>
+      <Section title="Teams" description="Fixtures, availability and results live inside a season.">
+        <div className="space-y-4">
+          {sides.map((teamId) => (
+            <TeamCard key={teamId} teamId={teamId} />
+          ))}
+        </div>
       </Section>
+
+      {/* At the bottom, because they are references rather than the way in:
+          needed rarely and urgently, and never on the way to a fixture. */}
+      {current && (
+        <Section title="The rules" description="The documents every side here plays under." className="mt-8">
+          <LeagueLinks season={current} />
+        </Section>
+      )}
     </Page>
   );
 }

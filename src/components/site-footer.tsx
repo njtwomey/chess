@@ -8,10 +8,11 @@ import { useSeason } from "@/components/season-context";
  * reference link belongs: always reachable, never in the way.
  */
 export function SiteFooter() {
-  const { season } = useSeason();
+  const { season, inSeason } = useSeason();
 
   const links = [
-    { href: season.team.links.fixtures, label: "Fixtures on the LMS" },
+    // One side's fixture list, so only where the page is about that side.
+    { href: inSeason ? season.team.links.fixtures : null, label: `${season.team.name} on the LMS` },
     { href: season.league.links.rules, label: "League rules" },
     { href: season.league.links.handbook, label: "FIDE Laws of Chess" },
     { href: season.club.links.website, label: `${season.club.name}` },
@@ -36,15 +37,20 @@ export function SiteFooter() {
             <span className="text-muted-foreground/70">If this site and the LMS disagree, the LMS is right.</span>
           </div>
         )}
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p>
-            {season.team.name} · {season.league.name}
-            {season.division === null ? "" : `, Division ${season.division}`}
-          </p>
-          <p className="tabular">
-            Selection seed <code className="font-mono">{season.seed}</code>
-          </p>
-        </div>
+        {/* Only where the page is about a season. The club has more than one
+            side, and naming whichever was last looked at reads as a claim that
+            it is the one this page is about. */}
+        {inSeason && (
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p>
+              {season.team.name} · {season.league.name}
+              {season.division === null ? "" : `, Division ${season.division}`}
+            </p>
+            <p className="tabular">
+              Selection seed <code className="font-mono">{season.seed}</code>
+            </p>
+          </div>
+        )}
       </div>
     </footer>
   );

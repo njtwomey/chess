@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-const SITE = "Bristol & Clifton G";
+const SITE = "Bristol & Clifton Chess";
 
 /**
  * Keep the tab title in step with the route.
@@ -12,7 +12,10 @@ const SITE = "Bristol & Clifton G";
  */
 export function useDocumentTitle(title?: string) {
   React.useEffect(() => {
-    document.title = title ? `${title} · ${SITE}` : SITE;
+    // No suffix where the page has already said it: the club's own page is
+    // titled after the club, and "Bristol & Clifton Chess Club · Bristol &
+    // Clifton Chess" is the same words twice.
+    document.title = !title || title.startsWith(SITE) ? (title ?? SITE) : `${title} · ${SITE}`;
   }, [title]);
 }
 
