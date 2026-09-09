@@ -4,9 +4,9 @@ import { Page, Section } from "@/components/page";
 import { CompetitionLink } from "@/components/competition-link";
 import { seasonPath } from "@/components/season-context";
 import { Badge } from "@/components/ui/badge";
-import { seasons, teams } from "@/lib/data";
-import type { Team } from "@/lib/schema";
-import { coverage, nextMatch, orderedMatches } from "@/lib/season";
+import { seasons } from "@/lib/data";
+import type { Season } from "@/lib/schema";
+import { coverage, nextMatch, opponentTeam, orderedMatches } from "@/lib/season";
 import { formatShortDate, today } from "@/lib/time";
 
 /**
@@ -40,7 +40,7 @@ function SeasonCard({ season }: { season: (typeof seasons)[number] }) {
           <span className="text-muted-foreground">Next:</span>
           <span className="font-medium">
             {next.home ? "" : "away to "}
-            {next.opponent}
+            {opponentTeam(season, next).name}
           </span>
           <span className="text-muted-foreground tabular">{formatShortDate(next.date)}</span>
           <ArrowRight className="text-muted-foreground size-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -69,32 +69,35 @@ const real = seasons.filter((season) => !season.prototype);
  * site is a derived view, so they belong where somebody looking for the source
  * will find them without being told.
  */
-const LEAGUE_LINKS = [
-  {
-    key: "fixtures" as const,
-    label: "Fixtures",
-    Icon: CalendarDays,
-    blurb: "The league's own table. If it and this site disagree, it is right.",
-  },
-  { key: "rules" as const, label: "League rules", Icon: Scale, blurb: "How the Bristol & District league is run." },
-  {
-    key: "handbook" as const,
-    label: "Laws of Chess",
-    Icon: BookOpen,
-    blurb: "FIDE, for when the argument is about the game.",
-  },
-];
-
-function LeagueLinks({ team }: { team: Team }) {
-  const links = LEAGUE_LINKS.filter((link) => team.links[link.key]);
+function LeagueLinks({ season }: { season: Season }) {
+  const links = [
+    {
+      href: season.team.links.fixtures,
+      label: "Fixtures",
+      Icon: CalendarDays,
+      blurb: "The league's own table. If it and this site disagree, it is right.",
+    },
+    {
+      href: season.league.links.rules,
+      label: "League rules",
+      Icon: Scale,
+      blurb: `How the ${season.league.name.replace(/ Chess League$/, "")} league is run.`,
+    },
+    {
+      href: season.league.links.handbook,
+      label: "Laws of Chess",
+      Icon: BookOpen,
+      blurb: "FIDE, for when the argument is about the game.",
+    },
+  ].filter((link) => link.href !== null);
   if (links.length === 0) return null;
 
   return (
     <div className="grid gap-3 sm:grid-cols-3">
-      {links.map(({ key, label, Icon, blurb }) => (
+      {links.map(({ href, label, Icon, blurb }) => (
         <a
-          key={key}
-          href={team.links[key]}
+          key={label}
+          href={href ?? undefined}
           target="_blank"
           rel="noreferrer"
           className="hover:border-primary/40 hover:bg-accent/40 group bg-card block rounded-lg border p-4 transition-colors"
@@ -111,11 +114,11 @@ function LeagueLinks({ team }: { team: Team }) {
   );
 }
 
-function TeamBlock({ team }: { team: Team }) {
+function TeamBlock({ teamId }: { teamId: string }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2">
       {real
-        .filter((season) => season.teamId === team.id)
+        .filter((season) => season.team.id === teamId)
         .map((season) => (
           <SeasonCard key={season.id} season={season} />
         ))}
@@ -133,26 +136,30 @@ function TeamBlock({ team }: { team: Team }) {
  * from the header.
  */
 export function SiteHome() {
-  const team = teams[0];
-  // A team with nothing to show would render an empty grid under a heading.
-  const sides = teams.filter((entry) => real.some((season) => season.teamId === entry.id));
+  // The most recent real season speaks for the club: the team's name, its club
+  // and the competition it is in are all facts about a season now, so there is
+  // no separate record of them to fall out of step.
+  const current = real[0];
+  // Only sides that have a season to show, so no heading stands over an empty
+  // grid. Newest first, which is the order the seasons come in.
+  const sides = [...new Set(real.map((season) => season.team.id))];
 
   return (
     <Page
-      title={team?.name ?? "Chess"}
+      title={current?.team.name ?? "Chess"}
       lede={
-        team ? (
+        current ? (
           <>
-            {team.club} · <CompetitionLink team={team} />
+            {current.club.name} · <CompetitionLink season={current} />
           </>
         ) : undefined
       }
     >
-      {team && <LeagueLinks team={team} />}
+      {current && <LeagueLinks season={current} />}
 
       <Section title="Seasons" description="Fixtures, availability and results live inside a season.">
-        {sides.map((entry) => (
-          <TeamBlock key={entry.id} team={entry} />
+        {sides.map((teamId) => (
+          <TeamBlock key={teamId} teamId={teamId} />
         ))}
       </Section>
     </Page>

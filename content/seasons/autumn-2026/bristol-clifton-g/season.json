@@ -1,7 +1,10 @@
 {
-  "id": "2026-autumn-g",
+  "leagueId": "bristol-district",
+  "clubId": "bristol-clifton",
+  "teamId": "g",
+  "period": "autumn-2026",
   "name": "Autumn 2026",
-  "teamId": "bristol-clifton-g",
+  "division": 6,
   "start": "2026-09-01",
   "end": "2026-12-31",
   "seed": "bristol-clifton-g-2026-autumn",

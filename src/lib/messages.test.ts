@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { Match } from "@/lib/schema";
 import { selectionFor } from "@/lib/season";
-import { availabilityUpdate, callToAction, describeRound, matchResult, selectedTeam } from "@/lib/messages";
+import { availabilityUpdate, callToAction, describeFixture, matchResult, selectedTeam } from "@/lib/messages";
 import type { Game } from "@/lib/schema";
-import { aGame, aMatch, aPlayer, aSeason, aTeam, aVenue, said } from "@/lib/testing";
+import { aClub, aGame, aMatch, aPlayer, aSeason, aTeam, ours, said } from "@/lib/testing";
 
 /**
  * Built, not read from a season on disk.
@@ -14,93 +14,102 @@ import { aGame, aMatch, aPlayer, aSeason, aTeam, aVenue, said } from "@/lib/test
  * really was sent. Built here, the replies hold still and the assertions can be
  * exact.
  */
-const ours = aVenue({
-  id: "our-venue",
-  name: "Our Chess Club",
-  address: "1 Some Road",
-  postcode: "AB1 2CD",
-  maps: "https://maps.example.invalid/ours",
-});
-const theirs = aVenue({ id: "their-venue", name: "Their Chess Club" });
-const venues = new Map([
-  [ours.id, ours],
-  [theirs.id, theirs],
-]);
-
 const squad = ["Ada", "Bruno", "Cass", "Dermot", "Elin", "Farid", "Gwen", "Hollis", "Imre"].map((name) =>
-  aPlayer({ id: name.toLowerCase(), name }),
+  aPlayer({ playerId: name.toLowerCase(), name }),
 );
 
-const home = { home: true, venueId: ours.id, opponent: "Their Team B" };
-const awayAt = { home: false, venueId: theirs.id, opponent: "Their Team B" };
+/** Who we play, on their own roster rather than embedded in the games. */
+const opponents = ["V. One", "W. Two", "X. Three", "Y. Four"].map((name) =>
+  aPlayer({ playerId: name.toLowerCase().replace(/[^a-z]+/g, "-"), name }),
+);
 
-const first = aMatch({ id: "r1", round: 1, date: "2026-03-10", ...home });
-const away = aMatch({ id: "r3", round: 3, date: "2026-04-20", ...awayAt });
+const us = aTeam({
+  clubId: "our-club",
+  teamId: "a",
+  name: "Our Team A",
+  players: squad,
+  club: aClub({
+    id: "our-club",
+    name: "Our Chess Club",
+    venue: { address: "1 Some Road", postcode: "AB1 2CD", maps: "https://maps.example.invalid/ours" },
+  }),
+});
+const them = aTeam({
+  clubId: "their-club",
+  teamId: "b",
+  name: "Their Team B",
+  players: opponents,
+  club: aClub({ id: "their-club", name: "Their Chess Club" }),
+});
+
+const theirs = (playerId: string) => `${them.id}/${playerId}`;
+
+const home = { home: true, opponentTeamId: them.id };
+const awayAt = { home: false, opponentTeamId: them.id };
+
+const first = aMatch({ id: "fixture-1", date: "2026-03-10", ...home });
+const away = aMatch({ id: "fixture-3", date: "2026-04-20", ...awayAt });
 
 /** Every reply group represented, and four players yet to answer. */
 const mixed = aMatch({
-  id: "r6",
-  round: 6,
+  id: "fixture-6",
   date: "2026-10-13",
   ...home,
   availability: [
-    said("ada", "yes"),
-    said("elin", "yes"),
-    said("gwen", "reserve"),
-    said("hollis", "unsure"),
-    said("imre", "no"),
+    said(ours("ada"), "yes"),
+    said(ours("elin"), "yes"),
+    said(ours("gwen"), "reserve"),
+    said(ours("hollis"), "unsure"),
+    said(ours("imre"), "no"),
   ],
 });
 
 /** Nobody has answered yet. */
-const silent = aMatch({ id: "r7", round: 7, date: "2026-11-10", ...home });
+const silent = aMatch({ id: "fixture-7", date: "2026-11-10", ...home });
 
 /** Settled, with more volunteers than boards, so somebody missed out. */
 const settled = aMatch({
-  id: "r5",
-  round: 5,
+  id: "fixture-5",
   date: "2026-09-16",
   ...awayAt,
   settled: true,
-  availability: squad.slice(0, 6).map((player) => said(player.id, "yes")),
+  availability: squad.slice(0, 6).map((player) => said(ours(player.playerId), "yes")),
 });
 
 /** Played fixtures, one of each outcome the message has to describe. */
-const them = ["V. One", "W. Two", "X. Three", "Y. Four"].map((name) =>
-  aPlayer({ id: name.toLowerCase().replace(/[^a-z]+/g, "-"), name }),
-);
 const boards = (results: Game["result"][]) =>
   results.map((result, index) =>
-    aGame({ board: index + 1, playerId: squad[index]!.id, opponent: them[index]!, result }),
+    aGame({
+      board: index + 1,
+      playerId: ours(squad[index]!.playerId),
+      opponentId: theirs(opponents[index]!.playerId),
+      result,
+    }),
   );
 
 const won = aMatch({
-  id: "w1",
-  round: 1,
-  date: "2026-03-10",
+  id: "fixture-8",
+  date: "2026-03-17",
   ...home,
   status: "played",
   result: { ourScore: 2.5, theirScore: 1.5, games: boards(["win", "draw", "win", "loss"]) },
 });
 const lost = aMatch({
-  id: "w2",
-  round: 2,
+  id: "fixture-9",
   date: "2026-03-24",
   ...home,
   status: "played",
   result: { ourScore: 1, theirScore: 3, games: boards(["win", "loss", "loss", "loss"]) },
 });
 const awayWin = aMatch({
-  id: "w3",
-  round: 3,
-  date: "2026-04-20",
+  id: "fixture-10",
+  date: "2026-04-27",
   ...awayAt,
   status: "played",
   result: { ourScore: 2.5, theirScore: 1.5, games: boards(["win", "draw", "win", "loss"]) },
 });
 const defaulted = aMatch({
-  id: "w4",
-  round: 4,
+  id: "fixture-11",
   date: "2026-05-12",
   ...home,
   status: "played",
@@ -108,30 +117,30 @@ const defaulted = aMatch({
 });
 
 const season = aSeason({
-  id: "a-season",
-  team: aTeam({ id: "our-team", name: "Our Team A", homeVenueId: ours.id }),
-  players: [...squad, ...them],
+  name: "Test Season",
+  team: us,
+  teams: [us, them],
   matches: [first, away, mixed, silent, settled, won, lost, awayWin, defaulted],
 });
 
 /** A fixture with the replies replaced, for a shape no other fixture has. */
 function withAvailability(match: Match, yes: string[]): Match {
-  return { ...match, availability: yes.map((playerId) => said(playerId, "yes")) };
+  return { ...match, availability: yes.map((playerId) => said(ours(playerId), "yes")) };
 }
 
-describe("describeRound", () => {
+describe("describeFixture", () => {
   it("uses words while it has them", () => {
-    expect(describeRound(1)).toBe("the first fixture of the season");
-    expect(describeRound(7)).toBe("the seventh fixture of the season");
+    expect(describeFixture(1)).toBe("the first fixture of the season");
+    expect(describeFixture(7)).toBe("the seventh fixture of the season");
   });
 
   it("falls back to a number rather than inventing a word", () => {
-    expect(describeRound(20)).toBe("round 20");
+    expect(describeFixture(20)).toBe("fixture 20");
   });
 });
 
 describe("callToAction", () => {
-  const message = callToAction(season, first, venues);
+  const message = callToAction(season, first);
 
   it("asks the question, then names the match", () => {
     expect(message.split("\n").filter(Boolean)).toEqual([
@@ -152,7 +161,7 @@ describe("callToAction", () => {
   });
 
   it("names the away club rather than just saying away", () => {
-    const line = callToAction(season, away, venues);
+    const line = callToAction(season, away);
     expect(line).toContain("away at Their Chess Club");
     expect(line).toContain("Their Team B v Our Team A");
   });
@@ -168,7 +177,7 @@ describe("callToAction", () => {
 });
 
 describe("availabilityUpdate", () => {
-  const message = availabilityUpdate(season, first, venues);
+  const message = availabilityUpdate(season, first);
 
   it("names the fixture, so it cannot be read against the wrong match", () => {
     expect(message.startsWith("Where we are for Our Team A v Their Team B, Tuesday 10 March")).toBe(true);
@@ -179,11 +188,11 @@ describe("availabilityUpdate", () => {
   });
 
   it("says which side of the fixture we are on for an away match", () => {
-    expect(availabilityUpdate(season, away, venues)).toContain("Their Team B v Our Team A");
+    expect(availabilityUpdate(season, away)).toContain("Their Team B v Our Team A");
   });
 
   it("groups the replies and sorts each group", () => {
-    const summary = availabilityUpdate(season, mixed, venues);
+    const summary = availabilityUpdate(season, mixed);
     expect(summary).toContain("Can play: Ada, Elin.");
     expect(summary).toContain("Can be a reserve: Gwen.");
     expect(summary).toContain("Not sure yet: Hollis.");
@@ -192,10 +201,10 @@ describe("availabilityUpdate", () => {
 
   it("names the people who have not replied at all", () => {
     // Everybody on the roster who is not in the replies, in one sorted list.
-    const summary = availabilityUpdate(season, mixed, venues);
+    const summary = availabilityUpdate(season, mixed);
     const answered = new Set(mixed.availability.map((entry) => entry.playerId));
     const silentOnes = season.players
-      .filter((player) => !answered.has(player.id))
+      .filter((player) => !answered.has(player.playerId))
       .map((player) => player.name)
       .sort();
     expect(summary).toContain(`Not heard from: ${silentOnes.join(", ")}.`);
@@ -208,14 +217,14 @@ describe("availabilityUpdate", () => {
   });
 
   it("leaves out a group nobody is in", () => {
-    const summary = availabilityUpdate(season, silent, venues);
+    const summary = availabilityUpdate(season, silent);
     expect(summary).not.toContain("Can play:");
     expect(summary).toContain("Not heard from:");
   });
 });
 
 describe("selectedTeam", () => {
-  const message = selectedTeam(season, settled, selectionFor(season, settled), venues);
+  const message = selectedTeam(season, settled, selectionFor(season, settled));
 
   it("names the fixture, with a map, because people have to get there", () => {
     expect(message.startsWith("Team for Their Team B v Our Team A, Wednesday 16 September")).toBe(true);
@@ -238,7 +247,9 @@ describe("selectedTeam", () => {
     const reserves = /Reserves: ([^.]+)\./.exec(message)?.[1];
     const selection = selectionFor(season, settled);
     expect(reserves).toBe(
-      selection.reservePlayers.map((player) => season.players.find((p) => p.id === player.playerId)!.name).join(", "),
+      selection.reservePlayers
+        .map((player) => season.players.find((p) => p.playerId === player.playerId)!.name)
+        .join(", "),
     );
   });
 
@@ -251,7 +262,7 @@ describe("selectedTeam", () => {
     // console and the line would be addressed at no one. Exactly four is a
     // shape a real fixture only holds until the fifth person replies.
     const exact = withAvailability(settled, ["ada", "bruno", "elin", "farid"]);
-    const message = selectedTeam(season, exact, selectionFor(season, exact), venues);
+    const message = selectedTeam(season, exact, selectionFor(season, exact));
     // Asserted first, because a message naming nobody also lacks the line, and
     // a fixture that quietly emptied would pass this test without testing it.
     expect(/Playing: (?:[^,.]+, ){3}[^,.]+\./.test(message)).toBe(true);

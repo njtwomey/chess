@@ -4,7 +4,6 @@ import { Page, Section } from "@/components/page";
 import { CompetitionLink } from "@/components/competition-link";
 import { useSeason } from "@/components/season-context";
 import { Button } from "@/components/ui/button";
-import { venueById } from "@/lib/data";
 import { icsFilename, toIcs } from "@/lib/ics";
 
 /**
@@ -17,7 +16,7 @@ function DownloadIcs() {
   const { season } = useSeason();
 
   const download = () => {
-    const blob = new Blob([toIcs(season, venueById)], { type: "text/calendar;charset=utf-8" });
+    const blob = new Blob([toIcs(season)], { type: "text/calendar;charset=utf-8" });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -53,7 +52,7 @@ export function SeasonCalendar() {
       title="Calendar"
       lede={
         <>
-          <CompetitionLink team={season.team} /> · {season.name}
+          <CompetitionLink season={season} /> · {season.name}
         </>
       }
       actions={<DownloadIcs />}

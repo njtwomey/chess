@@ -8,12 +8,53 @@
  * counter the fairest-looking selection in the season becomes wrong.
  */
 import { select, type Candidate, type Ranked, type Reply, type Role, type Selection } from "@/lib/selection";
-import { GAME_POINTS, type Game, type Match, type Player, type Rating, type Season } from "@/lib/schema";
+import {
+  GAME_POINTS,
+  fixtureNumber,
+  type Club,
+  type Game,
+  type Match,
+  type Player,
+  type Rating,
+  type Season,
+  type Team,
+} from "@/lib/schema";
 
-/** Chronological, with the round number settling two matches on one day. */
+/** Chronological, with the fixture number settling two matches on one day. */
 export function matchOrder(a: Match, b: Match): number {
   if (a.date !== b.date) return a.date < b.date ? -1 : 1;
-  return a.round - b.round;
+  return fixtureNumber(a) - fixtureNumber(b);
+}
+
+/**
+ * The other side, resolved.
+ *
+ * A fixture names a team rather than spelling out who they are, so this is the
+ * one place the name, the club and their squad are looked up. The loader
+ * guarantees the team is there, so the fallback is for a caller building a
+ * season by hand rather than for anything the site will meet.
+ */
+export function opponentTeam(season: Season, match: Match): Team {
+  return season.teams.find((team) => team.id === match.opponentTeamId) ?? season.team;
+}
+
+/** The two sides in the order the league writes them, home first. */
+export function sides(season: Season, match: Match): { home: string; away: string; them: string } {
+  const them = opponentTeam(season, match).name;
+  return match.home ? { home: season.team.name, away: them, them } : { home: them, away: season.team.name, them };
+}
+
+/**
+ * Where the fixture is played, which is a fact about who is at home rather than
+ * a third thing to record and keep in step.
+ */
+export function venueFor(season: Season, match: Match): Club {
+  return (match.home ? season.team : opponentTeam(season, match)).club;
+}
+
+/** Who we played on a board, from the opposing squad. */
+export function opponentOf(season: Season, match: Match, game: Game): Player | undefined {
+  return opponentTeam(season, match).players.find((player) => player.playerId === game.opponentId);
 }
 
 export function orderedMatches(season: Season): Match[] {
@@ -30,7 +71,7 @@ export function orderedMatches(season: Season): Match[] {
  * time.
  */
 export function gamesPlayedBefore(season: Season, match: Match): Map<string, number> {
-  const counts = new Map<string, number>(season.players.map((player) => [player.id, 0]));
+  const counts = new Map<string, number>(season.players.map((player) => [player.playerId, 0]));
   for (const other of season.matches) {
     if (other.id === match.id || matchOrder(other, match) >= 0 || !other.result) continue;
     for (const game of other.result.games) {
@@ -60,11 +101,11 @@ export function withdrawalOf(match: Match, playerId: string): { at?: string; not
 export function candidatesFor(season: Season, match: Match): Candidate[] {
   const played = gamesPlayedBefore(season, match);
   return season.players.map((player) => {
-    const entry = match.availability.find((reply) => reply.playerId === player.id);
+    const entry = match.availability.find((reply) => reply.playerId === player.playerId);
     return {
-      playerId: player.id,
+      playerId: player.playerId,
       reply: entry?.reply ?? "unsure",
-      gamesPlayed: played.get(player.id) ?? 0,
+      gamesPlayed: played.get(player.playerId) ?? 0,
       withdrawn: entry?.withdrawn != null,
     };
   });
@@ -110,8 +151,8 @@ export function sheetOrder(selection: Selection, fielded: Fielded): Ranked[] {
 
   const named = fielded.players.length + fielded.reserves.length;
   const place = new Map<string, number>();
-  fielded.players.forEach((player, index) => place.set(player.id, index));
-  fielded.reserves.forEach((player, index) => place.set(player.id, fielded.players.length + index));
+  fielded.players.forEach((player, index) => place.set(player.playerId, index));
+  fielded.reserves.forEach((player, index) => place.set(player.playerId, fielded.players.length + index));
 
   // Everybody else sorts by where the rule already had them, offset past the
   // named players. A finite key on purpose: Infinity for both sides of a
@@ -178,15 +219,15 @@ export interface Fielded {
  * somebody made rather than as an outcome the rule produced.
  */
 export function fieldedFor(season: Season, match: Match, selection: Selection): Fielded {
-  const byId = new Map(season.players.map((player) => [player.id, player]));
+  const byId = new Map(season.players.map((player) => [player.playerId, player]));
   const look = (ids: string[]): Player[] => ids.map((id) => byId.get(id)).filter((p) => p !== undefined);
 
   const ruled = selection.boardPlayers.map((player) => player.playerId);
 
   const withRoles = (players: Player[], reserves: Player[]) => {
     const roles = new Map<string, Role>();
-    for (const player of players) roles.set(player.id, "board");
-    for (const player of reserves) roles.set(player.id, "reserve");
+    for (const player of players) roles.set(player.playerId, "board");
+    for (const player of reserves) roles.set(player.playerId, "reserve");
     return roles;
   };
 
@@ -267,7 +308,7 @@ export function ratingOn(player: Player, date?: string): Rating | null {
 }
 
 export function statsFor(season: Season): PlayerStats[] {
-  const byPlayer = new Map<string, Game[]>(season.players.map((player) => [player.id, []]));
+  const byPlayer = new Map<string, Game[]>(season.players.map((player) => [player.playerId, []]));
   for (const match of season.matches) {
     for (const game of match.result?.games ?? []) {
       byPlayer.get(game.playerId)?.push(game);
@@ -275,7 +316,7 @@ export function statsFor(season: Season): PlayerStats[] {
   }
 
   return season.players.map((player) => {
-    const games = byPlayer.get(player.id) ?? [];
+    const games = byPlayer.get(player.playerId) ?? [];
     return {
       player,
       played: games.length,

@@ -5,62 +5,112 @@ description: Create a new season directory from a pasted league fixture list. Us
 
 # Starting a season
 
-A season is a directory under `content/seasons/<id>/` holding three files. Adding
-one is all it takes; the site discovers seasons by glob, so nothing needs
-registering anywhere.
+A season is a directory under `content/seasons/<period>/<club>-<team>/` holding
+three files. Adding one is all it takes; the site discovers seasons by glob, so
+nothing needs registering anywhere.
 
 ```
-content/seasons/2027-jan-apr/
-  season.json    the season itself: dates, seed, boards, clocks, links
-  players.json   the roster, which changes every season
+content/seasons/autumn-2026/bristol-clifton-g/
+  season.json    the season itself: dates, seed, boards, clocks, division
+  teams.json     both sides: ours with its squad, and everybody we play
   matches.json   the fixtures
 ```
 
-## The team comes first
-
-A season points at a team in `content/teams.json` by `teamId`. If the side is
-new, add the team there before the season: name, club, competition, home venue,
-and **`links.fixtures`, which is required**. That link is the league's own
-record and every match page points back at it, because this site is a
-convenience built on top of the league's list and has to say where its facts
-came from.
-
-## Naming
-
-Use `<year>-<start month>-<end month>`, lowercase: `2026-autumn-g`,
-`2027-jan-apr`. The directory name and the `id` inside `season.json` must match,
-and the loader fails if they do not.
+The directory is not the id. The id is the path the season's own fields spell
+out, `bristol-district/bristol-clifton/team-g/autumn-2026`, and it is what the
+URL uses. The directory only has to be unique and short enough to type, so it is
+the period and then the team: the loader checks the two agree.
 
 ## season.json
 
-Copy an existing one and change what differs. The fields worth thinking about:
+```json
+{
+  "leagueId": "bristol-district",
+  "clubId": "bristol-clifton",
+  "teamId": "g",
+  "period": "autumn-2026",
+  "name": "Autumn 2026",
+  "division": 6,
+  "start": "2026-09-01",
+  "end": "2026-12-31",
+  "seed": "bristol-clifton-g-2026-autumn",
+  "boards": 4,
+  "reserves": 2,
+  "active": true,
+  "prototype": false
+}
+```
 
+- **`leagueId`** must be in `content/leagues.json`, which carries the rules and
+  handbook links every team in that league shares.
+- **`period`** is the stretch of the calendar, slugified: `autumn-2026`.
+- **`division`** is an attribute, not part of the id, because it moves with
+  promotion and relegation and an id built on it would take every shared link
+  with it.
 - **`seed`** — the tiebreak seed. Any stable string; include the season so it
-  differs from every other. **Once a match has been played, it is immutable**:
+  differs from every other. **Once a fixture has been played, it is immutable**:
   changing it re-decides every tie in the season's history.
 - **`active`** — exactly one season across the whole site. This is the one `/`
   opens on.
 - **`prototype`** — true only for invented data. It badges the season in the UI
   and is what keeps made-up players away from real team sheets.
-- **`timeControl`** — the league's clocks. Currently 80+10, and 55+10 on a board
-  with anyone under 16.
+- **`timeControl`** — the league's clocks, defaulted to 80+10 and 55+10 on a
+  board with anyone under 16. Set `juniorOn` to the date the league takes age on.
+
+## teams.json
+
+Ours first, then a record for every side we are drawn against.
+
+```json
+[
+  {
+    "clubId": "bristol-clifton",
+    "teamId": "g",
+    "name": "Bristol & Clifton G",
+    "links": { "fixtures": "https://lms.englishchess.org.uk/lms/team/30209/fixtures" },
+    "players": [{ "playerId": "niall", "name": "Niall", "junior": false, "ratings": [] }]
+  },
+  { "clubId": "south-bristol", "teamId": "d", "name": "South Bristol D", "players": [] }
+]
+```
+
+- **`links.fixtures` on our team is required in practice**: it is the league's
+  own record, and every fixture page points back at it, because this site is a
+  convenience built on top of the league's list and has to say where its facts
+  came from.
+- **An opponent starts with an empty squad.** That is honest: it is a record of
+  who turned up, filled in as we meet them, not a claim to know their team.
+- **Every `clubId` must be in `content/clubs.json`.** A new opponent club means
+  adding the club first, with its venue: see the `venue-details` skill. The
+  address must come from the league site or the club, never from a guess.
 
 ## matches.json from a pasted fixture list
 
 The league publishes a table like `Bristol & Clifton G | 0 - 0 | South Bristol D
 | Tue 8 Sep 26 | 19:30`. For each row:
 
-- **`home` is whether we are named first.** That decides the venue: home
-  fixtures are at `bristol-clifton`, away ones at the opponent club's venue.
-- `venueId` must exist in `content/venues.json`. **A new opponent club means
-  adding a venue first**, and its address must come from the league site or the
-  club, never from a guess. A venue with a null address still works: the map link
-  searches by name.
-- `round` is the position in the list, 1 upward, and must be unique.
+```json
+{
+  "id": "fixture-1",
+  "opponentTeamId": "south-bristol/team-d",
+  "home": true,
+  "date": "2026-09-08",
+  "time": "19:30",
+  "status": "scheduled",
+  "availability": [],
+  "settled": false,
+  "recordUrl": null,
+  "result": null
+}
+```
+
+- **`id` is `fixture-<n>`**, its position in the list counting from one, unique
+  within the season. There is no separate round number: the id is the number.
+- **`home` is whether we are named first.** That is all the venue needs, because
+  the venue is the home club's and is never written down.
+- **`opponentTeamId`** is the team's whole path, `<clubId>/team-<letter>`, and
+  must match a record in `teams.json`.
 - `date` must fall inside the season's `start` and `end`.
-- Ids must be unique across every season, so prefix them: `2027-jan-apr-r1`.
-- Start with `status: "scheduled"`, empty `availability`, `settled: false` and
-  null `result`.
 
 **Check the weekdays.** The league writes "Tue 8 Sep 26"; if your date does not
 land on that weekday you have the wrong year or transcribed a digit. The site
@@ -70,8 +120,7 @@ prints the weekday it computed, so compare.
 
 Ask; do not carry the previous season's players over on your own. Membership
 changes each season and that is the reason seasons exist as separate
-directories. Each player needs `id` (kebab-case), `name`, and `junior`. Ratings
-can be empty, which means unrated and is normal for a new member.
+directories.
 
 ## Finally
 

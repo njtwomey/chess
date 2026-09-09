@@ -15,8 +15,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useTheme } from "@/hooks/use-theme";
-import { teams } from "@/lib/data";
-import { matchScore, orderedMatches } from "@/lib/season";
+import { fixtureNumber } from "@/lib/schema";
+import { matchScore, opponentTeam, orderedMatches } from "@/lib/season";
 import { formatShortDate, today } from "@/lib/time";
 import { cn } from "@/lib/utils";
 
@@ -59,6 +59,11 @@ function ThemeToggle() {
 function SeasonPicker({ onNavigate }: { onNavigate?: () => void }) {
   const { season, seasons, inSeason } = useSeason();
 
+  // Grouped by the side whose campaign it is, in the order the seasons come in,
+  // which is newest first. Taken from the seasons themselves because a team is
+  // a fact about a season now: there is no separate list to fall behind.
+  const sides = [...new Map(seasons.map((entry) => [entry.team.id, entry.team.name])).entries()];
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="hover:text-foreground inline-flex items-center gap-1.5 rounded-md text-sm font-medium transition-colors">
@@ -66,11 +71,11 @@ function SeasonPicker({ onNavigate }: { onNavigate?: () => void }) {
         <ChevronDown className="size-3.5 opacity-60" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-60">
-        {teams.map((team) => (
-          <React.Fragment key={team.id}>
-            <DropdownMenuLabel className="text-muted-foreground text-xs font-normal">{team.name}</DropdownMenuLabel>
+        {sides.map(([teamId, name]) => (
+          <React.Fragment key={teamId}>
+            <DropdownMenuLabel className="text-muted-foreground text-xs font-normal">{name}</DropdownMenuLabel>
             {seasons
-              .filter((entry) => entry.teamId === team.id)
+              .filter((entry) => entry.team.id === teamId)
               .map((entry) => {
                 const here = inSeason && entry.id === season.id;
                 return (
@@ -147,17 +152,17 @@ function ScheduleNav({ onNavigate }: { onNavigate?: () => void }) {
               return (
                 <DropdownMenuItem key={match.id} asChild>
                   <Link
-                    to={seasonPath(season.id, `match/${match.id}`)}
+                    to={seasonPath(season.id, match.id)}
                     onClick={onNavigate}
                     className={cn(
                       "text-muted-foreground focus:text-foreground cursor-pointer text-sm",
                       here && "text-foreground bg-accent font-medium",
                     )}
                   >
-                    <span className="tabular w-3 shrink-0 text-xs opacity-70">{match.round}</span>
+                    <span className="tabular w-3 shrink-0 text-xs opacity-70">{fixtureNumber(match)}</span>
                     <span className="tabular w-12 shrink-0 text-xs opacity-70">{formatShortDate(match.date)}</span>
                     <HomeAway home={match.home} size="xs" />
-                    <span className="min-w-0 flex-1 truncate">{match.opponent}</span>
+                    <span className="min-w-0 flex-1 truncate">{opponentTeam(season, match).name}</span>
                     {score ? (
                       <span
                         className={cn(
@@ -241,8 +246,8 @@ export function SiteHeader() {
           <NavLink to="/" end className={linkStyle()}>
             Home
           </NavLink>
-          <NavLink to="/venues" className={linkStyle()}>
-            Venues
+          <NavLink to="/clubs" className={linkStyle()}>
+            Clubs
           </NavLink>
           <NavLink to="/how-it-works" className={linkStyle()}>
             Info
@@ -264,8 +269,8 @@ export function SiteHeader() {
                 <NavLink to="/" onClick={close} end className={linkStyle("hover:bg-accent px-3 py-2")}>
                   Home
                 </NavLink>
-                <NavLink to="/venues" onClick={close} className={linkStyle("hover:bg-accent px-3 py-2")}>
-                  Venues
+                <NavLink to="/clubs" onClick={close} className={linkStyle("hover:bg-accent px-3 py-2")}>
+                  Clubs
                 </NavLink>
                 <NavLink to="/how-it-works" onClick={close} className={linkStyle("hover:bg-accent px-3 py-2")}>
                   Info

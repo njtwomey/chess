@@ -3,7 +3,6 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { useCopy } from "@/hooks/use-copy";
 import { availabilityUpdate, callToAction, matchResult, selectedTeam } from "@/lib/messages";
-import { venueById } from "@/lib/data";
 import type { Match, Season } from "@/lib/schema";
 import type { Selection } from "@/lib/selection";
 import { cn } from "@/lib/utils";
@@ -49,11 +48,11 @@ export function MessageButtons({
     ...(played
       ? [{ label: "Copy the result", Icon: Trophy, text: () => matchResult(season, match) ?? "" }]
       : [
-          { label: "Ask who can play", Icon: MessageSquare, text: () => callToAction(season, match, venueById) },
-          { label: "Copy the status", Icon: Users, text: () => availabilityUpdate(season, match, venueById) },
+          { label: "Ask who can play", Icon: MessageSquare, text: () => callToAction(season, match) },
+          { label: "Copy the status", Icon: Users, text: () => availabilityUpdate(season, match) },
         ]),
     ...(settled
-      ? [{ label: "Copy the team", Icon: ClipboardCopy, text: () => selectedTeam(season, match, selection, venueById) }]
+      ? [{ label: "Copy the team", Icon: ClipboardCopy, text: () => selectedTeam(season, match, selection) }]
       : []),
   ];
 

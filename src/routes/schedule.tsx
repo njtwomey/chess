@@ -4,7 +4,6 @@ import { Empty, Page, Section } from "@/components/page";
 import { CompetitionLink } from "@/components/competition-link";
 import { useSeason } from "@/components/season-context";
 import { Button } from "@/components/ui/button";
-import { venueById } from "@/lib/data";
 import { icsFilename, toIcs } from "@/lib/ics";
 import { orderedMatches } from "@/lib/season";
 import { today } from "@/lib/time";
@@ -18,7 +17,7 @@ export function Schedule() {
   const [next, ...rest] = upcoming;
 
   const download = () => {
-    const blob = new Blob([toIcs(season, venueById)], { type: "text/calendar;charset=utf-8" });
+    const blob = new Blob([toIcs(season)], { type: "text/calendar;charset=utf-8" });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -35,7 +34,7 @@ export function Schedule() {
       lede={
         <>
           {season.matches.length} fixtures, {season.boards} boards each, all starting at 19:30. Fixtures come from the{" "}
-          <CompetitionLink team={season.team} />.
+          <CompetitionLink season={season} />.
         </>
       }
       actions={

@@ -10,13 +10,23 @@ scatter of messages. This turns those into `availability` entries on one match.
 
 ## What you are editing
 
-`content/seasons/<season>/matches.json`, the `availability` array of one match.
-Nothing else. Never touch `result`, and never edit a player's game count: it is
-counted from results and does not exist as a field.
+`content/seasons/<period>/<club>-<team>/matches.json`, the `availability` array
+of one fixture. Nothing else. Never touch `result`, and never edit a player's
+game count: it is counted from results and does not exist as a field.
 
 ```json
-{ "playerId": "gwen-tsai", "reply": "yes", "at": "2026-09-04", "note": "Might be ten minutes late." }
+{
+  "playerId": "bristol-clifton/team-g/gwen",
+  "reply": "yes",
+  "at": "2026-09-04",
+  "note": "Might be ten minutes late."
+}
 ```
+
+`playerId` is the whole path: the club, the team and their own segment. The
+roster in `teams.json` stores only the last part, and everything that refers to
+a player spells it out, because a fixture has two squads in it and a bare name
+is unambiguous only until both sides field a Theo.
 
 `at` is the date they replied, which is what makes a past selection auditable.
 `note` is optional and only for something the captain would otherwise have to
@@ -45,7 +55,7 @@ to `no`. Add a `withdrawn` block and leave their reply alone:
 
 ```json
 {
-  "playerId": "mira-vance",
+  "playerId": "demo-club/team-d/mira-vance",
   "reply": "yes",
   "at": "2026-09-02",
   "withdrawn": { "at": "2026-09-14", "note": "Called away for work." }
@@ -80,8 +90,9 @@ match is settled automatically.
 
 ## How to do it
 
-1. Ask which match if it is not obvious. Match ids look like `demo-r5`.
-2. Match each name to a `playerId` from that season's `players.json`. Never
+1. Ask which fixture if it is not obvious. Fixture ids look like `fixture-5`.
+2. Match each name to a player on our team in that season's `teams.json`, and
+   write their id out in full. Never
    invent a player to fit a message. A name you cannot place is something to ask
    about, and the answer might be that they need adding first.
 3. One entry per player. If somebody has replied before, **update their existing
@@ -92,8 +103,8 @@ match is settled automatically.
    for them would say they answered when they did not.
 5. Run `make check`. The loader validates ids and duplicates.
 6. Report back: how many of each reply, who the rule now picks, who moved up if
-   anybody dropped out, and who is still silent. Point at `/match/<id>` for the
-   working.
+   anybody dropped out, and who is still silent. Point at
+   `/season/<season id>/<fixture id>` for the working.
 
 ## Afterwards
 

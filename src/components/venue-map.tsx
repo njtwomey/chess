@@ -1,6 +1,6 @@
 import { MapPin } from "lucide-react";
 import { mapsUrl } from "@/lib/links";
-import type { Venue } from "@/lib/schema";
+import type { Club } from "@/lib/schema";
 import { osmUrl, tilesAround } from "@/lib/tiles";
 import { cn } from "@/lib/utils";
 
@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 const ZOOM = 16;
 
 /**
- * A square of OpenStreetMap with the venue marked.
+ * A square of OpenStreetMap with the club's venue marked.
  *
  * Tiles are drawn directly rather than through OSM's embed or a map library.
  * That keeps it to a few lazily-loaded images with nothing to initialise, and
@@ -19,13 +19,13 @@ const ZOOM = 16;
  * The attribution is not decoration. OpenStreetMap's licence requires it, and
  * it has to link back.
  */
-export function VenueMap({ venue, className }: { venue: Venue; className?: string }) {
-  const { lat, lon } = venue;
+export function VenueMap({ club, className }: { club: Club; className?: string }) {
+  const { lat, lon } = club.venue;
 
   if (lat === null || lon === null) {
     return (
       <a
-        href={mapsUrl(venue)}
+        href={mapsUrl(club)}
         target="_blank"
         rel="noreferrer"
         className={cn(
@@ -44,10 +44,10 @@ export function VenueMap({ venue, className }: { venue: Venue; className?: strin
   return (
     <div className={cn("relative aspect-square overflow-hidden rounded-lg border bg-neutral-200", className)}>
       <a
-        href={mapsUrl(venue)}
+        href={mapsUrl(club)}
         target="_blank"
         rel="noreferrer"
-        aria-label={`Map of ${venue.name}`}
+        aria-label={`Map of ${club.name}`}
         className="absolute inset-0 block"
       >
         {tiles.map((tile) => (

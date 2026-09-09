@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { seasonPath } from "@/components/season-context";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { Match, Season } from "@/lib/schema";
-import { orderedMatches } from "@/lib/season";
+import { opponentTeam, orderedMatches } from "@/lib/season";
 import { today } from "@/lib/time";
 import { cn } from "@/lib/utils";
 
@@ -89,7 +89,7 @@ export function FixtureCalendar({ season }: { season: Season }) {
                   <Tooltip key={date}>
                     <TooltipTrigger asChild>
                       <Link
-                        to={seasonPath(season.id, `match/${match.id}`)}
+                        to={seasonPath(season.id, match.id)}
                         className={cn(
                           "tabular block rounded py-1 text-xs font-semibold",
                           match.home
@@ -102,7 +102,7 @@ export function FixtureCalendar({ season }: { season: Season }) {
                     </TooltipTrigger>
                     <TooltipContent>
                       {match.home ? "Home to " : "Away to "}
-                      {match.opponent}, {match.time}
+                      {opponentTeam(season, match).name}, {match.time}
                     </TooltipContent>
                   </Tooltip>
                 );

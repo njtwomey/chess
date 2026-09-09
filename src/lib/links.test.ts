@@ -1,32 +1,27 @@
 import { describe, expect, it } from "vitest";
 import { chesscomUrl, lichessUrl, mapsUrl, taggedPgn } from "@/lib/links";
-import type { Game, Match, Venue } from "@/lib/schema";
+import type { Club, Game, Match, Venue } from "@/lib/schema";
 
-const venue = (overrides: Partial<Venue> = {}): Venue => ({
-  id: "v",
+const club = (overrides: Partial<Venue> = {}): Club => ({
+  id: "bristol-clifton",
   name: "Bristol & Clifton Chess Club",
-  address: null,
-  postcode: null,
-  maps: null,
-  website: null,
-  lat: null,
-  lon: null,
-  ...overrides,
+  links: { website: null },
+  venue: { name: null, address: null, postcode: null, maps: null, lat: null, lon: null, ...overrides },
 });
 
 describe("maps links", () => {
   it("prefers a link somebody pasted", () => {
-    expect(mapsUrl(venue({ maps: "https://maps.app.goo.gl/abc" }))).toBe("https://maps.app.goo.gl/abc");
+    expect(mapsUrl(club({ maps: "https://maps.app.goo.gl/abc" }))).toBe("https://maps.app.goo.gl/abc");
   });
 
   it("searches by name when there is no address, rather than inventing one", () => {
-    const url = mapsUrl(venue());
+    const url = mapsUrl(club());
     expect(url).toContain("google.com/maps/search/");
     expect(decodeURIComponent(url)).toContain("Bristol & Clifton Chess Club, Bristol");
   });
 
   it("uses the address and postcode once they are known", () => {
-    const url = mapsUrl(venue({ address: "99 Oldfield Road", postcode: "BS8 4QQ" }));
+    const url = mapsUrl(club({ address: "99 Oldfield Road", postcode: "BS8 4QQ" }));
     expect(decodeURIComponent(url)).toContain("99 Oldfield Road, BS8 4QQ");
   });
 });
@@ -55,11 +50,9 @@ describe("analysis links", () => {
 
 describe("exporting a PGN", () => {
   const match: Match = {
-    id: "m",
-    round: 3,
-    opponent: "Bristol Grendel C",
+    id: "fixture-3",
+    opponentTeamId: "bristol-grendel/team-c",
     home: false,
-    venueId: "v",
     date: "2026-04-20",
     time: "19:30",
     status: "played",
@@ -72,37 +65,34 @@ describe("exporting a PGN", () => {
 
   const game: Game = {
     board: 1,
-    playerId: "ada-mercer",
+    playerId: "demo-club/team-d/ada-mercer",
+    opponentId: "bristol-grendel/team-c/v-okonjo",
     colour: "black",
-    opponent: {
-      id: "bristol-grendel-c-v-okonjo",
-      name: "V. Okonjo",
-      role: "member",
-      ratings: [{ date: "2026-04-20", rating: 1612, source: "ecf" }],
-      ecfCode: null,
-      junior: false,
-      url: null,
-    },
     result: "win",
     pgn: "1. d4 Nf6 2. c4 e6 0-1",
   };
 
+  /** Away, so the league writes the home side first: they are, we are not. */
+  const SIDES = { home: "Bristol Grendel C", away: "Bristol & Clifton G" };
+  const pgnOf = (over: Partial<Game> = {}, us = "Ada Mercer") =>
+    taggedPgn(match, { ...game, ...over }, us, "V. Okonjo", SIDES);
+
   it("writes the seven required tags", () => {
-    const pgn = taggedPgn(match, game, "Ada Mercer", "Bristol & Clifton G");
+    const pgn = pgnOf();
     for (const tag of ["Event", "Site", "Date", "Round", "White", "Black", "Result"]) {
       expect(pgn).toContain(`[${tag} `);
     }
   });
 
   it("names the away team second and dots the date", () => {
-    const pgn = taggedPgn(match, game, "Ada Mercer", "Bristol & Clifton G");
+    const pgn = pgnOf();
     expect(pgn).toContain('[Event "Bristol Grendel C v Bristol & Clifton G"]');
     expect(pgn).toContain('[Date "2026.04.20"]');
     expect(pgn).toContain('[Round "3.1"]');
   });
 
   it("puts our player on the right side of the board", () => {
-    const pgn = taggedPgn(match, game, "Ada Mercer", "Bristol & Clifton G");
+    const pgn = pgnOf();
     expect(pgn).toContain('[White "V. Okonjo"]');
     expect(pgn).toContain('[Black "Ada Mercer"]');
   });
@@ -110,14 +100,12 @@ describe("exporting a PGN", () => {
   it("writes the result from White's side, not ours", () => {
     // Our win with the black pieces is 0-1 in a PGN, and getting this backwards
     // is how a database ends up crediting the wrong player.
-    expect(taggedPgn(match, game, "Ada", "Us")).toContain('[Result "0-1"]');
-    const asWhite = { ...game, colour: "white" as const };
-    expect(taggedPgn(match, asWhite, "Ada", "Us")).toContain('[Result "1-0"]');
-    const drawn = { ...game, result: "draw" as const };
-    expect(taggedPgn(match, drawn, "Ada", "Us")).toContain('[Result "1/2-1/2"]');
+    expect(pgnOf()).toContain('[Result "0-1"]');
+    expect(pgnOf({ colour: "white" })).toContain('[Result "1-0"]');
+    expect(pgnOf({ result: "draw" })).toContain('[Result "1/2-1/2"]');
   });
 
   it("stands in a placeholder when there is no movetext", () => {
-    expect(taggedPgn(match, { ...game, pgn: null }, "Ada", "Us")).toMatch(/\n\*\n$/);
+    expect(pgnOf({ pgn: null })).toMatch(/\n\*\n$/);
   });
 });

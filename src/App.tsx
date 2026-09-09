@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Navigate, Route, BrowserRouter as Router, Routes, useLocation, useParams } from "react-router-dom";
+import { Navigate, Route, BrowserRouter as Router, Routes, useLocation } from "react-router-dom";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { Page } from "@/components/page";
-import { SeasonProvider, seasonPath, useSeason } from "@/components/season-context";
+import { SeasonProvider, seasonPath, splitSeasonPath, useSeason } from "@/components/season-context";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -18,7 +18,7 @@ const SeasonCalendar = React.lazy(() => import("@/routes/calendar").then((m) => 
 const Schedule = React.lazy(() => import("@/routes/schedule").then((m) => ({ default: m.Schedule })));
 const Team = React.lazy(() => import("@/routes/team").then((m) => ({ default: m.Team })));
 const Games = React.lazy(() => import("@/routes/games").then((m) => ({ default: m.Games })));
-const Venues = React.lazy(() => import("@/routes/venues").then((m) => ({ default: m.Venues })));
+const Clubs = React.lazy(() => import("@/routes/clubs").then((m) => ({ default: m.Clubs })));
 const GamePage = React.lazy(() => import("@/routes/games").then((m) => ({ default: m.GamePage })));
 const MatchPage = React.lazy(() => import("@/routes/match").then((m) => ({ default: m.MatchPage })));
 const HowItWorks = React.lazy(() => import("@/routes/how-it-works").then((m) => ({ default: m.HowItWorks })));
@@ -53,15 +53,40 @@ function EnterSeason({ page }: { page?: string }) {
 }
 
 /**
- * A season on its own opens on its calendar.
+ * Everything under a season, dispatched by hand.
  *
- * Redirected rather than rendered here, so the calendar has exactly one URL.
- * Two paths showing the same page is how a shared link stops matching what the
- * header says is current.
+ * A season id is itself a path, so `:seasonId` cannot match it and a fixed
+ * shape would bake its depth into every route in the app. A splat plus a lookup
+ * costs one function and stays right whatever the ids look like.
+ *
+ * A season on its own redirects to its calendar rather than rendering it, so
+ * the calendar has exactly one URL: two paths showing the same page is how a
+ * shared link stops matching what the header says is current.
  */
-function SeasonEntry() {
-  const { seasonId } = useParams();
-  return <Navigate to={seasonPath(seasonId ?? "", "calendar")} replace />;
+const SEASON_PAGES: Record<string, React.ComponentType> = {
+  calendar: SeasonCalendar,
+  schedule: Schedule,
+  team: Team,
+  games: Games,
+};
+
+function SeasonRoutes() {
+  const { pathname } = useLocation();
+  const found = splitSeasonPath(pathname);
+  if (!found) return <Navigate to="/" replace />;
+
+  const { season, page } = found;
+  if (page === "") return <Navigate to={seasonPath(season.id, "calendar")} replace />;
+
+  const Known = SEASON_PAGES[page];
+  if (Known) return <Known />;
+
+  // A fixture, and under it a board. Both say what they are, so the path needs
+  // no `/match/` or `/board/` segment to explain them.
+  const parts = /^(fixture-\d+)(?:\/(board-\d+))?$/.exec(page);
+  if (!parts?.[1]) return <Navigate to={seasonPath(season.id, "schedule")} replace />;
+  if (!parts[2]) return <MatchPage seasonId={season.id} matchId={parts[1]} />;
+  return <GamePage seasonId={season.id} matchId={parts[1]} board={Number(parts[2].slice("board-".length))} />;
 }
 
 function RouteFallback() {
@@ -89,25 +114,13 @@ export default function App() {
                 <Routes>
                   {/* The global half: about the club, not about one season. */}
                   <Route path="/" element={<SiteHome />} />
-                  <Route path="/venues" element={<Venues />} />
+                  <Route path="/clubs" element={<Clubs />} />
                   <Route path="/how-it-works" element={<HowItWorks />} />
 
-                  {/* Season-scoped, and therefore shareable. */}
-                  <Route path="/season/:seasonId" element={<SeasonEntry />} />
-                  <Route path="/season/:seasonId/calendar" element={<SeasonCalendar />} />
-                  <Route path="/season/:seasonId/schedule" element={<Schedule />} />
-                  <Route path="/season/:seasonId/team" element={<Team />} />
-                  <Route path="/season/:seasonId/games" element={<Games />} />
-                  {/* Venues used to hang off a season and was published that
-                      way, so an old link keeps working rather than silently
-                      landing somebody on the front page. */}
-                  <Route path="/season/:seasonId/venues" element={<Navigate to="/venues" replace />} />
-
-                  {/* A match belongs to a season and a game is a board of a
-                      match, so the path says exactly that. It also lets a match
-                      be `r1` rather than repeating the season id inside it. */}
-                  <Route path="/season/:seasonId/match/:matchId" element={<MatchPage />} />
-                  <Route path="/season/:seasonId/match/:matchId/board/:board" element={<GamePage />} />
+                  {/* Season-scoped, and therefore shareable. The season id is
+                      a path in its own right, so one splat covers every page
+                      under it, fixtures and boards included. */}
+                  <Route path="/season/*" element={<SeasonRoutes />} />
 
                   {/* The unscoped forms are kept as entry points: someone who
                     types /schedule, or follows a link from before the season

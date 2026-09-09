@@ -12,7 +12,7 @@ import { assignBoards } from "@/lib/boards";
 import { selectedTeam } from "@/lib/messages";
 import { fieldedFor, roleFor, selectionFor, sheetOrder } from "@/lib/season";
 import type { Match } from "@/lib/schema";
-import { aMatch, aSeason, aSquad, aVenue, said } from "@/lib/testing";
+import { aMatch, aSeason, aSquad, ours, said } from "@/lib/testing";
 
 /**
  * Built rather than read from a season on disk.
@@ -23,21 +23,19 @@ import { aMatch, aSeason, aSquad, aVenue, said } from "@/lib/testing";
  * cannot change what this file is testing.
  */
 const base = aMatch({
-  id: "r1",
+  id: "fixture-1",
   availability: [
-    said("p1", "yes"),
-    said("p2", "yes"),
-    said("p3", "yes"),
-    said("p4", "yes"),
-    said("p5", "yes"),
-    said("p6", "yes", { withdrawn: { at: "2026-03-08" } }),
-    said("p7", "reserve"),
-    said("p8", "reserve"),
-    said("p9", "unsure"),
+    said(ours("p1"), "yes"),
+    said(ours("p2"), "yes"),
+    said(ours("p3"), "yes"),
+    said(ours("p4"), "yes"),
+    said(ours("p5"), "yes"),
+    said(ours("p6"), "yes", { withdrawn: { at: "2026-03-08" } }),
+    said(ours("p7"), "reserve"),
+    said(ours("p8"), "reserve"),
+    said(ours("p9"), "unsure"),
   ],
 });
-const venue = aVenue({ id: "our-venue", name: "Our Chess Club" });
-const venues = new Map([[venue.id, venue]]);
 const season = aSeason({ players: aSquad(9), matches: [base] });
 
 /** The same fixture, with a team written down on it. */
@@ -59,13 +57,13 @@ describe("fieldedFor, with no team written down", () => {
     expect(fielded.ordered).toBe(false);
     expect(fielded.added).toEqual([]);
     expect(fielded.dropped).toEqual([]);
-    expect(fielded.players.map((player) => player.id)).toEqual(ruled);
+    expect(fielded.players.map((player) => player.playerId)).toEqual(ruled);
   });
 
   it("still reports the dropouts the rule knew about", () => {
     // Losing them here would mean a withdrawal vanished from the group message
     // the moment this layer was introduced.
-    expect(fielded.withdrawn.map((player) => player.id)).toEqual(rule.withdrawn.map((player) => player.playerId));
+    expect(fielded.withdrawn.map((player) => player.playerId)).toEqual(rule.withdrawn.map((player) => player.playerId));
   });
 });
 
@@ -73,7 +71,7 @@ describe("fieldedFor, with a team written down", () => {
   it("fields exactly who is named, in the order they are named", () => {
     const shortlist = [...ruled].reverse();
     const fielded = fieldedFor(season, withLineup(shortlist), rule);
-    expect(fielded.players.map((player) => player.id)).toEqual(shortlist);
+    expect(fielded.players.map((player) => player.playerId)).toEqual(shortlist);
     expect(fielded.ordered).toBe(true);
   });
 
@@ -93,8 +91,8 @@ describe("fieldedFor, with a team written down", () => {
     const fielded = fieldedFor(season, withLineup(shortlist), rule);
 
     expect(fielded.fromRule).toBe(false);
-    expect(fielded.added.map((player) => player.id)).toEqual([standby]);
-    expect(fielded.dropped.map((player) => player.id)).toEqual([ruled[3]]);
+    expect(fielded.added.map((player) => player.playerId)).toEqual([standby]);
+    expect(fielded.dropped.map((player) => player.playerId)).toEqual([ruled[3]]);
   });
 
   it("carries the captain's reason", () => {
@@ -105,7 +103,7 @@ describe("fieldedFor, with a team written down", () => {
   it("takes the reserves from beyond the boards", () => {
     const shortlist = [...ruled, ...rule.reservePlayers.map((player) => player.playerId)];
     const fielded = fieldedFor(season, withLineup(shortlist), rule);
-    expect(fielded.reserves.map((player) => player.id)).toEqual(shortlist.slice(season.boards));
+    expect(fielded.reserves.map((player) => player.playerId)).toEqual(shortlist.slice(season.boards));
   });
 
   it("reports a short shortlist rather than quietly fielding three", () => {
@@ -119,20 +117,20 @@ describe("a dropout out of a written-down team", () => {
   // The one property that matters: nobody is re-ranked. Whoever was below the
   // player who pulled out moves up exactly one place, and nobody else moves.
   const gone = base.availability.find((entry) => entry.withdrawn)!.playerId;
-  const others = season.players.map((player) => player.id).filter((id) => id !== gone);
+  const others = season.players.map((player) => player.playerId).filter((id) => id !== gone);
   const shortlist = [others[0]!, gone, ...others.slice(1, 5)];
   const fielded = fieldedFor(season, withLineup(shortlist), rule);
 
   it("takes them out and moves everybody below up one place", () => {
     const survivors = shortlist.filter((id) => id !== gone);
-    expect(fielded.players.map((player) => player.id)).toEqual(survivors.slice(0, season.boards));
-    expect(fielded.reserves.map((player) => player.id)).toEqual(
+    expect(fielded.players.map((player) => player.playerId)).toEqual(survivors.slice(0, season.boards));
+    expect(fielded.reserves.map((player) => player.playerId)).toEqual(
       survivors.slice(season.boards, season.boards + season.reserves),
     );
   });
 
   it("keeps them on the record rather than deleting them", () => {
-    expect(fielded.withdrawn.map((player) => player.id)).toEqual([gone]);
+    expect(fielded.withdrawn.map((player) => player.playerId)).toEqual([gone]);
   });
 });
 
@@ -141,7 +139,7 @@ describe("the group message follows the team that is actually being fielded", ()
     const standby = rule.standby[0]!.playerId;
     const shortlist = [...ruled.slice(0, 3), standby];
     const match = withLineup(shortlist, "Ada is away, so Hollis steps in.");
-    const message = selectedTeam(season, match, rule, venues);
+    const message = selectedTeam(season, match, rule);
 
     const fielded = fieldedFor(season, match, rule);
     expect(message).toContain(`Playing: ${names(fielded.players).join(", ")}.`);
@@ -150,7 +148,7 @@ describe("the group message follows the team that is actually being fielded", ()
 
   it("still names the rule's team when nothing was overridden", () => {
     const fielded = fieldedFor(season, base, rule);
-    expect(selectedTeam(season, base, rule, venues)).toContain(`Playing: ${names(fielded.players).join(", ")}.`);
+    expect(selectedTeam(season, base, rule)).toContain(`Playing: ${names(fielded.players).join(", ")}.`);
   });
 });
 
@@ -165,13 +163,13 @@ describe("a shortlist that names only the boards", () => {
       .filter((player) => !shortlist.includes(player.playerId))
       .slice(0, season.reserves)
       .map((player) => player.playerId);
-    expect(fielded.reserves.map((player) => player.id)).toEqual(expected);
+    expect(fielded.reserves.map((player) => player.playerId)).toEqual(expected);
     expect(fielded.reserves.length).toBeGreaterThan(0);
   });
 
   it("never puts somebody on a board and in the reserves at once", () => {
-    const boards = new Set(fielded.players.map((player) => player.id));
-    expect(fielded.reserves.filter((player) => boards.has(player.id))).toEqual([]);
+    const boards = new Set(fielded.players.map((player) => player.playerId));
+    expect(fielded.reserves.filter((player) => boards.has(player.playerId))).toEqual([]);
   });
 });
 
@@ -198,7 +196,7 @@ describe("the selection table and the board order agree", () => {
         timeControl: season.timeControl,
         onDate: match.date,
         keepOrder: fielded.ordered,
-      }).map((entry) => entry.player.id),
+      }).map((entry) => entry.player.playerId),
     };
   };
 
@@ -275,7 +273,7 @@ describe("the order a team sheet reads in", () => {
     const rows = sheetOrder(rule, fielded);
 
     const reserves = rows.slice(season.boards, season.boards + fielded.reserves.length);
-    expect(reserves.map((player) => player.playerId)).toEqual(fielded.reserves.map((player) => player.id));
+    expect(reserves.map((player) => player.playerId)).toEqual(fielded.reserves.map((player) => player.playerId));
 
     const rest = rows.slice(season.boards + fielded.reserves.length).map((player) => player.playerId);
     const asRuled = rule.standing.map((player) => player.playerId).filter((id) => rest.includes(id));

@@ -110,7 +110,7 @@ export function Team() {
             </TableHeader>
             <TableBody>
               {ordered.map((entry) => (
-                <TableRow key={entry.player.id} className={cn(entry.played === 0 && "bg-reply-unsure-soft/25")}>
+                <TableRow key={entry.player.playerId} className={cn(entry.played === 0 && "bg-reply-unsure-soft/25")}>
                   <TableCell>
                     <PlayerLink player={entry.player} className="font-medium" />
                     {entry.player.role !== "member" && (

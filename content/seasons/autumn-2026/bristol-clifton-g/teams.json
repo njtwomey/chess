@@ -1,0 +1,302 @@
+[
+  {
+    "clubId": "bristol-clifton",
+    "teamId": "g",
+    "name": "Bristol & Clifton G",
+    "links": {
+      "fixtures": "https://lms.englishchess.org.uk/lms/team/30209/fixtures"
+    },
+    "players": [
+      {
+        "playerId": "alex",
+        "name": "Alex",
+        "fullName": null,
+        "junior": false,
+        "ratings": [
+          {
+            "date": "2026-08-31",
+            "rating": 1840,
+            "source": "ecf"
+          }
+        ],
+        "ecfCode": "386591F"
+      },
+      {
+        "playerId": "alexandra",
+        "name": "Alexandra",
+        "fullName": null,
+        "junior": false,
+        "ratings": [
+          {
+            "date": "2026-08-31",
+            "rating": 1080,
+            "source": "ecf"
+          }
+        ],
+        "ecfCode": "380878G"
+      },
+      {
+        "playerId": "alfie",
+        "name": "Alfie",
+        "fullName": null,
+        "role": "captain",
+        "junior": false,
+        "ratings": [
+          {
+            "date": "2026-08-31",
+            "rating": 1382,
+            "source": "ecf"
+          }
+        ],
+        "ecfCode": "364477H"
+      },
+      {
+        "playerId": "george",
+        "name": "George",
+        "fullName": null,
+        "junior": false,
+        "ratings": []
+      },
+      {
+        "playerId": "jade",
+        "name": "Jade",
+        "fullName": null,
+        "junior": false,
+        "ratings": []
+      },
+      {
+        "playerId": "john",
+        "name": "John",
+        "fullName": null,
+        "junior": false,
+        "ratings": []
+      },
+      {
+        "playerId": "lorenzo",
+        "name": "Lorenzo",
+        "fullName": null,
+        "junior": false,
+        "ratings": []
+      },
+      {
+        "playerId": "mark",
+        "name": "Mark",
+        "fullName": null,
+        "junior": false,
+        "ratings": []
+      },
+      {
+        "playerId": "max",
+        "name": "Max",
+        "fullName": null,
+        "junior": false,
+        "ratings": []
+      },
+      {
+        "playerId": "mukhtar",
+        "name": "Mukhtar",
+        "fullName": null,
+        "junior": false,
+        "ratings": [
+          {
+            "date": "2026-08-31",
+            "rating": 1284,
+            "source": "ecf"
+          }
+        ],
+        "ecfCode": "389043A"
+      },
+      {
+        "playerId": "niall",
+        "name": "Niall",
+        "fullName": null,
+        "role": "captain",
+        "junior": false,
+        "ratings": []
+      },
+      {
+        "playerId": "shaan",
+        "name": "Shaan",
+        "fullName": null,
+        "junior": false,
+        "ratings": [
+          {
+            "date": "2026-08-31",
+            "rating": 1459,
+            "source": "ecf"
+          }
+        ],
+        "ecfCode": "380146K"
+      },
+      {
+        "playerId": "sonny",
+        "name": "Sonny",
+        "fullName": null,
+        "junior": true,
+        "ratings": []
+      },
+      {
+        "playerId": "steve",
+        "name": "Steve",
+        "fullName": null,
+        "junior": false,
+        "ratings": [
+          {
+            "date": "2026-08-31",
+            "rating": 1214,
+            "source": "ecf"
+          }
+        ],
+        "ecfCode": "368493D"
+      },
+      {
+        "playerId": "theo",
+        "name": "Theo",
+        "fullName": null,
+        "junior": false,
+        "ratings": []
+      },
+      {
+        "playerId": "thomas",
+        "name": "Thomas",
+        "fullName": null,
+        "junior": false,
+        "ratings": [
+          {
+            "date": "2026-08-31",
+            "rating": 1350,
+            "source": "ecf"
+          }
+        ],
+        "ecfCode": "220762L"
+      },
+      {
+        "playerId": "will",
+        "name": "Will",
+        "fullName": null,
+        "junior": false,
+        "ratings": []
+      }
+    ]
+  },
+  {
+    "clubId": "bristol-grendel",
+    "teamId": "c",
+    "name": "Bristol Grendel C",
+    "links": {
+      "fixtures": null
+    },
+    "players": []
+  },
+  {
+    "clubId": "downend-fishponds",
+    "teamId": "f",
+    "name": "Downend & Fishponds F",
+    "links": {
+      "fixtures": null
+    },
+    "players": []
+  },
+  {
+    "clubId": "hanham-folk-centre",
+    "teamId": "b",
+    "name": "Hanham Folk Centre B",
+    "links": {
+      "fixtures": null
+    },
+    "players": []
+  },
+  {
+    "clubId": "horfield-redland",
+    "teamId": "e",
+    "name": "Horfield & Redland E",
+    "links": {
+      "fixtures": null
+    },
+    "players": []
+  },
+  {
+    "clubId": "south-bristol",
+    "teamId": "d",
+    "name": "South Bristol D",
+    "links": {
+      "fixtures": null
+    },
+    "players": [
+      {
+        "playerId": "sean-hubble",
+        "name": "Sean Hubble",
+        "fullName": null,
+        "ratings": [
+          {
+            "date": "2026-09-08",
+            "rating": 1542,
+            "source": "ecf"
+          }
+        ],
+        "ecfCode": null,
+        "url": "https://lms.englishchess.org.uk/lms/player/121305/view"
+      },
+      {
+        "playerId": "michael-chaffey",
+        "name": "Michael Chaffey",
+        "fullName": null,
+        "ratings": [
+          {
+            "date": "2026-09-08",
+            "rating": 1488,
+            "source": "ecf"
+          }
+        ],
+        "ecfCode": null,
+        "url": "https://lms.englishchess.org.uk/lms/player/112300/view"
+      },
+      {
+        "playerId": "ryszard-dudko",
+        "name": "Ryszard Dudko",
+        "fullName": null,
+        "ratings": [
+          {
+            "date": "2026-09-08",
+            "rating": 1475,
+            "source": "ecf"
+          }
+        ],
+        "ecfCode": null,
+        "url": "https://lms.englishchess.org.uk/lms/player/129174/view"
+      },
+      {
+        "playerId": "alessandro-coppola",
+        "name": "Alessandro Coppola",
+        "fullName": null,
+        "ratings": [
+          {
+            "date": "2026-09-08",
+            "rating": 1356,
+            "source": "ecf"
+          }
+        ],
+        "ecfCode": null,
+        "url": "https://lms.englishchess.org.uk/lms/player/73812/view"
+      }
+    ]
+  },
+  {
+    "clubId": "south-bristol",
+    "teamId": "e",
+    "name": "South Bristol E",
+    "links": {
+      "fixtures": null
+    },
+    "players": []
+  },
+  {
+    "clubId": "uwe",
+    "teamId": "b",
+    "name": "UWE B",
+    "links": {
+      "fixtures": null
+    },
+    "players": []
+  }
+]

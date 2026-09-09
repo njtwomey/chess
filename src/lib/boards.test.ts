@@ -11,8 +11,9 @@ const CONTROL: TimeControl = {
 
 function player(id: string, rating: number | null, junior = false): Player {
   return {
-    id,
+    playerId: id,
     name: id,
+    fullName: null,
     role: "member",
     junior,
     ecfCode: null,
@@ -26,19 +27,20 @@ const options = { timeControl: CONTROL };
 describe("board order", () => {
   it("puts the strongest on board one and descends", () => {
     const boards = assignBoards([player("weak", 1200), player("strong", 1800), player("middle", 1500)], options);
-    expect(boards.map((entry) => entry.player.id)).toEqual(["strong", "middle", "weak"]);
+    expect(boards.map((entry) => entry.player.playerId)).toEqual(["strong", "middle", "weak"]);
     expect(boards.map((entry) => entry.board)).toEqual([1, 2, 3]);
   });
 
   it("puts unrated players below every graded one", () => {
     const boards = assignBoards([player("unrated", null), player("graded", 1100)], options);
-    expect(boards.map((entry) => entry.player.id)).toEqual(["graded", "unrated"]);
+    expect(boards.map((entry) => entry.player.playerId)).toEqual(["graded", "unrated"]);
   });
 
   it("uses the most recent rating, not the first", () => {
     const improving: Player = {
-      id: "improving",
+      playerId: "improving",
       name: "improving",
+      fullName: null,
       role: "member",
       junior: false,
       ecfCode: null,
@@ -49,21 +51,21 @@ describe("board order", () => {
       ],
     };
     const boards = assignBoards([player("steady", 1500), improving], options);
-    expect(boards[0]!.player.id).toBe("improving");
+    expect(boards[0]!.player.playerId).toBe("improving");
   });
 
   it("orders equal ratings alphabetically, whatever order they arrive in", () => {
     const squad = [player("carla", 1500), player("aaron", 1500), player("bev", 1500)];
-    const forwards = assignBoards(squad, options).map((entry) => entry.player.id);
+    const forwards = assignBoards(squad, options).map((entry) => entry.player.playerId);
     expect(forwards).toEqual(["aaron", "bev", "carla"]);
-    expect(assignBoards([...squad].reverse(), options).map((entry) => entry.player.id)).toEqual(forwards);
+    expect(assignBoards([...squad].reverse(), options).map((entry) => entry.player.playerId)).toEqual(forwards);
   });
 
   it("orders unrated players alphabetically, which is the whole order when nobody is rated", () => {
     // A seeded coin toss would be stable but unexplainable, and board order is
     // not a fairness question.
     const squad = [player("imre-solt", null), player("gwen-tsai", null), player("hollis-barr", null)];
-    expect(assignBoards(squad, options).map((entry) => entry.player.id)).toEqual([
+    expect(assignBoards(squad, options).map((entry) => entry.player.playerId)).toEqual([
       "gwen-tsai",
       "hollis-barr",
       "imre-solt",
@@ -77,7 +79,7 @@ describe("board order", () => {
       player("gwen-tsai", null),
       player("hollis-barr", null),
     ];
-    expect(assignBoards(squad, options).map((entry) => entry.player.id)).toEqual([
+    expect(assignBoards(squad, options).map((entry) => entry.player.playerId)).toEqual([
       "noor-abadi",
       "gwen-tsai",
       "hollis-barr",

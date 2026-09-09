@@ -48,7 +48,7 @@ function AvailabilityTable({ season, match, selection }: { season: Season; match
 
   const rows = [...season.players].sort((a, b) => {
     const rank = (id: string) => REPLY_ORDER.indexOf(replyOf(match, id));
-    return rank(a.id) - rank(b.id) || a.name.localeCompare(b.name);
+    return rank(a.playerId) - rank(b.playerId) || a.name.localeCompare(b.name);
   });
 
   const replied = match.availability.length;
@@ -66,14 +66,14 @@ function AvailabilityTable({ season, match, selection }: { season: Season; match
           </TableHeader>
           <TableBody>
             {rows.map((player) => (
-              <TableRow key={player.id}>
+              <TableRow key={player.playerId}>
                 <TableCell>
                   <PlayerLink player={player} className="font-medium" />
                 </TableCell>
                 <TableCell>
-                  <ReplyBadge reply={replyOf(match, player.id)} />
+                  <ReplyBadge reply={replyOf(match, player.playerId)} />
                 </TableCell>
-                <TableCell className="tabular text-right">{played.get(player.id) ?? 0}</TableCell>
+                <TableCell className="tabular text-right">{played.get(player.playerId) ?? 0}</TableCell>
               </TableRow>
             ))}
           </TableBody>

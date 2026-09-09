@@ -1,0 +1,18 @@
+[
+  {
+    "id": "bristol-district",
+    "name": "Bristol & District Chess League",
+    "links": {
+      "rules": "https://www.chessinbristol.uk/home/rules",
+      "handbook": "https://handbook.fide.com/chapter/E012023"
+    }
+  },
+  {
+    "id": "demo-league",
+    "name": "Demo League",
+    "links": {
+      "rules": null,
+      "handbook": null
+    }
+  }
+]

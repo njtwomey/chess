@@ -3,10 +3,9 @@ import { Link } from "react-router-dom";
 import { seasonPath } from "@/components/season-context";
 import { HomeAway } from "@/components/home-away";
 import { Badge } from "@/components/ui/badge";
-import { venueById } from "@/lib/data";
-import { mapsUrl } from "@/lib/links";
-import type { Match, Season } from "@/lib/schema";
-import { matchScore } from "@/lib/season";
+import { addressLines, mapsUrl } from "@/lib/links";
+import { fixtureNumber, type Match, type Season } from "@/lib/schema";
+import { matchScore, opponentTeam, venueFor } from "@/lib/season";
 import { formatLongDate, formatShortDate, formatWeekday, relativeDay, today } from "@/lib/time";
 import { cn } from "@/lib/utils";
 
@@ -17,11 +16,9 @@ import { cn } from "@/lib/utils";
  * a player who already knows they are picked opens the page to find out where
  * they are going, and everything else on it is somebody else's problem.
  */
-export function VenueLine({ match, className }: { match: Match; className?: string }) {
-  const venue = venueById.get(match.venueId);
-  if (!venue) return null;
-
-  const place = [venue.address, venue.postcode].filter(Boolean).join(", ");
+export function VenueLine({ season, match, className }: { season: Season; match: Match; className?: string }) {
+  const venue = venueFor(season, match);
+  const place = addressLines(venue).join(", ");
   return (
     <a
       href={mapsUrl(venue)}
@@ -62,7 +59,7 @@ export function MatchCard({ season, match, className }: { season: Season; match:
 
   return (
     <Link
-      to={seasonPath(season.id, `match/${match.id}`)}
+      to={seasonPath(season.id, match.id)}
       className={cn(
         "hover:border-primary/40 hover:bg-accent/40 block rounded-lg border p-4 transition-colors",
         match.status === "cancelled" && "opacity-60",
@@ -72,13 +69,13 @@ export function MatchCard({ season, match, className }: { season: Season; match:
       <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-muted-foreground tabular text-xs">Round {match.round}</span>
+            <span className="text-muted-foreground tabular text-xs">Fixture {fixtureNumber(match)}</span>
             <HomeAway home={match.home} />
             {match.status === "cancelled" && <Badge variant="outline">Cancelled</Badge>}
           </div>
           <p className="mt-1.5 font-medium">
             <span className="text-muted-foreground">{match.home ? "" : "away to "}</span>
-            {match.opponent}
+            {opponentTeam(season, match).name}
           </p>
         </div>
 
@@ -93,7 +90,7 @@ export function MatchCard({ season, match, className }: { season: Season; match:
       </div>
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-        <VenueLine match={match} />
+        <VenueLine season={season} match={match} />
         {score ? (
           <span
             className={cn(

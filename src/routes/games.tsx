@@ -1,6 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import * as React from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { AnalysisIcons, AnalysisLinks } from "@/components/analysis-links";
 import { EngineSwitch } from "@/components/evaluation";
 import { DEFAULT_ENGINE_OPTIONS, type EngineOptions } from "@/hooks/use-engine";
@@ -14,8 +14,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { findMatch, playerById } from "@/lib/data";
 import { taggedPgn } from "@/lib/links";
-import { GAME_RESULT_LABEL } from "@/lib/schema";
-import { orderedMatches, ratingOn } from "@/lib/season";
+import { GAME_RESULT_LABEL, boardSlug } from "@/lib/schema";
+import { opponentOf, opponentTeam, orderedMatches, ratingOn, sides } from "@/lib/season";
 import { formatShortDate } from "@/lib/time";
 
 import { cn } from "@/lib/utils";
@@ -51,6 +51,7 @@ export function Games() {
               {matches.map(({ match, games }, group) =>
                 games.map((game, index) => {
                   const player = playerById(season, game.playerId);
+                  const opponent = opponentOf(season, match, game);
                   const won = game.result === "win" || game.result === "default-win";
                   const drew = game.result === "draw";
                   return (
@@ -62,20 +63,18 @@ export function Games() {
                     >
                       <TableCell className="align-top">
                         {index === 0 && (
-                          <Link to={seasonPath(season.id, `match/${match.id}`)} className="hover:text-primary block">
+                          <Link to={seasonPath(season.id, match.id)} className="hover:text-primary block">
                             <span className="text-muted-foreground tabular block text-xs">
                               {formatShortDate(match.date)}
                             </span>
-                            <span className="font-medium">{match.opponent}</span>
+                            <span className="font-medium">{opponentTeam(season, match).name}</span>
                           </Link>
                         )}
                       </TableCell>
                       <TableCell className="tabular text-right">{game.board}</TableCell>
                       <TableCell>{player ? <PlayerCell player={player} on={match.date} /> : game.playerId}</TableCell>
                       <TableCell className="text-muted-foreground text-sm capitalize">{game.colour}</TableCell>
-                      <TableCell>
-                        <PlayerCell player={game.opponent} />
-                      </TableCell>
+                      <TableCell>{opponent ? <PlayerCell player={opponent} /> : game.opponentId}</TableCell>
                       <TableCell>
                         <span
                           className={cn(
@@ -92,10 +91,16 @@ export function Games() {
                         {game.pgn ? (
                           <span className="inline-flex items-center gap-1">
                             <AnalysisIcons
-                              pgn={taggedPgn(match, game, player?.name ?? game.playerId, season.team.name)}
+                              pgn={taggedPgn(
+                                match,
+                                game,
+                                player?.name ?? game.playerId,
+                                opponent?.name ?? game.opponentId,
+                                sides(season, match),
+                              )}
                             />
                             <Button variant="ghost" size="sm" asChild>
-                              <Link to={seasonPath(season.id, `match/${match.id}/board/${game.board}`)}>View</Link>
+                              <Link to={seasonPath(season.id, `${match.id}/${boardSlug(game)}`)}>View</Link>
                             </Button>
                           </span>
                         ) : (
@@ -114,8 +119,7 @@ export function Games() {
   );
 }
 
-export function GamePage() {
-  const { seasonId, matchId, board } = useParams();
+export function GamePage({ seasonId, matchId, board }: { seasonId: string; matchId: string; board: number }) {
   // On by default: anybody who opens a game page has come to look at the game,
   // and the evaluation is most of why the page is worth opening. The cost is
   // that the engine downloads on arrival rather than on request; it is scoped
@@ -123,25 +127,27 @@ export function GamePage() {
   const [analysing, setAnalysing] = React.useState(true);
   const [engineOptions, setEngineOptions] = React.useState<EngineOptions>(DEFAULT_ENGINE_OPTIONS);
   const found = findMatch(seasonId, matchId);
-  const game = found?.match.result?.games.find((entry) => entry.board === Number(board));
+  const game = found?.match.result?.games.find((entry) => entry.board === board);
 
   if (!found || !game) return <Navigate to="/" replace />;
 
   const { season, match } = found;
   const player = playerById(season, game.playerId);
   const name = player?.name ?? game.playerId;
-  const pgn = taggedPgn(match, game, name, season.team.name);
-  const opponentRating = ratingOn(game.opponent);
-  const white = game.colour === "white" ? name : game.opponent.name;
-  const black = game.colour === "white" ? game.opponent.name : name;
+  const opponent = opponentOf(season, match, game);
+  const opponentName = opponent?.name ?? game.opponentId;
+  const pgn = taggedPgn(match, game, name, opponentName, sides(season, match));
+  const opponentRating = opponent ? ratingOn(opponent) : null;
+  const white = game.colour === "white" ? name : opponentName;
+  const black = game.colour === "white" ? opponentName : name;
 
   return (
     <Page
       title={`${white} v ${black}`}
-      lede={`Board ${game.board} · ${match.home ? "" : "away to "}${match.opponent} · ${formatShortDate(match.date)}`}
+      lede={`Board ${game.board} · ${match.home ? "" : "away to "}${opponentTeam(season, match).name} · ${formatShortDate(match.date)}`}
       actions={
         <Button variant="ghost" size="sm" asChild>
-          <Link to={seasonPath(season.id, `match/${match.id}`)}>
+          <Link to={seasonPath(season.id, match.id)}>
             <ArrowLeft className="size-3.5" />
             Match
           </Link>
@@ -155,7 +161,7 @@ export function GamePage() {
             {name} played {game.colour}
           </Badge>
           {opponentRating && <Badge variant="outline">Opponent {opponentRating.rating}</Badge>}
-          {game.opponent.junior && <Badge variant="outline">Junior opponent</Badge>}
+          {opponent?.junior && <Badge variant="outline">Junior opponent</Badge>}
         </div>
 
         {/* Everything that takes the game somewhere else, gathered on the right

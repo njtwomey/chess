@@ -9,15 +9,25 @@
  * Every builder goes through the schema rather than returning a literal, so a
  * fixture cannot drift from the contract. Add a required field to `PlayerSchema`
  * and the builders fail here, once, rather than in nine test files.
+ *
+ * The loaded shapes (a team with its club, a season with everything resolved)
+ * are assembled here the way `data.ts` assembles them, because those parts are
+ * by definition not in the schema: it is strict, and would reject the very
+ * fields that make a season usable.
  */
 import {
+  ClubSchema,
+  LeagueSchema,
   MatchSchema,
   PlayerSchema,
   SeasonSchema,
   TeamSchema,
-  VenueSchema,
+  playerSlug,
+  teamSlug,
   type Availability,
+  type Club,
   type Game,
+  type League,
   type Match,
   type Player,
   type Season,
@@ -26,34 +36,53 @@ import {
 } from "@/lib/schema";
 import type { Reply } from "@/lib/selection";
 
+/** The side every built fixture is against, unless a test says otherwise. */
+export const THEIR_TEAM = "their-club/team-b";
+
+/** The id a squad member of the default team ends up with. */
+export const ours = (playerId: string) => `our-club/team-a/${playerId}`;
+/** The same for a player on the side they are playing. */
+export const theirs = (playerId: string) => `${THEIR_TEAM}/${playerId}`;
+
 let counter = 0;
 /** Distinct without being meaningful: a test that cares names the thing itself. */
 const next = (prefix: string) => `${prefix}-${(counter += 1)}`;
 
-export function aVenue(over: Partial<Venue> = {}): Venue {
-  return VenueSchema.parse({ id: next("venue"), name: "A Venue", ...over });
+export function aClub(over: Partial<Omit<Club, "venue">> & { venue?: Partial<Venue> } = {}): Club {
+  return ClubSchema.parse({ id: next("club"), name: "A Club", ...over, venue: { ...over.venue } });
 }
 
+export function aLeague(over: Partial<League> = {}): League {
+  return LeagueSchema.parse({ id: next("league"), name: "A League", ...over });
+}
+
+/**
+ * A team as the loader hands it over: its id spelled out, its club attached and
+ * its players' ids resolved to the whole path, exactly as `data.ts` does it.
+ *
+ * A test that built bare ids here would be testing something the site never
+ * sees, and would pass while the real loader disagreed with it.
+ */
 export function aTeam(over: Partial<Team> = {}): Team {
-  return TeamSchema.parse({
-    id: "our-team",
-    name: "Our Team",
-    club: "Our Club",
-    competition: "A League",
-    homeVenueId: "our-venue",
-    links: { fixtures: "https://example.invalid/fixtures" },
-    ...over,
-  });
+  const { id, club, ...rest } = over;
+  void id;
+  const record = TeamSchema.parse({ clubId: "our-club", teamId: "a", name: "Our Team", ...rest });
+  return {
+    ...record,
+    id: teamSlug(record),
+    club: club ?? aClub({ id: record.clubId, name: "Our Club" }),
+    players: record.players.map((player) => ({ ...player, playerId: playerSlug(record, player) })),
+  };
 }
 
 export function aPlayer(over: Partial<Player> = {}): Player {
-  const id = over.id ?? next("player");
-  return PlayerSchema.parse({ id, name: over.name ?? id, ...over });
+  const playerId = over.playerId ?? next("player");
+  return PlayerSchema.parse({ playerId, name: over.name ?? playerId, ...over });
 }
 
 /** A squad of `count` players, all unrated, ids `p1`, `p2`, … */
 export function aSquad(count: number, over: (index: number) => Partial<Player> = () => ({})): Player[] {
-  return Array.from({ length: count }, (_, index) => aPlayer({ id: `p${index + 1}`, ...over(index) }));
+  return Array.from({ length: count }, (_, index) => aPlayer({ playerId: `p${index + 1}`, ...over(index) }));
 }
 
 export function said(playerId: string, reply: Reply, over: Partial<Availability> = {}): Availability {
@@ -62,11 +91,9 @@ export function said(playerId: string, reply: Reply, over: Partial<Availability>
 
 export function aMatch(over: Partial<Match> = {}): Match {
   return MatchSchema.parse({
-    id: over.id ?? next("match"),
-    round: 1,
-    opponent: "Somebody Else",
+    id: over.id ?? `fixture-${(counter += 1)}`,
+    opponentTeamId: THEIR_TEAM,
     home: true,
-    venueId: "our-venue",
     date: "2026-03-10",
     time: "19:30",
     status: "scheduled",
@@ -77,9 +104,9 @@ export function aMatch(over: Partial<Match> = {}): Match {
 export function aGame(over: Partial<Game> = {}): Game {
   return {
     board: 1,
-    playerId: "p1",
+    playerId: ours("p1"),
+    opponentId: theirs("them-1"),
     colour: "black",
-    opponent: aPlayer({ id: "them-1", name: "Them One" }),
     result: "win",
     pgn: null,
     ...over,
@@ -90,16 +117,19 @@ export function aGame(over: Partial<Game> = {}): Game {
  * A season, loaded and cross-referenced, as `data.ts` would hand it over.
  *
  * Defaults to four boards and two reserves because that is the shape every rule
- * in this repository is written for; a test wanting otherwise says so.
+ * in this repository is written for; a test wanting otherwise says so. It also
+ * comes with the side it is playing, so a fixture can always resolve its
+ * opponent and therefore its venue.
  */
 export function aSeason(over: Partial<Season> = {}): Season {
-  // The loaded parts are not in the schema, so they are held back from it: it
-  // is strict, and would reject the very fields that make a season usable.
-  const { team, players, matches, ...rest } = over;
+  const { id, league, club, team, teams, players, matches, ...rest } = over;
+  void id;
   const meta = SeasonSchema.parse({
-    id: "a-season",
+    leagueId: "a-league",
+    clubId: "our-club",
+    teamId: "a",
+    period: "spring-2026",
     name: "A Season",
-    teamId: "our-team",
     start: "2026-01-01",
     end: "2026-12-31",
     seed: "a-seed",
@@ -107,10 +137,31 @@ export function aSeason(over: Partial<Season> = {}): Season {
     reserves: 2,
     ...rest,
   });
+
+  const us =
+    team ??
+    aTeam({
+      clubId: meta.clubId,
+      teamId: meta.teamId,
+      name: "Our Team",
+      players: players ?? aSquad(8),
+      ...(club ? { club } : {}),
+    });
+  const them = aTeam({
+    clubId: "their-club",
+    teamId: "b",
+    name: "Their Team",
+    players: [aPlayer({ playerId: "them-1", name: "Them One" })],
+  });
+
   return {
     ...meta,
-    team: team ?? aTeam(),
-    players: players ?? aSquad(8),
+    id: `${meta.leagueId}/${teamSlug(meta)}/${meta.period}`,
+    league: league ?? aLeague({ id: meta.leagueId, name: "A League" }),
+    club: us.club,
+    team: us,
+    teams: teams ?? [us, them],
+    players: us.players,
     matches: matches ?? [aMatch()],
   };
 }

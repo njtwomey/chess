@@ -11,7 +11,7 @@ than getting the moves right.
 
 ## What you are editing
 
-`content/seasons/<season>/matches.json`, one match:
+`content/seasons/<period>/<club>-<team>/matches.json`, one fixture:
 
 - `status` becomes `"played"`.
 - `result` gains `ourScore`, `theirScore` and one `games` entry per board.
@@ -19,16 +19,23 @@ than getting the moves right.
 ```json
 {
   "board": 1,
-  "playerId": "ada-mercer",
+  "playerId": "bristol-clifton/team-g/theo",
+  "opponentId": "south-bristol/team-d/sean-hubble",
   "colour": "white",
-  "opponent": {
-    "id": "south-bristol-d-r-whitlock",
-    "name": "R. Whitlock",
-    "ratings": [{ "date": "2026-03-10", "rating": 1544, "source": "ecf" }],
-    "url": "https://lms.englishchess.org.uk/lms/player/121305/view"
-  },
   "result": "win",
   "pgn": "1. e4 e5 2. Bc4 Nc6 3. Qh5 Nf6 4. Qxf7# 1-0"
+}
+```
+
+Both sides are references. The opponent themselves goes on their own team in
+that season's `teams.json`, in exactly the shape one of ours takes:
+
+```json
+{
+  "playerId": "sean-hubble",
+  "name": "Sean Hubble",
+  "ratings": [{ "date": "2026-09-08", "rating": 1542, "source": "ecf" }],
+  "url": "https://lms.englishchess.org.uk/lms/player/121305/view"
 }
 ```
 
@@ -42,9 +49,9 @@ conversion; do not pre-convert.
 - `ourScore` must equal the games added up: win and default-win 1, draw 0.5,
   otherwise 0.
 - `ourScore + theirScore` must equal the number of games.
-- Board numbers unique, no player playing twice, every `playerId` on the roster.
-- An opponent's ratings ascend by date and none is dated after the match, and
-  their id is not one of ours.
+- Board numbers unique, no player playing twice, every `playerId` on our roster
+  and every `opponentId` on the opposing team's.
+- An opponent's ratings ascend by date and none is dated after the fixture.
 - A match with `status: "played"` must have a result, and one without must not.
 
 ## Things that are easy to get wrong
@@ -52,11 +59,12 @@ conversion; do not pre-convert.
 - **Record who actually played, not who was selected.** If a reserve stepped in,
   the reserve is in `games`. Their game count follows from this entry, so
   crediting the wrong person quietly corrupts every later selection.
-- **An opponent is a player record, the same shape as ours.** Name, and where
-  the league's page gives them, a dated rating and a `url` to that page. Their
-  `id` is made up from the team and the name, slugified, because they have no id
-  of ours to be known by. Everything else on a player is optional and usually
-  absent: they have no ECF code we know and no role in this club.
+- **An opponent is a player record, the same shape as ours, and it lives on
+  their team.** Add them to that team's `players` once; an opponent met twice is
+  one person with one rating history, which is the whole reason they are
+  referenced rather than copied into each game. Their `playerId` is the slug of
+  their name. Everything else is optional and usually absent: they have no ECF
+  code we know and no role in this club.
 - **`junior` on the opponent matters** even when our player is an adult: one
   junior on either side makes that board the shorter clock.
 - **Date an opponent's rating on or before the match.** It is the rating that
@@ -75,6 +83,7 @@ the order for the next fixture.
 
 ## Ratings
 
-A result is often when new grades appear. Those go in `players.json` as a new
+A result is often when new grades appear. Those go on the player in
+`teams.json` as a new
 `{ date, rating, source }` **appended** to the player's list, never as an edit to
 the existing entry. The history is the point.

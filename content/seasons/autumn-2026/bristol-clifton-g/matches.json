@@ -1,88 +1,91 @@
 [
   {
-    "id": "r1",
-    "round": 1,
-    "opponent": "South Bristol D",
+    "id": "fixture-1",
+    "opponentTeamId": "south-bristol/team-d",
     "home": true,
-    "venueId": "bristol-clifton",
     "date": "2026-09-08",
     "time": "19:30",
     "status": "played",
     "availability": [
       {
-        "playerId": "niall",
+        "playerId": "bristol-clifton/team-g/niall",
         "reply": "yes",
         "at": "2026-08-31"
       },
       {
-        "playerId": "steve",
+        "playerId": "bristol-clifton/team-g/steve",
         "reply": "yes",
         "at": "2026-08-31"
       },
       {
-        "playerId": "lorenzo",
+        "playerId": "bristol-clifton/team-g/lorenzo",
         "reply": "yes",
         "at": "2026-08-31"
       },
       {
-        "playerId": "jade",
+        "playerId": "bristol-clifton/team-g/jade",
         "reply": "yes",
         "at": "2026-08-31"
       },
       {
-        "playerId": "alex",
+        "playerId": "bristol-clifton/team-g/alex",
         "reply": "reserve",
         "at": "2026-08-31"
       },
       {
-        "playerId": "max",
+        "playerId": "bristol-clifton/team-g/max",
         "reply": "reserve",
         "at": "2026-08-31"
       },
       {
-        "playerId": "alfie",
+        "playerId": "bristol-clifton/team-g/alfie",
         "reply": "no",
         "at": "2026-08-31"
       },
       {
-        "playerId": "alexandra",
+        "playerId": "bristol-clifton/team-g/alexandra",
         "reply": "no",
         "at": "2026-08-31"
       },
       {
-        "playerId": "george",
+        "playerId": "bristol-clifton/team-g/george",
         "reply": "no",
         "at": "2026-08-31"
       },
       {
-        "playerId": "shaan",
+        "playerId": "bristol-clifton/team-g/shaan",
         "reply": "no",
         "at": "2026-08-31"
       },
       {
-        "playerId": "thomas",
+        "playerId": "bristol-clifton/team-g/thomas",
         "reply": "unsure",
         "at": "2026-08-31"
       },
       {
-        "playerId": "theo",
+        "playerId": "bristol-clifton/team-g/theo",
         "reply": "yes",
         "at": "2026-08-31"
       },
       {
-        "playerId": "will",
+        "playerId": "bristol-clifton/team-g/will",
         "reply": "unsure",
         "at": "2026-08-31"
       },
       {
-        "playerId": "mukhtar",
+        "playerId": "bristol-clifton/team-g/mukhtar",
         "reply": "yes",
         "at": "2026-08-31"
       }
     ],
     "settled": true,
     "lineup": {
-      "playerIds": ["theo", "jade", "mukhtar", "niall"],
+      "playerIds": [
+        "bristol-clifton/team-g/theo",
+        "bristol-clifton/team-g/jade",
+        "bristol-clifton/team-g/mukhtar",
+        "bristol-clifton/team-g/niall"
+      ],
       "at": "2026-08-31"
     },
     "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155235",
@@ -92,77 +95,33 @@
       "games": [
         {
           "board": 1,
-          "playerId": "theo",
+          "playerId": "bristol-clifton/team-g/theo",
+          "opponentId": "south-bristol/team-d/sean-hubble",
           "colour": "black",
-          "opponent": {
-            "id": "south-bristol-d-sean-hubble",
-            "name": "Sean Hubble",
-            "ratings": [
-              {
-                "date": "2026-09-08",
-                "rating": 1542,
-                "source": "ecf"
-              }
-            ],
-            "url": "https://lms.englishchess.org.uk/lms/player/121305/view"
-          },
           "result": "win",
           "pgn": null
         },
         {
           "board": 2,
-          "playerId": "jade",
+          "playerId": "bristol-clifton/team-g/jade",
+          "opponentId": "south-bristol/team-d/michael-chaffey",
           "colour": "white",
-          "opponent": {
-            "id": "south-bristol-d-michael-chaffey",
-            "name": "Michael Chaffey",
-            "ratings": [
-              {
-                "date": "2026-09-08",
-                "rating": 1488,
-                "source": "ecf"
-              }
-            ],
-            "url": "https://lms.englishchess.org.uk/lms/player/112300/view"
-          },
           "result": "loss",
           "pgn": null
         },
         {
           "board": 3,
-          "playerId": "mukhtar",
+          "playerId": "bristol-clifton/team-g/mukhtar",
+          "opponentId": "south-bristol/team-d/ryszard-dudko",
           "colour": "black",
-          "opponent": {
-            "id": "south-bristol-d-ryszard-dudko",
-            "name": "Ryszard Dudko",
-            "ratings": [
-              {
-                "date": "2026-09-08",
-                "rating": 1475,
-                "source": "ecf"
-              }
-            ],
-            "url": "https://lms.englishchess.org.uk/lms/player/129174/view"
-          },
           "result": "loss",
           "pgn": null
         },
         {
           "board": 4,
-          "playerId": "niall",
+          "playerId": "bristol-clifton/team-g/niall",
+          "opponentId": "south-bristol/team-d/alessandro-coppola",
           "colour": "white",
-          "opponent": {
-            "id": "south-bristol-d-alessandro-coppola",
-            "name": "Alessandro Coppola",
-            "ratings": [
-              {
-                "date": "2026-09-08",
-                "rating": 1356,
-                "source": "ecf"
-              }
-            ],
-            "url": "https://lms.englishchess.org.uk/lms/player/73812/view"
-          },
           "result": "loss",
           "pgn": null
         }
@@ -170,90 +129,91 @@
     }
   },
   {
-    "id": "r2",
-    "round": 2,
-    "opponent": "Horfield & Redland E",
+    "id": "fixture-2",
+    "opponentTeamId": "horfield-redland/team-e",
     "home": true,
-    "venueId": "bristol-clifton",
     "date": "2026-09-15",
     "time": "19:30",
     "status": "scheduled",
     "availability": [
       {
-        "playerId": "niall",
+        "playerId": "bristol-clifton/team-g/niall",
         "reply": "yes",
         "at": "2026-09-04"
       },
       {
-        "playerId": "steve",
+        "playerId": "bristol-clifton/team-g/steve",
         "reply": "yes",
         "at": "2026-09-04"
       },
       {
-        "playerId": "alex",
+        "playerId": "bristol-clifton/team-g/alex",
         "reply": "yes",
         "at": "2026-09-04"
       },
       {
-        "playerId": "thomas",
+        "playerId": "bristol-clifton/team-g/thomas",
         "reply": "yes",
         "at": "2026-09-04"
       },
       {
-        "playerId": "max",
+        "playerId": "bristol-clifton/team-g/max",
         "reply": "yes",
         "at": "2026-09-04"
       },
       {
-        "playerId": "lorenzo",
+        "playerId": "bristol-clifton/team-g/lorenzo",
         "reply": "yes",
         "at": "2026-09-05"
       },
       {
-        "playerId": "will",
+        "playerId": "bristol-clifton/team-g/will",
         "reply": "yes",
         "at": "2026-09-05"
       },
       {
-        "playerId": "theo",
+        "playerId": "bristol-clifton/team-g/theo",
         "reply": "yes",
         "at": "2026-09-08"
       },
       {
-        "playerId": "alfie",
+        "playerId": "bristol-clifton/team-g/alfie",
         "reply": "no",
         "at": "2026-09-04"
       },
       {
-        "playerId": "alexandra",
+        "playerId": "bristol-clifton/team-g/alexandra",
         "reply": "no",
         "at": "2026-09-04"
       },
       {
-        "playerId": "mukhtar",
+        "playerId": "bristol-clifton/team-g/mukhtar",
         "reply": "no",
         "at": "2026-09-07"
       },
       {
-        "playerId": "mark",
+        "playerId": "bristol-clifton/team-g/mark",
         "reply": "reserve",
         "at": "2026-09-05"
       }
     ],
     "settled": true,
     "lineup": {
-      "playerIds": ["max", "lorenzo", "will", "steve"],
+      "playerIds": [
+        "bristol-clifton/team-g/max",
+        "bristol-clifton/team-g/lorenzo",
+        "bristol-clifton/team-g/will",
+        "bristol-clifton/team-g/steve"
+      ],
       "at": "2026-09-09"
     },
     "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155244",
     "result": null
   },
   {
-    "id": "r3",
-    "round": 3,
-    "opponent": "Bristol Grendel C",
+    "id": "fixture-3",
+    "opponentTeamId": "bristol-grendel/team-c",
     "home": false,
-    "venueId": "bristol-grendel",
     "date": "2026-10-05",
     "time": "19:30",
     "status": "scheduled",
@@ -263,11 +223,9 @@
     "result": null
   },
   {
-    "id": "r4",
-    "round": 4,
-    "opponent": "Downend & Fishponds F",
+    "id": "fixture-4",
+    "opponentTeamId": "downend-fishponds/team-f",
     "home": true,
-    "venueId": "bristol-clifton",
     "date": "2026-10-20",
     "time": "19:30",
     "status": "scheduled",
@@ -277,11 +235,9 @@
     "result": null
   },
   {
-    "id": "r5",
-    "round": 5,
-    "opponent": "South Bristol E",
+    "id": "fixture-5",
+    "opponentTeamId": "south-bristol/team-e",
     "home": false,
-    "venueId": "south-bristol",
     "date": "2026-10-28",
     "time": "19:30",
     "status": "scheduled",
@@ -291,11 +247,9 @@
     "result": null
   },
   {
-    "id": "r6",
-    "round": 6,
-    "opponent": "UWE B",
+    "id": "fixture-6",
+    "opponentTeamId": "uwe/team-b",
     "home": false,
-    "venueId": "uwe",
     "date": "2026-12-02",
     "time": "19:30",
     "status": "scheduled",
@@ -305,11 +259,9 @@
     "result": null
   },
   {
-    "id": "r7",
-    "round": 7,
-    "opponent": "Hanham Folk Centre B",
+    "id": "fixture-7",
+    "opponentTeamId": "hanham-folk-centre/team-b",
     "home": true,
-    "venueId": "bristol-clifton",
     "date": "2026-12-15",
     "time": "19:30",
     "status": "scheduled",

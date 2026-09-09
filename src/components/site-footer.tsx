@@ -12,9 +12,10 @@ export function SiteFooter() {
 
   const links = [
     { href: season.team.links.fixtures, label: "Fixtures on the LMS" },
-    { href: season.team.links.rules, label: "League rules" },
-    { href: season.team.links.handbook, label: "FIDE Laws of Chess" },
-  ].filter((link) => link.href);
+    { href: season.league.links.rules, label: "League rules" },
+    { href: season.league.links.handbook, label: "FIDE Laws of Chess" },
+    { href: season.club.links.website, label: `${season.club.name}` },
+  ].filter((link): link is { href: string; label: string } => link.href !== null && link.href !== undefined);
 
   return (
     <footer className="mt-auto border-t">
@@ -37,7 +38,8 @@ export function SiteFooter() {
         )}
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p>
-            {season.team.name} · {season.team.competition}
+            {season.team.name} · {season.league.name}
+            {season.division === null ? "" : `, Division ${season.division}`}
           </p>
           <p className="tabular">
             Selection seed <code className="font-mono">{season.seed}</code>

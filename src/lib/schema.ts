@@ -16,6 +16,27 @@ import { z } from "zod";
 
 const ID = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "ids are kebab-case: lowercase, digits and single hyphens");
 
+/**
+ * An id that names its parents, joined by "/".
+ *
+ * `bristol-clifton/team-g/niall` is a club, a team and a player, and it reads as
+ * the path it is. Only ever derived, never typed into a file: a record carries
+ * its own segment and the loader joins them, so the parts cannot disagree with
+ * the whole.
+ */
+const PATH_ID = z
+  .string()
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/, "expected a path of kebab-case segments");
+
+/**
+ * A fixture's id, which is its number in the season's fixture list.
+ *
+ * `fixture-3` rather than `r3` or a bare `3`, so that it says what it is the way
+ * every other segment does. The number is the id, so there is no separate round
+ * field to disagree with it.
+ */
+const FIXTURE_ID = z.string().regex(/^fixture-[1-9]\d*$/, "a fixture id is fixture-1, fixture-2, and so on");
+
 const URL = z.string().regex(/^https?:\/\/\S+$/, "expected an http(s) URL");
 
 /**
@@ -54,8 +75,31 @@ export const RatingSchema = z.strictObject({
 });
 
 export const PlayerSchema = z.strictObject({
-  id: ID,
+  /**
+   * Stored as the bare segment, `niall`, and loaded as the whole path,
+   * `bristol-clifton/team-g/niall`.
+   *
+   * The record carries only its own part, because the team around it supplies
+   * the rest and two copies of a fact eventually disagree. Everything that
+   * refers to a player, availability, a shortlist, a game, uses the full path:
+   * a fixture has two squads in it, and a bare name is only unambiguous until
+   * both sides field a Theo.
+   *
+   * It also feeds the selection tiebreak, so it is fixed once a fixture has
+   * been played: see CLAUDE.md.
+   */
+  playerId: ID,
+  /** What we call them, which is what the site says everywhere. */
   name: z.string().min(1),
+  /**
+   * Their name as the league publishes it.
+   *
+   * Two facts, not one: the squad calls him Alfie and the league's record says
+   * Alfred Holton-Stoppani, and neither can be derived from the other. Null
+   * where nobody has needed it, and for an opponent, whose `name` is already
+   * the published form.
+   */
+  fullName: z.string().min(1).nullable().default(null),
   /**
    * Captain, or not. There is no separate co-captain: the club runs with more
    * than one and they do the same job, so a second word would be a distinction
@@ -103,7 +147,7 @@ export const PlayerSchema = z.strictObject({
 });
 
 export const AvailabilitySchema = z.strictObject({
-  playerId: ID,
+  playerId: PATH_ID,
   reply: z.enum(["yes", "reserve", "unsure", "no"]),
   /** When they said so, for auditing a selection after the fact. */
   at: DATE.optional(),
@@ -122,18 +166,17 @@ export const AvailabilitySchema = z.strictObject({
 
 export const GameSchema = z.strictObject({
   board: z.number().int().min(1).max(12),
-  playerId: ID,
-  colour: z.enum(["white", "black"]),
+  /** Ours, by the full id their team's roster gives them. */
+  playerId: PATH_ID,
   /**
-   * Who we played, in the same shape as one of ours.
+   * Theirs, the same way.
    *
-   * A person is a person: they have a name, a rating with a date on it, and
-   * sometimes an age that shortens the clock. Keeping a second, flatter shape
-   * for the other side meant a rating on our side of the board could be read
-   * back and one on theirs could not. Their id is made up from the team and the
-   * name, because they have no id of ours to be known by.
+   * Referenced rather than embedded: an opponent met twice used to be two
+   * copies of one person, each with its own rating and no way to tell they were
+   * the same player.
    */
-  opponent: PlayerSchema,
+  opponentId: PATH_ID,
+  colour: z.enum(["white", "black"]),
   result: z.enum(["win", "draw", "loss", "default-win", "default-loss"]),
   /** Null is normal: not every game gets written up. */
   pgn: z.string().nullable().default(null),
@@ -146,11 +189,15 @@ export const ResultSchema = z.strictObject({
 });
 
 export const MatchSchema = z.strictObject({
-  id: ID,
-  round: z.number().int().min(1),
-  opponent: z.string().min(1),
+  id: FIXTURE_ID,
+  /** The other side, by its full path id: `south-bristol/team-d`. */
+  opponentTeamId: PATH_ID,
+  /**
+   * Whether we are at home, which is also where the match is: the venue is the
+   * home club's, so it is derived rather than written down. A stored venue was
+   * a third fact that had to agree with the other two.
+   */
   home: z.boolean(),
-  venueId: ID,
   date: DATE,
   time: TIME,
   status: z.enum(["scheduled", "played", "cancelled"]),
@@ -207,7 +254,7 @@ export const MatchSchema = z.strictObject({
    */
   lineup: z
     .strictObject({
-      playerIds: z.array(ID).min(1),
+      playerIds: z.array(PATH_ID).min(1),
       /** When the captain settled it. */
       at: DATE.optional(),
       /** Why it is not what the rule said. Worth writing: somebody will ask. */
@@ -245,34 +292,48 @@ export const TimeControlSchema = z.strictObject({
 });
 
 /**
- * A team, kept out of the seasons so it can be named once.
+ * A team, named by the club that fields it and the letter the league gives it.
  *
- * The club fields several sides and may want more than one of them here, so a
- * season points at a team rather than repeating its name. That also stops the
- * two drifting: a season saying "Bristol & Clifton G" while another says
- * "Bristol and Clifton G" was a matter of time.
+ * Stored as its two parts rather than as the path they spell, so the id is
+ * derived and cannot disagree with the components beside it. `name` is written
+ * out because the league's own form of it is not reliably derivable: it is one
+ * string per team, not one per fixture, which is the duplication that mattered.
  */
 export const TeamSchema = z.strictObject({
-  id: ID,
+  clubId: ID,
+  /** The league's letter for this side, bare: "g", not "team-g". */
+  teamId: ID,
   /** How the league writes it, which is what goes on a fixture card. */
   name: z.string().min(1),
-  club: z.string().min(1),
-  competition: z.string().min(1),
-  /** Where this team plays its home matches. */
-  homeVenueId: ID,
   /**
-   * The league's own pages. `fixtures` is required, because it is the authority
-   * on when and where a match is: this site is a convenience built on top of
-   * it, and a fixture page with no way back to the record it copied is a page
-   * that can be quietly wrong.
+   * The league's page for this team's fixtures, which is the authority on when
+   * and where a match is: this site is a convenience built on top of it, and a
+   * fixture page with no way back to the record it copied is a page that can be
+   * quietly wrong. Null for a side we merely play, whose page we have no reason
+   * to hold.
    */
-  links: z.strictObject({ fixtures: URL, rules: URL.optional(), handbook: URL.optional() }),
+  links: z.strictObject({ fixtures: URL.nullable().default(null) }).default({ fixtures: null }),
+  players: z.array(PlayerSchema).default([]),
 });
 
+/**
+ * One team's campaign, in one competition, over one period.
+ *
+ * Those three things identify it and together they spell its id. The division
+ * is deliberately not among them: it moves with promotion and relegation, and
+ * an id built on an attribute that changes takes every shared link with it when
+ * it does.
+ */
 export const SeasonSchema = z.strictObject({
-  id: ID,
-  name: z.string().min(1),
+  leagueId: ID,
+  clubId: ID,
+  /** Ours, bare, as on the team record. */
   teamId: ID,
+  /** The stretch of the calendar this covers: `autumn-2026`. */
+  period: ID,
+  name: z.string().min(1),
+  /** Which division we are in this time round. Null before the league says. */
+  division: z.number().int().min(1).nullable().default(null),
   start: DATE,
   end: DATE,
   /**
@@ -294,16 +355,23 @@ export const SeasonSchema = z.strictObject({
   prototype: z.boolean().default(false),
 });
 
+/**
+ * Where a club meets, which is not the same fact as who the club is.
+ *
+ * Bristol Grendel is a club and it happens to meet in a pub; UWE meets in a
+ * lecture room; Bristol & Clifton meets in its own building. Flattening the two
+ * into one record made all three read as though the building were the club.
+ *
+ * `name` is the building, and null where there is nothing to add beyond the
+ * club's own name.
+ */
 export const VenueSchema = z.strictObject({
-  id: ID,
-  name: z.string().min(1),
+  name: z.string().min(1).nullable().default(null),
   /** Null until somebody confirms it. Never guessed: see mapsUrl. */
   address: z.string().nullable().default(null),
   postcode: z.string().nullable().default(null),
   /** An exact pasted Maps link, when there is one. */
   maps: URL.nullable().default(null),
-  /** The club's own page, which is where playing nights and contacts live. */
-  website: URL.nullable().default(null),
   /**
    * Where the building is, for the OpenStreetMap square.
    *
@@ -316,10 +384,41 @@ export const VenueSchema = z.strictObject({
   note: z.string().optional(),
 });
 
-export const PlayersFileSchema = z.array(PlayerSchema);
+/**
+ * A club, which is the thing that outlives a season.
+ *
+ * Everybody we play is one of these, ours included, so a fixture's venue is
+ * simply the home club's. `links` sits here rather than on a team because a
+ * club's own pages are the club's: Team G has no website, Bristol & Clifton
+ * does.
+ */
+export const ClubSchema = z.strictObject({
+  id: ID,
+  /** As the league writes it, which is what appears on a fixture card. */
+  name: z.string().min(1),
+  links: z.strictObject({ website: URL.nullable().default(null) }).default({ website: null }),
+  venue: VenueSchema,
+});
+
+/**
+ * A competition, and the two documents that govern it.
+ *
+ * `rules` and `handbook` were on the team, where they were a copy waiting to be
+ * made: they are the same for every side in the league, so they belong to the
+ * league.
+ */
+export const LeagueSchema = z.strictObject({
+  id: ID,
+  name: z.string().min(1),
+  links: z
+    .strictObject({ rules: URL.nullable().default(null), handbook: URL.nullable().default(null) })
+    .default({ rules: null, handbook: null }),
+});
+
 export const MatchesFileSchema = z.array(MatchSchema);
-export const VenuesFileSchema = z.array(VenueSchema);
 export const TeamsFileSchema = z.array(TeamSchema);
+export const ClubsFileSchema = z.array(ClubSchema);
+export const LeaguesFileSchema = z.array(LeagueSchema);
 
 export type Clock = z.infer<typeof ClockSchema>;
 export type TimeControl = z.infer<typeof TimeControlSchema>;
@@ -331,11 +430,60 @@ export type Result = z.infer<typeof ResultSchema>;
 export type Match = z.infer<typeof MatchSchema>;
 export type SeasonMeta = z.infer<typeof SeasonSchema>;
 export type Venue = z.infer<typeof VenueSchema>;
-export type Team = z.infer<typeof TeamSchema>;
+export type League = z.infer<typeof LeagueSchema>;
+export type Club = z.infer<typeof ClubSchema>;
+export type TeamRecord = z.infer<typeof TeamSchema>;
 
-/** A season with its files loaded, its team resolved and everything cross-checked. */
+/**
+ * Ids, spelled out from the parts the records store.
+ *
+ * One rule at every level: a slug names its parent, then itself, joined by "/".
+ * `-` stays inside a segment, so `hanham-folk-centre/team-b/j-smith` splits into
+ * three however many hyphens a name contains. A segment says what it is, which
+ * is why a team's bare "g" is written as "team-g": on its own a letter means
+ * nothing, and in a path somebody has to read at a glance it says which of the
+ * two Gs is being talked about.
+ *
+ * Composed here and never stored, so every id in the repository is correct by
+ * construction and every component is still visible on the record that owns it.
+ */
+export function teamSlug(team: { clubId: string; teamId: string }): string {
+  return `${team.clubId}/team-${team.teamId}`;
+}
+
+export function playerSlug(team: { clubId: string; teamId: string }, player: { playerId: string }): string {
+  return `${teamSlug(team)}/${player.playerId}`;
+}
+
+/** Which fixture of the season this is, read back off its id. */
+export function fixtureNumber(match: { id: string }): number {
+  return Number(match.id.slice("fixture-".length));
+}
+
+/** A board within a fixture, which is how a game is addressed. */
+export function boardSlug(game: { board: number }): string {
+  return `board-${game.board}`;
+}
+
+export function seasonSlug(season: { leagueId: string; clubId: string; teamId: string; period: string }): string {
+  return `${season.leagueId}/${teamSlug(season)}/${season.period}`;
+}
+
+/** A team with its club resolved and its id spelled out. */
+export interface Team extends TeamRecord {
+  id: string;
+  club: Club;
+}
+
+/** A season with its files loaded, everything resolved and everything cross-checked. */
 export interface Season extends SeasonMeta {
+  id: string;
+  league: League;
+  club: Club;
+  /** Ours. `teams` holds it too, alongside everybody we play. */
   team: Team;
+  teams: Team[];
+  /** Our squad, which is `team.players` under the name the site reads it by. */
   players: Player[];
   matches: Match[];
 }

@@ -40,15 +40,38 @@ There is no server and no database. Everything the site shows is derived from JS
 file is the whole workflow.
 
 ```
-content/teams.json                  the sides we enter, named once
-content/venues.json                 shared across seasons; the same clubs recur
-content/seasons/<id>/season.json    dates, seed, boards, reserves, clocks
-content/seasons/<id>/players.json   the roster, which changes every season
-content/seasons/<id>/matches.json   fixtures, availability, results, PGNs
+content/clubs.json                        who we play and where they meet
+content/leagues.json                      the competitions, and their rules links
+content/seasons/<period>/<club>-<team>/
+  season.json                             dates, seed, boards, reserves, clocks
+  teams.json                              both sides, each with its squad
+  matches.json                            fixtures, availability, results, PGNs
 ```
 
-Seasons are found by glob, so adding a directory is all it takes. A season points at a team by
-`teamId` rather than repeating its name, and is read as `season.team`.
+Clubs and leagues are global, because they outlive a season. Teams and players are per season,
+because who turns out for Team G this autumn is not who turned out last spring. Seasons are found by
+glob, so adding a directory is all it takes.
+
+**Ids are paths, composed from the parts the records store and never written down whole.** A slug
+names its parent, then itself: `-` inside a segment, `/` between them, and a segment says what it is.
+
+```
+league    bristol-district
+club      bristol-clifton
+team      bristol-clifton/team-g          from clubId "bristol-clifton", teamId "g"
+player    bristol-clifton/team-g/niall    from the team, plus playerId "niall"
+season    bristol-district/bristol-clifton/team-g/autumn-2026
+fixture   fixture-1                       unique within its season
+board     board-3                         within its fixture
+```
+
+The season id is also the URL, so `/season/` takes a splat and the site splits it by the longest
+season id that prefixes it. The directory is not the id: it only has to be unique and typable, so it
+is the period and the team, and the loader checks the two agree.
+
+A fixture names the other side by its team id and says whether we are at home. **The venue is the
+home club's**, derived rather than stored, and a game names both players by id rather than embedding
+one of them.
 
 **A new feature is nearly always a new derivation, not new state.** Before adding a field, check
 whether it can be computed. Games played is the standing example: counted from recorded results
@@ -59,13 +82,14 @@ from the zod schemas rather than declared beside them. Objects are **strict**, s
 an error: a misspelled `reserve` for `reserves` would otherwise silently change who plays.
 
 `src/lib/data.ts` parses every file at import and then checks what a schema cannot, because it spans
-files: availability naming real players, a score matching its games, a team's home venue existing.
+files: availability naming real players, a score matching its games, a fixture naming a team that is in the season.
 **It throws, listing every problem at once.** A site that refuses to start is a five-minute fix; one
 that renders a wrong team sheet is not, because nobody will notice.
 
 ### Two seasons, and never invent
 
-**`2026-autumn-g`** is real and active. **`demo`** is entirely invented, flagged
+**`autumn-2026/bristol-clifton-g`** is real and active. **`spring-2026/demo-club-d`** is entirely
+invented, in an invented league against invented clubs, flagged
 `prototype: true`, and badged as such throughout the UI. Never put a real person in the prototype or
 invented data in a real season; a test enforces that the two casts do not overlap.
 
@@ -76,10 +100,10 @@ plausible wrong address sends somebody to the wrong side of Bristol on a Tuesday
 
 ### Names, and what the site is allowed to know
 
-The repository is public. A player is a **first name**, a junior flag, and where they have one a
-rating and an ECF code. **Never an email address, a phone number or a home address.** Player ids are
-the slug of the name (`Alex` is `alex`), enforced by a test, and placeholders such as `player-a` must
-not survive into a season.
+The repository is public. A player is a **first name**, the league's own fuller form of it in
+`fullName`, a junior flag, and where they have one a rating and an ECF code. **Never an email
+address, a phone number or a home address.** `playerId` is the slug of `name` (`Alex` is `alex`),
+enforced by the loader, and placeholders such as `player-a` must not survive into a season.
 
 ## Selection, and the things that quietly break it
 
@@ -94,8 +118,9 @@ number. One ordering produces both the boards and the reserves, sorted by four k
   value: it forgoes priority to the people who asked for a game.
 - **The tiebreak hashes `(seed, matchId, playerId)`**, never array position and never `Math.random`.
   The match id is in the hash so a tied pair does not break the same way all season.
-- **Player ids feed that hash, so renaming one re-decides past ties.** Change `name`, never `id`, once
-  a match has been played. Before that they are free to change together.
+- **Player ids feed that hash, so renaming one re-decides past ties.** The id is the whole path, so
+  moving a player between teams counts as a rename. Change `name`, never `playerId`, once a fixture
+  has been played.
 - **The seed is immutable once a match has been played.**
 - **Games played counts only matches _earlier_ than this one**, which is what makes a past selection
   reproducible after later results are recorded.
@@ -135,11 +160,11 @@ find themselves playing the short clock.
 
 ## The site
 
-Every page names its subject in the path, and everything hangs off the season: `/season/:seasonId`,
-`/season/:seasonId/schedule`, `/season/:seasonId/match/:matchId`,
-`/season/:seasonId/match/:matchId/board/:board`. **Match ids are unique within a season, not across
-them** — the path already names the season, so a match is `r1`. The ICS UID has to add the season
-back, or `r1` would collide with every other season's first round.
+Every page names its subject in the path, and everything hangs off the season: `/season/<id>`,
+`/season/<id>/schedule`, `/season/<id>/fixture-1`, `/season/<id>/fixture-1/board-3`. **Fixture ids
+are unique within a season, not across them** — the path already names the season, so a fixture is
+`fixture-1`. The ICS UID has to add the season back, or `fixture-1` would collide with every other
+season's first fixture.
 
 There is no organisation page: a match carries its own selection, with the results above it once they
 exist. `src/routes/how-it-works.tsx` computes every worked example by calling `select()`. Do not

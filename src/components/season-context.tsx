@@ -24,22 +24,42 @@ interface SeasonState {
 
 const SeasonContext = React.createContext<SeasonState | null>(null);
 
-/** Season-scoped pages live under /season/:seasonId, which is what makes them shareable. */
+/** Season-scoped pages live under /season/<season id>, which is what makes them shareable. */
 export function seasonPath(seasonId: string, page?: string): string {
   return page ? `/season/${seasonId}/${page}` : `/season/${seasonId}`;
 }
 
 /**
- * Which season a URL is about.
+ * Longest first, so the split below cannot stop at a season whose id is a
+ * prefix of another one's.
+ */
+const byLength = [...seasons].sort((a, b) => b.id.length - a.id.length);
+
+/**
+ * Which season a URL is about, and what comes after it.
+ *
+ * A season id is a path of its own (`bristol-district/bristol-clifton/team-g/
+ * autumn-2026`), so where the id ends and the page begins cannot be read off
+ * the slashes. The site knows every season at build time, which turns that into
+ * a lookup rather than a guess and means nothing has to agree in advance about
+ * how deep an id goes.
  *
  * The URL is the authority, not a stored preference, so a link pasted into the
  * group chat opens the season the sender was looking at rather than whichever
- * one the reader happened to choose last. Every page names its season, matches
- * and games included, which is why this is one regex and not a lookup.
+ * one the reader happened to choose last.
  */
+export function splitSeasonPath(pathname: string): { season: Season; page: string } | null {
+  const rest = pathname.replace(/^\/season\//, "").replace(/\/+$/, "");
+  if (rest === pathname) return null;
+  for (const season of byLength) {
+    if (rest === season.id) return { season, page: "" };
+    if (rest.startsWith(`${season.id}/`)) return { season, page: rest.slice(season.id.length + 1) };
+  }
+  return null;
+}
+
 function seasonFromPath(pathname: string): Season | null {
-  const scoped = /^\/season\/([^/]+)/.exec(pathname);
-  return scoped?.[1] ? (seasonById.get(scoped[1]) ?? null) : null;
+  return splitSeasonPath(pathname)?.season ?? null;
 }
 
 function storedId(): string | null {
@@ -80,15 +100,12 @@ export function SeasonProvider({ children }: { children: React.ReactNode }) {
       } catch {
         // As above.
       }
-      // Stay on the same kind of page where that makes sense. A match page
-      // belongs to one season and cannot follow the switch, so it goes to that
-      // season's schedule instead of nowhere.
-      // A match belongs to one season and cannot follow the switch, so anything
-      // deeper than a season-level page goes to that season's schedule instead.
-      // Stay on the same kind of page where there is one, otherwise land on
-      // the season's own home rather than somewhere arbitrary.
-      const scoped = /^\/season\/[^/]+\/?([^/]*)$/.exec(pathname);
-      navigate(seasonPath(id, scoped ? scoped[1] || undefined : undefined));
+      // Stay on the same kind of page where there is one. A fixture belongs to
+      // one season and cannot follow the switch, so anything deeper than a
+      // season-level page lands on the new season's own home rather than
+      // somewhere arbitrary.
+      const page = splitSeasonPath(pathname)?.page;
+      navigate(seasonPath(id, page && !page.includes("/") && !page.startsWith("fixture-") ? page : undefined));
     },
     [navigate, pathname],
   );

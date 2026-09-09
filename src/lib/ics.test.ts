@@ -1,40 +1,50 @@
 import { describe, expect, it } from "vitest";
 import { icsFilename, toIcs } from "@/lib/ics";
-import { aMatch, aSeason, aTeam, aVenue } from "@/lib/testing";
+import { aClub, aMatch, aSeason, aTeam } from "@/lib/testing";
 
 /**
  * A season built for the calendar, not read from one on disk.
  *
  * Three fixtures cover what an ICS file has to get right: a date inside British
- * Summer Time and one outside it, a home fixture and an away one, and a venue
+ * Summer Time and one outside it, a home fixture and an away one, and a club
  * with a pasted map beside one with only a name to search for.
  */
-const ours = aVenue({
-  id: "our-venue",
-  name: "Our Chess Club",
-  address: "1 Some Road, Somewhere",
-  postcode: "AB1 2CD",
-  maps: "https://maps.example.invalid/ours",
+const us = aTeam({
+  clubId: "our-club",
+  teamId: "a",
+  name: "Our Team A",
+  club: aClub({
+    id: "our-club",
+    name: "Our Chess Club",
+    venue: { address: "1 Some Road, Somewhere", postcode: "AB1 2CD", maps: "https://maps.example.invalid/ours" },
+  }),
 });
-const theirs = aVenue({ id: "their-venue", name: "Their Chess Club" });
-const venues = new Map([
-  [ours.id, ours],
-  [theirs.id, theirs],
-]);
+const them = aTeam({
+  clubId: "their-club",
+  teamId: "b",
+  name: "Their Team B",
+  club: aClub({ id: "their-club", name: "Their Chess Club" }),
+});
+const another = aTeam({
+  clubId: "another-club",
+  teamId: "c",
+  name: "Another Team C",
+  club: aClub({ id: "another-club", name: "Another Chess Club" }),
+});
 
 const season = aSeason({
-  id: "a-season",
   name: "Test Season",
-  team: aTeam({ id: "our-team", name: "Our Team A", homeVenueId: ours.id }),
+  team: us,
+  teams: [us, them, another],
   matches: [
-    aMatch({ id: "r1", round: 1, opponent: "Their Team B", home: true, venueId: ours.id, date: "2026-04-20" }),
-    aMatch({ id: "r2", round: 2, opponent: "Their Team B", home: false, venueId: theirs.id, date: "2026-11-10" }),
-    aMatch({ id: "r3", round: 3, opponent: "Another Team C", home: true, venueId: ours.id, date: "2026-11-24" }),
+    aMatch({ id: "fixture-1", opponentTeamId: them.id, home: true, date: "2026-04-20" }),
+    aMatch({ id: "fixture-2", opponentTeamId: them.id, home: false, date: "2026-11-10" }),
+    aMatch({ id: "fixture-3", opponentTeamId: another.id, home: true, date: "2026-11-24" }),
   ],
 });
 
 const NOW = new Date("2026-03-01T09:00:00Z");
-const calendar = toIcs(season, venues, NOW);
+const calendar = toIcs(season, NOW);
 const lines = calendar.split("\r\n");
 
 /** What a calendar client sees: folded lines joined back up. */
@@ -74,9 +84,9 @@ describe("the fixture calendar", () => {
     expect(unfolded).toContain("LOCATION:Our Chess Club\\, 1 Some Road\\, Somewhere\\, AB1 2CD");
   });
 
-  it("carries a map for every event, whatever kind the venue has", () => {
+  it("carries a map for every event, whatever kind the club has", () => {
     // Not asserting which kind: a pasted link is preferred and a name search is
-    // the fallback, and which venues have which is data that changes.
+    // the fallback, and which clubs have which is data that changes.
     const maps = [...unfolded.matchAll(/Map: (\S+)/g)].map((match) => match[1]);
     expect(maps).toHaveLength(season.matches.length);
     for (const url of maps) expect(url).toMatch(/^https:\/\//);
@@ -93,7 +103,7 @@ describe("the fixture calendar", () => {
   it("gives every event a stable id, so a re-download updates rather than duplicates", () => {
     const uids = lines.filter((line) => line.startsWith("UID:"));
     expect(new Set(uids).size).toBe(season.matches.length);
-    expect(uids[0]).toBe("UID:a-season-r1@our-team");
+    expect(uids[0]).toBe(`UID:${season.id}/fixture-1`);
   });
 
   it("names the file after the team and season", () => {

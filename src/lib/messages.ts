@@ -13,19 +13,10 @@
  */
 import { playerName } from "@/lib/data";
 import { mapsUrl } from "@/lib/links";
-import type { Game, Match, Season, Venue } from "@/lib/schema";
-import { fieldedFor, formatPoints, replyOf } from "@/lib/season";
+import { fixtureNumber, type Game, type Match, type Season } from "@/lib/schema";
+import { fieldedFor, formatPoints, opponentOf, replyOf, sides, venueFor } from "@/lib/season";
 import type { Reply, Selection } from "@/lib/selection";
 import { formatLongDate } from "@/lib/time";
-
-/**
- * Where the venues come from, rather than reaching for the loaded ones.
- *
- * A message is built from a season, and a season the caller made up needs its
- * own venues: a function that reaches into `data.ts` can only ever describe the
- * season that shipped.
- */
-type Venues = ReadonlyMap<string, Venue>;
 
 const ORDINALS = [
   "first",
@@ -42,10 +33,10 @@ const ORDINALS = [
   "twelfth",
 ];
 
-/** "the first fixture of the season", or "round 14" once the words run out. */
-export function describeRound(round: number): string {
-  const word = ORDINALS[round - 1];
-  return word ? `the ${word} fixture of the season` : `round ${round}`;
+/** "the first fixture of the season", or "fixture 14" once the words run out. */
+export function describeFixture(number: number): string {
+  const word = ORDINALS[number - 1];
+  return word ? `the ${word} fixture of the season` : `fixture ${number}`;
 }
 
 /** Drops the empty entries a conditional line leaves behind. */
@@ -63,12 +54,11 @@ const sorted = (names: string[]) => [...names].sort().join(", ");
  * on the messages where somebody has to get themselves somewhere: on a progress
  * report it is a link nobody clicks, and four of them in a row is clutter.
  */
-function fixtureLine(season: Season, match: Match, venues: Venues, withMap: boolean): string {
-  const venue = venues.get(match.venueId);
-  const home = match.home ? season.team.name : match.opponent;
-  const away = match.home ? match.opponent : season.team.name;
-  const where = match.home ? "at home" : `away at ${venue?.name ?? "a venue still to be confirmed"}`;
-  const link = withMap && venue ? ` (${mapsUrl(venue)})` : "";
+function fixtureLine(season: Season, match: Match, withMap: boolean): string {
+  const venue = venueFor(season, match);
+  const { home, away } = sides(season, match);
+  const where = match.home ? "at home" : `away at ${venue.name}`;
+  const link = withMap ? ` (${mapsUrl(venue)})` : "";
 
   return `${home} v ${away}, ${formatLongDate(match.date)}, ${match.time}, ${where}${link}.`;
 }
@@ -80,8 +70,8 @@ function fixtureLine(season: Season, match: Match, venues: Venues, withMap: bool
  * days" ages badly. No list of the four answers either: those go out as a poll,
  * so spelling them out would be a second, worse copy of the options.
  */
-export function callToAction(season: Season, match: Match, venues: Venues): string {
-  return join([`Who can play in ${describeRound(match.round)}?`, "", fixtureLine(season, match, venues, true)]);
+export function callToAction(season: Season, match: Match): string {
+  return join([`Who can play in ${describeFixture(fixtureNumber(match))}?`, "", fixtureLine(season, match, true)]);
 }
 
 /**
@@ -91,10 +81,10 @@ export function callToAction(season: Season, match: Match, venues: Venues): stri
  * of "can play" is most likely to be misread as a team sheet. Hence the last
  * line.
  */
-export function availabilityUpdate(season: Season, match: Match, venues: Venues): string {
+export function availabilityUpdate(season: Season, match: Match): string {
   const grouped = new Map<Reply | "none", string[]>();
   for (const player of season.players) {
-    const reply = replyOf(match, player.id) ?? "none";
+    const reply = replyOf(match, player.playerId) ?? "none";
     grouped.set(reply, [...(grouped.get(reply) ?? []), player.name]);
   }
 
@@ -104,7 +94,7 @@ export function availabilityUpdate(season: Season, match: Match, venues: Venues)
   };
 
   return join([
-    `Where we are for ${fixtureLine(season, match, venues, false)}`,
+    `Where we are for ${fixtureLine(season, match, false)}`,
     "",
     line("yes", "Can play"),
     line("reserve", "Can be a reserve"),
@@ -125,7 +115,7 @@ export function availabilityUpdate(season: Season, match: Match, venues: Venues)
  * because that is the whole promise the rule makes and the one thing somebody
  * who was not picked wants to hear.
  */
-export function selectedTeam(season: Season, match: Match, selection: Selection, venues: Venues): string {
+export function selectedTeam(season: Season, match: Match, selection: Selection): string {
   // The team the captain is fielding, which is the rule's answer unless he has
   // written one down. A message naming four people who are not playing is the
   // worst thing this function could produce.
@@ -137,7 +127,7 @@ export function selectedTeam(season: Season, match: Match, selection: Selection,
   const missedOut = fielded.reserves.length > 0 || selection.standby.length > 0;
 
   return join([
-    `Team for ${fixtureLine(season, match, venues, true)}`,
+    `Team for ${fixtureLine(season, match, true)}`,
     "",
 
     // Board order, because that is what the message is for. Reserves keep their
@@ -170,8 +160,7 @@ export function selectedTeam(season: Season, match: Match, selection: Selection,
 export function matchResult(season: Season, match: Match): string | null {
   if (!match.result) return null;
 
-  const home = match.home ? season.team.name : match.opponent;
-  const away = match.home ? match.opponent : season.team.name;
+  const { home, away } = sides(season, match);
   // The league writes a scoreline home side first, so the numbers have to be
   // ordered to match the names or an away win reads as a defeat.
   const homeScore = match.home ? match.result.ourScore : match.result.theirScore;
@@ -194,7 +183,10 @@ export function matchResult(season: Season, match: Match): string | null {
 
   const boards = [...match.result.games]
     .sort((a, b) => a.board - b.board)
-    .map((game) => `${game.board}. ${playerName(season, game.playerId)} ${score[game.result]} ${game.opponent.name}`);
+    .map(
+      (game) =>
+        `${game.board}. ${playerName(season, game.playerId)} ${score[game.result]} ${opponentOf(season, match, game)?.name ?? game.opponentId}`,
+    );
 
   return join([
     `${outcome}: ${home} ${formatPoints(homeScore)} - ${formatPoints(awayScore)} ${away}.`,

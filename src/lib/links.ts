@@ -4,20 +4,32 @@
  * Everything here is a URL builder. Nothing fetches, and nothing analyses — the
  * site hands a game to a site that can analyse it and gets out of the way.
  */
-import type { Game, Match, Player, Venue } from "@/lib/schema";
+import { fixtureNumber, type Club, type Game, type Match, type Player } from "@/lib/schema";
+
+/**
+ * The building, in the order an envelope would have it.
+ *
+ * The club's own name is not in here: it is the heading this sits under, and
+ * repeating it would read as two different places. Any of the parts can be
+ * missing, and a club whose address nobody has confirmed yet shows none of them
+ * rather than a guess.
+ */
+export function addressLines(club: Club): string[] {
+  return [club.venue.name, club.venue.address, club.venue.postcode].filter((line) => line !== null);
+}
 
 /**
  * Where the match is, on a map.
  *
- * A pasted link wins when there is one. Otherwise this searches for the venue by
+ * A pasted link wins when there is one. Otherwise this searches for the club by
  * name rather than by an address, because the addresses are not all confirmed
  * and a guessed one sends somebody to the wrong side of Bristol on a Tuesday
  * evening. A search for the club name lands on the right place or visibly fails,
  * and both of those beat quiet confidence.
  */
-export function mapsUrl(venue: Venue): string {
-  if (venue.maps) return venue.maps;
-  const query = [venue.name, venue.address, venue.postcode, "Bristol"].filter(Boolean).join(", ");
+export function mapsUrl(club: Club): string {
+  if (club.venue.maps) return club.venue.maps;
+  const query = [club.name, ...addressLines(club), "Bristol"].join(", ");
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 }
 
@@ -52,9 +64,15 @@ export function chesscomUrl(pgn: string): string | null {
  * here should be a valid PGN, and the tags are the difference between a game
  * that keeps its context and a list of moves.
  */
-export function taggedPgn(match: Match, game: Game, playerName: string, team: string): string {
-  const white = game.colour === "white" ? playerName : game.opponent.name;
-  const black = game.colour === "white" ? game.opponent.name : playerName;
+export function taggedPgn(
+  match: Match,
+  game: Game,
+  playerName: string,
+  opponentName: string,
+  sides: { home: string; away: string },
+): string {
+  const white = game.colour === "white" ? playerName : opponentName;
+  const black = game.colour === "white" ? opponentName : playerName;
   const scores: Record<Game["result"], string> = {
     win: "1-0",
     "default-win": "1-0",
@@ -68,12 +86,12 @@ export function taggedPgn(match: Match, game: Game, playerName: string, team: st
   const result = game.colour === "white" ? ours : ours === "1-0" ? "0-1" : ours === "0-1" ? "1-0" : ours;
 
   const tags = [
-    ["Event", `${match.home ? team : match.opponent} v ${match.home ? match.opponent : team}`],
+    ["Event", `${sides.home} v ${sides.away}`],
     ["Site", "Bristol, England"],
     ["Date", match.date.replace(/-/g, ".")],
     // Team chess numbers a round by match and board, which is what makes two
     // games from the same evening distinguishable in a database.
-    ["Round", `${match.round}.${game.board}`],
+    ["Round", `${fixtureNumber(match)}.${game.board}`],
     ["White", white],
     ["Black", black],
     ["Result", result],

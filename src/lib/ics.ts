@@ -9,8 +9,9 @@
  * block. Both are legal; this one is shorter and cannot be misread, and it
  * relies on `londonToUtc` having got the clock change right, which is tested.
  */
-import { mapsUrl } from "@/lib/links";
-import type { Match, Season, Venue } from "@/lib/schema";
+import { addressLines, mapsUrl } from "@/lib/links";
+import { fixtureNumber, type Match, type Season } from "@/lib/schema";
+import { sides, venueFor } from "@/lib/season";
 import { londonToUtc } from "@/lib/time";
 
 /** A league match, generously. Nobody minds a calendar block ending early. */
@@ -42,29 +43,26 @@ function fold(line: string): string[] {
   return out;
 }
 
-function event(season: Season, match: Match, venue: Venue | undefined, now: Date): string[] {
+function event(season: Season, match: Match, now: Date): string[] {
   const start = londonToUtc(match.date, match.time);
   const end = new Date(start.getTime() + DURATION_MINUTES * 60_000);
-  const home = match.home ? season.team.name : match.opponent;
-  const away = match.home ? match.opponent : season.team.name;
-  const place = venue
-    ? [venue.name, venue.address, venue.postcode].filter(Boolean).join(", ")
-    : "Venue to be confirmed";
+  const { home, away } = sides(season, match);
+  const venue = venueFor(season, match);
+  const place = [venue.name, ...addressLines(venue)].join(", ");
 
   const description = [
-    `${season.team.competition}, round ${match.round}.`,
+    `${season.league.name}, fixture ${fixtureNumber(match)}.`,
     match.home ? "Home fixture." : "Away fixture.",
-    venue ? `Map: ${mapsUrl(venue)}` : null,
-  ]
-    .filter(Boolean)
-    .join(" ");
+    `Map: ${mapsUrl(venue)}`,
+  ].join(" ");
 
   return [
     "BEGIN:VEVENT",
-    // Season included: match ids are unique within a season, not across them,
-    // so `r1` alone would collide with every other season's first round and
-    // calendars would treat them as the same event.
-    `UID:${season.id}-${match.id}@${season.team.id}`,
+    // Season included: fixture ids are unique within a season, not across them,
+    // so `fixture-1` alone would collide with every other season's first
+    // fixture and calendars would treat them as the same event. The season id
+    // names its league, club, team and period, so the pair is unique outright.
+    `UID:${season.id}/${match.id}`,
     `DTSTAMP:${stamp(now)}`,
     `DTSTART:${stamp(start)}`,
     `DTEND:${stamp(end)}`,
@@ -75,7 +73,7 @@ function event(season: Season, match: Match, venue: Venue | undefined, now: Date
   ];
 }
 
-export function toIcs(season: Season, venues: Map<string, Venue>, now: Date = new Date()): string {
+export function toIcs(season: Season, now: Date = new Date()): string {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
@@ -83,9 +81,7 @@ export function toIcs(season: Season, venues: Map<string, Venue>, now: Date = ne
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     `X-WR-CALNAME:${escape(`${season.team.name}, ${season.name}`)}`,
-    ...season.matches
-      .filter((match) => match.status !== "cancelled")
-      .flatMap((match) => event(season, match, venues.get(match.venueId), now)),
+    ...season.matches.filter((match) => match.status !== "cancelled").flatMap((match) => event(season, match, now)),
     "END:VCALENDAR",
   ];
 

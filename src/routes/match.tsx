@@ -1,6 +1,6 @@
 import { ArrowLeft, Clock3, Eye, EyeOff, ExternalLink, MapPin } from "lucide-react";
 import * as React from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { AnalysisIcons } from "@/components/analysis-links";
 import { seasonPath } from "@/components/season-context";
 import { Empty, Page, Section } from "@/components/page";
@@ -14,10 +14,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { assignBoards, expectedColour, formatClock, type BoardAssignment } from "@/lib/boards";
-import { findMatch, playerById, venueById } from "@/lib/data";
-import { mapsUrl, taggedPgn } from "@/lib/links";
-import { GAME_RESULT_LABEL, type Match, type Season } from "@/lib/schema";
-import { fieldedFor, matchScore, ratingOn, selectionFor, type Fielded } from "@/lib/season";
+import { findMatch, playerById } from "@/lib/data";
+import { addressLines, mapsUrl, taggedPgn } from "@/lib/links";
+import { GAME_RESULT_LABEL, boardSlug, fixtureNumber, type Match, type Season } from "@/lib/schema";
+import {
+  fieldedFor,
+  matchScore,
+  opponentOf,
+  opponentTeam,
+  ratingOn,
+  selectionFor,
+  sides,
+  venueFor,
+  type Fielded,
+} from "@/lib/season";
 import { formatDated, formatLongDate, formatYear, relativeDay, today } from "@/lib/time";
 import type { Selection } from "@/lib/selection";
 import { cn } from "@/lib/utils";
@@ -30,8 +40,8 @@ import { cn } from "@/lib/utils";
  * for is when to leave the house and where they are going.
  */
 function Where({ season, match }: { season: Season; match: Match }) {
-  const venue = venueById.get(match.venueId);
-  const place = venue ? [venue.address, venue.postcode].filter(Boolean).join(", ") : "";
+  const venue = venueFor(season, match);
+  const place = addressLines(venue).join(", ");
 
   return (
     <div className="bg-card grid gap-5 rounded-xl border p-5 sm:grid-cols-[minmax(0,1fr)_11rem] md:grid-cols-[minmax(0,1fr)_13rem]">
@@ -59,7 +69,7 @@ function Where({ season, match }: { season: Season; match: Match }) {
             Where
           </p>
           <p className="mt-1.5 text-lg font-semibold">
-            {venue?.name ?? "Venue to be confirmed"}{" "}
+            {venue.name}{" "}
             <span className="ml-1 align-middle">
               <HomeAway home={match.home} />
             </span>
@@ -70,17 +80,15 @@ function Where({ season, match }: { season: Season; match: Match }) {
 
       {/* Down the side of both rows, so the column is not left empty under it
           and the card is no taller than the map. */}
-      {venue && <VenueMap venue={venue} className="w-full self-start sm:row-span-2" />}
+      <VenueMap club={venue} className="w-full self-start sm:row-span-2" />
 
       <div className="space-y-2.5 border-t pt-3.5">
         <div className="flex flex-wrap items-center gap-2">
-          {venue && (
-            <Button variant="outline" size="sm" asChild>
-              <a href={mapsUrl(venue)} target="_blank" rel="noreferrer">
-                Open in Maps <ExternalLink className="size-3.5" />
-              </a>
-            </Button>
-          )}
+          <Button variant="outline" size="sm" asChild>
+            <a href={mapsUrl(venue)} target="_blank" rel="noreferrer">
+              Open in Maps <ExternalLink className="size-3.5" />
+            </a>
+          </Button>
           {match.recordUrl && (
             <Button variant="outline" size="sm" asChild>
               <a href={match.recordUrl} target="_blank" rel="noreferrer">
@@ -88,9 +96,9 @@ function Where({ season, match }: { season: Season; match: Match }) {
               </a>
             </Button>
           )}
-          {venue?.website && (
+          {venue.links.website && (
             <Button variant="ghost" size="sm" asChild>
-              <a href={venue.website} target="_blank" rel="noreferrer">
+              <a href={venue.links.website} target="_blank" rel="noreferrer">
                 Club website <ExternalLink className="size-3.5" />
               </a>
             </Button>
@@ -104,7 +112,7 @@ function Where({ season, match }: { season: Season; match: Match }) {
         <p className="text-muted-foreground text-xs">
           Times and venues come from{" "}
           <a
-            href={season.team.links.fixtures}
+            href={season.team.links.fixtures ?? undefined}
             target="_blank"
             rel="noreferrer"
             className="text-primary inline-flex items-center gap-1 hover:underline"
@@ -161,9 +169,9 @@ function LocalComparison({
       <p className="text-muted-foreground mb-1.5 text-xs font-medium">{title}</p>
       <ol className="space-y-1">
         {boards.map((entry) => {
-          const same = other[entry.board - 1]?.player.id === entry.player.id;
+          const same = other[entry.board - 1]?.player.playerId === entry.player.playerId;
           return (
-            <li key={entry.player.id} className="flex items-baseline gap-2 text-sm">
+            <li key={entry.player.playerId} className="flex items-baseline gap-2 text-sm">
               <span className="tabular text-muted-foreground w-4 shrink-0 text-xs">{entry.board}</span>
               <span className={cn("truncate", !same && "text-reply-unsure font-medium")}>{entry.player.name}</span>
               <span className="tabular text-muted-foreground ml-auto shrink-0 text-xs">
@@ -236,7 +244,7 @@ function BoardOrder({ season, match, fielded }: { season: Season; match: Match; 
           </TableHeader>
           <TableBody>
             {boards.map((entry) => (
-              <TableRow key={entry.player.id}>
+              <TableRow key={entry.player.playerId}>
                 <TableCell className="tabular font-medium">{entry.board}</TableCell>
                 <TableCell>
                   <PlayerLink player={entry.player} />
@@ -280,7 +288,7 @@ function Result({ season, match }: { season: Season; match: Match }) {
             <TableHead className="w-16">Board</TableHead>
             <TableHead>Us</TableHead>
             <TableHead className="w-20">Colour</TableHead>
-            <TableHead>{match.opponent}</TableHead>
+            <TableHead>{opponentTeam(season, match).name}</TableHead>
             <TableHead className="w-28">Result</TableHead>
             <TableHead className="w-20 text-right">Game</TableHead>
           </TableRow>
@@ -290,6 +298,7 @@ function Result({ season, match }: { season: Season; match: Match }) {
             .sort((a, b) => a.board - b.board)
             .map((game) => {
               const player = playerById(season, game.playerId);
+              const opponent = opponentOf(season, match, game);
               const won = game.result === "win" || game.result === "default-win";
               const drew = game.result === "draw";
               return (
@@ -302,9 +311,7 @@ function Result({ season, match }: { season: Season; match: Match }) {
                     </span>
                   </TableCell>
                   <TableCell className="text-muted-foreground text-sm capitalize">{game.colour}</TableCell>
-                  <TableCell>
-                    <PlayerCell player={game.opponent} />
-                  </TableCell>
+                  <TableCell>{opponent ? <PlayerCell player={opponent} /> : game.opponentId}</TableCell>
                   <TableCell>
                     <span
                       className={cn(
@@ -320,9 +327,17 @@ function Result({ season, match }: { season: Season; match: Match }) {
                   <TableCell className="text-right whitespace-nowrap">
                     {game.pgn ? (
                       <span className="inline-flex items-center gap-1">
-                        <AnalysisIcons pgn={taggedPgn(match, game, player?.name ?? game.playerId, season.team.name)} />
+                        <AnalysisIcons
+                          pgn={taggedPgn(
+                            match,
+                            game,
+                            player?.name ?? game.playerId,
+                            opponent?.name ?? game.opponentId,
+                            sides(season, match),
+                          )}
+                        />
                         <Button variant="ghost" size="sm" asChild>
-                          <Link to={seasonPath(season.id, `match/${match.id}/board/${game.board}`)}>View</Link>
+                          <Link to={seasonPath(season.id, `${match.id}/${boardSlug(game)}`)}>View</Link>
                         </Button>
                       </span>
                     ) : (
@@ -338,8 +353,7 @@ function Result({ season, match }: { season: Season; match: Match }) {
   );
 }
 
-export function MatchPage() {
-  const { seasonId, matchId } = useParams();
+export function MatchPage({ seasonId, matchId }: { seasonId: string; matchId: string }) {
   const found = findMatch(seasonId, matchId);
   if (!found) return <Navigate to="/schedule" replace />;
 
@@ -375,8 +389,7 @@ export function MatchPage() {
   const canForce = import.meta.env.DEV && !settled;
   const [forced, setForced] = React.useState(true);
   const showProposal = settled || (canForce && forced);
-  const home = match.home ? season.team.name : match.opponent;
-  const away = match.home ? match.opponent : season.team.name;
+  const { home, away } = sides(season, match);
 
   return (
     <Page
@@ -384,7 +397,7 @@ export function MatchPage() {
       badge={<HomeAway home={match.home} size="lg" />}
       lede={
         <>
-          Round {match.round} · <CompetitionLink team={season.team} />
+          Fixture {fixtureNumber(match)} · <CompetitionLink season={season} />
         </>
       }
       actions={
