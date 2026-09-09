@@ -24,8 +24,7 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": null
+      "codes": []
     },
     {
       "playerId": "g-passmore",
@@ -38,8 +37,7 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": null
+      "codes": []
     },
     {
       "playerId": "l-cadbury",
@@ -52,8 +50,7 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": null
+      "codes": []
     },
     {
       "playerId": "w-culliford",
@@ -66,8 +63,7 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": null
+      "codes": []
     }
   ]
 }

@@ -28,7 +28,8 @@
           "rating": 1602,
           "source": "ecf"
         }
-      ]
+      ],
+      "codes": []
     },
     {
       "playerId": "bruno-halliday",
@@ -45,7 +46,8 @@
           "rating": 1511,
           "source": "ecf"
         }
-      ]
+      ],
+      "codes": []
     },
     {
       "playerId": "cass-oyelaran",
@@ -57,7 +59,8 @@
           "rating": 1720,
           "source": "ecf"
         }
-      ]
+      ],
+      "codes": []
     },
     {
       "playerId": "dermot-kavanagh",
@@ -69,14 +72,16 @@
           "rating": 1340,
           "source": "ecf"
         }
-      ]
+      ],
+      "codes": []
     },
     {
       "playerId": "elin-pryce",
       "name": "Elin Pryce",
       "fullName": null,
       "ratings": [],
-      "note": "Joined in February, no published grade yet."
+      "note": "Joined in February, no published grade yet.",
+      "codes": []
     },
     {
       "playerId": "farid-nassar",
@@ -88,7 +93,8 @@
           "rating": 1455,
           "source": "estimated"
         }
-      ]
+      ],
+      "codes": []
     },
     {
       "playerId": "gwen-tsai",
@@ -105,13 +111,15 @@
           "rating": 1325,
           "source": "ecf"
         }
-      ]
+      ],
+      "codes": []
     },
     {
       "playerId": "hollis-barr",
       "name": "Hollis Barr",
       "fullName": null,
-      "ratings": []
+      "ratings": [],
+      "codes": []
     },
     {
       "playerId": "imre-solt",
@@ -123,7 +131,8 @@
           "rating": 1610,
           "source": "fide"
         }
-      ]
+      ],
+      "codes": []
     },
     {
       "playerId": "jonah-kestrel",
@@ -136,7 +145,8 @@
           "source": "ecf"
         }
       ],
-      "note": "Under 16, so any board he plays is on the shorter clock."
+      "note": "Under 16, so any board he plays is on the shorter clock.",
+      "codes": []
     },
     {
       "playerId": "keeley-monrove",
@@ -148,13 +158,15 @@
           "rating": 1405,
           "source": "ecf"
         }
-      ]
+      ],
+      "codes": []
     },
     {
       "playerId": "liam-ferrers",
       "name": "Liam Ferrers",
       "fullName": null,
-      "ratings": []
+      "ratings": [],
+      "codes": []
     },
     {
       "playerId": "mira-vance",
@@ -166,7 +178,8 @@
           "rating": 1530,
           "source": "ecf"
         }
-      ]
+      ],
+      "codes": []
     },
     {
       "playerId": "noor-abadi",
@@ -178,7 +191,8 @@
           "rating": 1365,
           "source": "estimated"
         }
-      ]
+      ],
+      "codes": []
     }
   ]
 }

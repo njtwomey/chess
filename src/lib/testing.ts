@@ -7,7 +7,7 @@
  * nothing in `content/` can break a test and no test can hold the data still.
  *
  * Every builder goes through the schema rather than returning a literal, so a
- * fixture cannot drift from the contract. Add a required field to `PlayerSchema`
+ * fixture cannot drift from the contract. Add a required field to `PersonSchema`
  * and the builders fail here, once, rather than in nine test files.
  *
  * The loaded shapes (a team with its club, a season with everything resolved)
@@ -19,7 +19,7 @@ import {
   ClubSchema,
   LeagueSchema,
   MatchSchema,
-  PlayerSchema,
+  PersonSchema,
   SeasonSchema,
   SquadMemberSchema,
   TeamSchema,
@@ -101,7 +101,7 @@ export function aTeam(over: Partial<Team> = {}): Team {
 export function aPlayer(over: Partial<Player> = {}): Player {
   const { role, junior, ...rest } = over;
   const playerId = bare(rest.playerId ?? next("player"));
-  const person = PlayerSchema.parse({ ...rest, playerId, name: rest.name ?? playerId });
+  const person = PersonSchema.parse({ ...rest, playerId, name: rest.name ?? playerId });
   const member = SquadMemberSchema.parse({
     playerId,
     ...(role === undefined ? {} : { role }),

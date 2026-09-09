@@ -68,6 +68,50 @@ export const RATING_SOURCE_LABEL: Record<(typeof RATING_SOURCES)[number], string
  * the series means the site can show a player's direction of travel, and means
  * a rating quoted on a past match card stays the rating that was true then.
  */
+/**
+ * The bodies that know a player by a number, which is not the same list as the
+ * bodies that publish a rating: nobody is registered with "estimated", and the
+ * league's own management site issues a number without rating anybody.
+ */
+export const CODE_SOURCES = ["ecf", "fide", "lms"] as const;
+
+export const CODE_SOURCE_LABEL: Record<(typeof CODE_SOURCES)[number], string> = {
+  ecf: "ECF",
+  fide: "FIDE",
+  lms: "League management site",
+};
+
+/**
+ * One registration: who knows them, and the number they know them by.
+ *
+ * A list rather than a field per body, because `ecfCode` beside `url` could
+ * hold exactly one federation and one link, and said nothing about which link
+ * belonged to which. Somebody with an ECF code, a FIDE id and an LMS page has
+ * three of these and the site can build all three addresses; an opponent we met
+ * once has the LMS number that was in the page we read their rating off.
+ *
+ * The URL is not stored. Every one of these is a template with the code
+ * substituted in, so keeping the address as well would be the same fact twice,
+ * and the copy would be the one that rots.
+ *
+ * Checked per body, because the shapes really are different and a FIDE id typed
+ * into an ECF field is a link to the wrong person rather than to nobody.
+ */
+export const PlayerCodeSchema = z.discriminatedUnion("source", [
+  z.strictObject({
+    source: z.literal("ecf"),
+    code: z.string().regex(/^\d{6}[A-Z]$/, "an ECF code is six digits and a capital letter, like 364477H"),
+  }),
+  z.strictObject({
+    source: z.literal("fide"),
+    code: z.string().regex(/^\d{4,9}$/, "a FIDE id is four to nine digits"),
+  }),
+  z.strictObject({
+    source: z.literal("lms"),
+    code: z.string().regex(/^\d+$/, "an LMS player number is the digits in their page's address"),
+  }),
+]);
+
 export const RatingSchema = z.strictObject({
   date: DATE,
   rating: z.number().int().min(0).max(3500),
@@ -86,7 +130,7 @@ export const RatingSchema = z.strictObject({
  * What is deliberately not here is anything only true of a season: see
  * `SquadMemberSchema`.
  */
-export const PlayerSchema = z.strictObject({
+export const PersonSchema = z.strictObject({
   /**
    * Stored as the bare segment, `niall-twomey`, and loaded as the whole path,
    * `bristol-clifton/niall-twomey`.
@@ -119,26 +163,14 @@ export const PlayerSchema = z.strictObject({
    */
   ratings: z.array(RatingSchema).default([]),
   /**
-   * Their ECF membership code, six digits and a check letter.
+   * Every body that knows them by a number, and that number.
    *
-   * Worth holding because it is the one identifier that survives a name: it
-   * links to the published record, which is the authority on a rating and the
-   * place to look when a new list comes out.
+   * These are what survive a name, which is why they are worth holding: they
+   * link to the published record, which is the authority on a rating and the
+   * place to look when a new list comes out. Empty is normal for a member who
+   * has never registered anywhere.
    */
-  ecfCode: z
-    .string()
-    .regex(/^\d{6}[A-Z]$/, "an ECF code is six digits and a capital letter, like 364477H")
-    .nullable()
-    .default(null),
-  /**
-   * Their page on the league's own site.
-   *
-   * Ours are found through `ecfCode`, which is the identifier that survives a
-   * name change. An opponent is usually met once, with no code to hand and no
-   * reason to go looking for one, so a link to the page the rating was read off
-   * is the honest amount of identity to keep about somebody else's player.
-   */
-  url: URL.nullable().default(null),
+  codes: z.array(PlayerCodeSchema).default([]),
   note: z.string().optional(),
 });
 
@@ -433,7 +465,7 @@ export const ClubSchema = z.strictObject({
    * is one man with one rating history rather than two records that can
    * disagree. A season says who was picked; this says who they are.
    */
-  players: z.array(PlayerSchema).default([]),
+  players: z.array(PersonSchema).default([]),
 });
 
 /**
@@ -458,7 +490,8 @@ export const LeaguesFileSchema = z.array(LeagueSchema);
 export type Clock = z.infer<typeof ClockSchema>;
 export type TimeControl = z.infer<typeof TimeControlSchema>;
 export type Rating = z.infer<typeof RatingSchema>;
-export type Person = z.infer<typeof PlayerSchema>;
+export type PlayerCode = z.infer<typeof PlayerCodeSchema>;
+export type Person = z.infer<typeof PersonSchema>;
 export type SquadMember = z.infer<typeof SquadMemberSchema>;
 
 /**

@@ -25,8 +25,12 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": "https://lms.englishchess.org.uk/lms/player/73812/view"
+      "codes": [
+        {
+          "source": "lms",
+          "code": "73812"
+        }
+      ]
     },
     {
       "playerId": "michael-chaffey",
@@ -39,8 +43,12 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": "https://lms.englishchess.org.uk/lms/player/112300/view"
+      "codes": [
+        {
+          "source": "lms",
+          "code": "112300"
+        }
+      ]
     },
     {
       "playerId": "ryszard-dudko",
@@ -53,8 +61,12 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": "https://lms.englishchess.org.uk/lms/player/129174/view"
+      "codes": [
+        {
+          "source": "lms",
+          "code": "129174"
+        }
+      ]
     },
     {
       "playerId": "sean-hubble",
@@ -67,8 +79,12 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": "https://lms.englishchess.org.uk/lms/player/121305/view"
+      "codes": [
+        {
+          "source": "lms",
+          "code": "121305"
+        }
+      ]
     }
   ]
 }

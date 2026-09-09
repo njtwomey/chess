@@ -90,8 +90,8 @@ function loadClubs(): Club[] {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export const clubs: Club[] = loadClubs();
-export const leagues: League[] = only(leagueFiles, LeaguesFileSchema, "leagues.json");
+const clubs: Club[] = loadClubs();
+const leagues: League[] = only(leagueFiles, LeaguesFileSchema, "leagues.json");
 
 for (const club of clubs) {
   const venue = club.venue;
@@ -112,8 +112,8 @@ for (const club of clubs) {
   }
 }
 
-export const clubById = new Map(clubs.map((club) => [club.id, club]));
-export const leagueById = new Map(leagues.map((league) => [league.id, league]));
+const clubById = new Map(clubs.map((club) => [club.id, club]));
+const leagueById = new Map(leagues.map((league) => [league.id, league]));
 
 function loadSeasons(): Season[] {
   const problems: string[] = [];
@@ -281,6 +281,15 @@ function checkClub(club: Club): string[] {
     const dates = player.ratings.map((rating) => rating.date);
     if (dates.some((date, index) => index > 0 && date <= (dates[index - 1] ?? ""))) {
       note(`"${player.playerId}" has ratings that are not in ascending date order`);
+    }
+
+    // One number per body. Two ECF codes for one person is not two records, it
+    // is one of them being somebody else, and the site would link to whichever
+    // came first.
+    const sources = new Set<string>();
+    for (const entry of player.codes) {
+      if (sources.has(entry.source)) note(`"${player.playerId}" has two ${entry.source} codes`);
+      sources.add(entry.source);
     }
   }
   return problems;

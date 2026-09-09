@@ -106,8 +106,10 @@ plausible wrong address sends somebody to the wrong side of Bristol on a Tuesday
 ### Names, and what the site is allowed to know
 
 The repository is public. A player is a **first name**, the league's own fuller form of it in
-`fullName`, a junior flag, and where they have one a rating and an ECF code. **Never an email
-address, a phone number or a home address.** `playerId` is the slug of the fullest name held, so
+`fullName`, a junior flag, a rating history, and the numbers the bodies that rate them know them by:
+`codes` is a list of `{ source, code }` over ECF, FIDE and the league's own site, and **every link to
+a player is built from one of those rather than stored**. **Never an email address, a phone number or
+a home address.** `playerId` is the slug of the fullest name held, so
 `fullName` where there is one and `name` otherwise, enforced by the loader: Will Blatchford is
 `william-blatchford` and shows as "Will". Placeholders such as `player-a` must not survive into a
 season.

@@ -4,7 +4,7 @@
  * Everything here is a URL builder. Nothing fetches, and nothing analyses — the
  * site hands a game to a site that can analyse it and gets out of the way.
  */
-import { fixtureNumber, type Club, type Game, type Match, type Player } from "@/lib/schema";
+import { fixtureNumber, type Club, type Game, type Match, type Player, type PlayerCode } from "@/lib/schema";
 
 /**
  * The building, in the order an envelope would have it.
@@ -103,20 +103,33 @@ export function taggedPgn(
   return `${tags.map(([tag, value]) => `[${tag} "${value}"]`).join("\n")}\n\n${withResult}\n`;
 }
 
-/**
- * Where a player's record lives, whoever's player they are.
- *
- * Ours are found by their ECF code, an opponent by the league page their rating
- * was read off. Same question, two answers, and the page should not care which:
- * a name that links on one side of the board and not the other reads as an
- * oversight, because it is one.
- */
-export function playerUrl(player: Player): string | null {
-  if (player.url) return player.url;
-  return player.ecfCode ? ecfUrl(player.ecfCode) : null;
+/** Where each body publishes the player it knows by that number. */
+const CODE_URL: Record<PlayerCode["source"], (code: string) => string> = {
+  ecf: (code) => `https://rating.englishchess.org.uk/players?ECF_code=${code}`,
+  fide: (code) => `https://ratings.fide.com/profile/${code}`,
+  lms: (code) => `https://lms.englishchess.org.uk/lms/player/${code}/view`,
+};
+
+export function codeUrl(entry: PlayerCode): string {
+  return CODE_URL[entry.source](entry.code);
 }
 
-/** A player's published record on the ECF rating site. */
-export function ecfUrl(code: string): string {
-  return `https://rating.englishchess.org.uk/players?ECF_code=${code}`;
+/**
+ * The most authoritative record we can reach, in that order.
+ *
+ * The ECF's own page is the authority on an English rating, FIDE's on an
+ * international one, and the league's management site is where an opponent's
+ * rating was read off when nobody had a code to hand. Ours mostly have the
+ * first and theirs mostly the last, and the page must not care which: a name
+ * that links on one side of the board and not the other reads as an oversight,
+ * because it is one.
+ */
+const PREFERRED: PlayerCode["source"][] = ["ecf", "fide", "lms"];
+
+export function playerUrl(player: Player): string | null {
+  for (const source of PREFERRED) {
+    const found = player.codes.find((entry) => entry.source === source);
+    if (found) return codeUrl(found);
+  }
+  return null;
 }

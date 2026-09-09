@@ -25,7 +25,12 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": "386591F"
+      "codes": [
+        {
+          "source": "ecf",
+          "code": "386591F"
+        }
+      ]
     },
     {
       "playerId": "alexandra-bicknell",
@@ -38,7 +43,12 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": "380878G"
+      "codes": [
+        {
+          "source": "ecf",
+          "code": "380878G"
+        }
+      ]
     },
     {
       "playerId": "alfred-holton-stoppani",
@@ -51,43 +61,54 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": "364477H"
+      "codes": [
+        {
+          "source": "ecf",
+          "code": "364477H"
+        }
+      ]
     },
     {
       "playerId": "george",
       "name": "George",
       "fullName": null,
-      "ratings": []
+      "ratings": [],
+      "codes": []
     },
     {
       "playerId": "jade-redpath-aislabie",
       "name": "Jade",
       "fullName": "Jade Redpath-Aislabie",
-      "ratings": []
+      "ratings": [],
+      "codes": []
     },
     {
       "playerId": "john",
       "name": "John",
       "fullName": null,
-      "ratings": []
+      "ratings": [],
+      "codes": []
     },
     {
       "playerId": "lorenzo-milleri",
       "name": "Lorenzo",
       "fullName": "Lorenzo Milleri",
-      "ratings": []
+      "ratings": [],
+      "codes": []
     },
     {
       "playerId": "mark",
       "name": "Mark",
       "fullName": null,
-      "ratings": []
+      "ratings": [],
+      "codes": []
     },
     {
       "playerId": "max-pester",
       "name": "Max",
       "fullName": "Max Pester",
-      "ratings": []
+      "ratings": [],
+      "codes": []
     },
     {
       "playerId": "mukhtar-hasan",
@@ -100,13 +121,19 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": "389043A"
+      "codes": [
+        {
+          "source": "ecf",
+          "code": "389043A"
+        }
+      ]
     },
     {
       "playerId": "niall-twomey",
       "name": "Niall",
       "fullName": "Niall Twomey",
-      "ratings": []
+      "ratings": [],
+      "codes": []
     },
     {
       "playerId": "shaan-thomas",
@@ -119,13 +146,19 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": "380146K"
+      "codes": [
+        {
+          "source": "ecf",
+          "code": "380146K"
+        }
+      ]
     },
     {
       "playerId": "sonny-hancock",
       "name": "Sonny",
       "fullName": "Sonny Hancock",
-      "ratings": []
+      "ratings": [],
+      "codes": []
     },
     {
       "playerId": "stephen-hinde",
@@ -138,13 +171,19 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": "368493D"
+      "codes": [
+        {
+          "source": "ecf",
+          "code": "368493D"
+        }
+      ]
     },
     {
       "playerId": "theo-wright",
       "name": "Theo",
       "fullName": "Theo Wright",
-      "ratings": []
+      "ratings": [],
+      "codes": []
     },
     {
       "playerId": "thomas-booth",
@@ -157,13 +196,19 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": "220762L"
+      "codes": [
+        {
+          "source": "ecf",
+          "code": "220762L"
+        }
+      ]
     },
     {
       "playerId": "william-blatchford",
       "name": "Will",
       "fullName": "William Blatchford",
-      "ratings": []
+      "ratings": [],
+      "codes": []
     }
   ]
 }

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { chesscomUrl, lichessUrl, mapsUrl, taggedPgn } from "@/lib/links";
-import type { Club, Game, Match, Venue } from "@/lib/schema";
+import { chesscomUrl, codeUrl, lichessUrl, mapsUrl, playerUrl, taggedPgn } from "@/lib/links";
+import type { Club, Game, Match, PlayerCode, Venue } from "@/lib/schema";
+import { aPlayer } from "@/lib/testing";
 
 const club = (overrides: Partial<Venue> = {}): Club => ({
   id: "bristol-clifton",
@@ -24,6 +25,38 @@ describe("maps links", () => {
   it("uses the address and postcode once they are known", () => {
     const url = mapsUrl(club({ address: "99 Oldfield Road", postcode: "BS8 4QQ" }));
     expect(decodeURIComponent(url)).toContain("99 Oldfield Road, BS8 4QQ");
+  });
+});
+
+describe("where a player's record lives", () => {
+  const withCodes = (codes: PlayerCode[]) => aPlayer({ codes });
+
+  it("builds each body's address from the number, rather than storing it", () => {
+    expect(codeUrl({ source: "ecf", code: "364477H" })).toBe(
+      "https://rating.englishchess.org.uk/players?ECF_code=364477H",
+    );
+    expect(codeUrl({ source: "fide", code: "1234567" })).toBe("https://ratings.fide.com/profile/1234567");
+    expect(codeUrl({ source: "lms", code: "121305" })).toBe("https://lms.englishchess.org.uk/lms/player/121305/view");
+  });
+
+  it("prefers the body that is the authority on a rating", () => {
+    const both = withCodes([
+      { source: "lms", code: "121305" },
+      { source: "ecf", code: "364477H" },
+    ]);
+    // Written in the other order on purpose: the preference is a ranking, not
+    // whichever entry somebody happened to type first.
+    expect(playerUrl(both)).toContain("ECF_code=364477H");
+  });
+
+  it("falls back to the league's page, which is all we have for an opponent", () => {
+    expect(playerUrl(withCodes([{ source: "lms", code: "73812" }]))).toContain("/lms/player/73812/");
+  });
+
+  it("is nothing at all for somebody registered nowhere", () => {
+    // An unregistered member is a normal state, and a name that is not a link
+    // is the honest way to show it.
+    expect(playerUrl(withCodes([]))).toBeNull();
   });
 });
 

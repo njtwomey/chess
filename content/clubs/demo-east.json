@@ -24,8 +24,7 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": null
+      "codes": []
     },
     {
       "playerId": "d-brough",
@@ -38,8 +37,7 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": null
+      "codes": []
     },
     {
       "playerId": "j-peart",
@@ -52,8 +50,7 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": null
+      "codes": []
     },
     {
       "playerId": "m-kerslake",
@@ -66,8 +63,7 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": null
+      "codes": []
     }
   ]
 }

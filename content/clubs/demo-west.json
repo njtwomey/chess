@@ -18,8 +18,7 @@
       "name": "C. Bramley",
       "fullName": null,
       "ratings": [],
-      "ecfCode": null,
-      "url": null
+      "codes": []
     },
     {
       "playerId": "h-trelawny",
@@ -32,8 +31,7 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": null
+      "codes": []
     },
     {
       "playerId": "n-prowse",
@@ -46,8 +44,7 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": null
+      "codes": []
     },
     {
       "playerId": "v-okonjo",
@@ -60,8 +57,7 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": null
+      "codes": []
     }
   ]
 }

@@ -37,9 +37,14 @@ they were picked:
   "playerId": "sean-hubble",
   "name": "Sean Hubble",
   "ratings": [{ "date": "2026-09-08", "rating": 1542, "source": "ecf" }],
-  "url": "https://lms.englishchess.org.uk/lms/player/121305/view"
+  "codes": [{ "source": "lms", "code": "121305" }]
 }
 ```
+
+The code is the number out of the page you read their rating off,
+`.../lms/player/121305/view`. Do not store the address: the site builds it back
+from the number. And do not file that number as an `ecf` code; it is the
+league site's own, and the two are different identifiers for the same person.
 
 `result` is from **our** player's point of view: `win`, `draw`, `loss`,
 `default-win`, `default-loss`. The PGN's own result tag is from White's side, so
@@ -65,7 +70,8 @@ conversion; do not pre-convert.
   once and reference them thereafter; somebody we meet in two seasons is one man
   with one rating history, which is the whole reason they are not copied into
   each game. Their `playerId` is the slug of their name. Everything else is
-  optional and usually absent: they have no ECF code we know.
+  optional and usually absent: they have no ECF code we know, only the league
+  site's number.
 - **`junior` on the opponent matters** even when our player is an adult: one
   junior on either side makes that board the shorter clock.
 - **Date an opponent's rating on or before the match.** It is the rating that

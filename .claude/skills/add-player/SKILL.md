@@ -25,7 +25,7 @@ In `content/clubs/bristol-clifton.json`, under `players`:
   "name": "Gwen",
   "fullName": "Gwen Tsai",
   "ratings": [{ "date": "2026-01-01", "rating": 1290, "source": "ecf" }],
-  "ecfCode": "364477H",
+  "codes": [{ "source": "ecf", "code": "364477H" }],
   "note": "Optional, only for something a captain would otherwise have to remember."
 }
 ```
@@ -67,6 +67,13 @@ squad member is `{ "playerId": "gwen-tsai" }` and nothing else.
 address: this repository is public and the site is a team sheet, not a contact
 list.
 
+- **`codes` is who knows them by a number**: `ecf` is six digits and a check
+  letter, `fide` is four to nine digits, `lms` is the number out of the league
+  page's own address, `.../lms/player/121305/view`. One entry per body, and the
+  loader rejects two of the same. **Never write a URL down**: the site builds
+  every link from the code, so a stored address would be the same fact twice
+  and the copy is the one that rots. An LMS number is not an ECF code, whatever
+  it looks like, so do not carry one across into the other.
 - **`ratings: []` means unrated**, which is a normal state for a new member and
   is displayed as "Unrated". Never substitute a zero or an invented estimate; if
   you have a genuine estimate, record it with `"source": "estimated"` so the site

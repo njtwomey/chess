@@ -31,9 +31,9 @@ describe("the builders", () => {
   it("fill in every default the schema asks for", () => {
     expect(aPlayer({ playerId: "x", name: "X" })).toMatchObject({
       junior: false,
+      role: "member",
       ratings: [],
-      ecfCode: null,
-      url: null,
+      codes: [],
       fullName: null,
     });
     expect(aMatch()).toMatchObject({ settled: false, lineup: null, result: null, recordUrl: null });

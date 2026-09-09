@@ -24,8 +24,7 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": null
+      "codes": []
     },
     {
       "playerId": "r-whitlock",
@@ -38,8 +37,7 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": null
+      "codes": []
     },
     {
       "playerId": "s-ellery",
@@ -52,8 +50,7 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": null
+      "codes": []
     },
     {
       "playerId": "t-ashworth",
@@ -66,8 +63,7 @@
           "source": "ecf"
         }
       ],
-      "ecfCode": null,
-      "url": null
+      "codes": []
     }
   ]
 }

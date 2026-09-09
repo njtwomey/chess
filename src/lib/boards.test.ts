@@ -16,8 +16,7 @@ function player(id: string, rating: number | null, junior = false): Player {
     fullName: null,
     role: "member",
     junior,
-    ecfCode: null,
-    url: null,
+    codes: [],
     ratings: rating === null ? [] : [{ date: "2026-01-01", rating, source: "ecf" }],
   };
 }
@@ -43,8 +42,7 @@ describe("board order", () => {
       fullName: null,
       role: "member",
       junior: false,
-      ecfCode: null,
-      url: null,
+      codes: [],
       ratings: [
         { date: "2026-01-01", rating: 1200, source: "ecf" },
         { date: "2026-06-01", rating: 1700, source: "ecf" },
