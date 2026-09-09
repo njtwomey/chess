@@ -12,3 +12,7 @@ public/engine
 # The PGN read off it is committed, into the season's matches.json; the picture
 # is not.
 games
+
+# Working notes and proposals. Thinking, not decisions: what gets decided ends
+# up in the code, the data or CLAUDE.md.
+.scratch

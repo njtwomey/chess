@@ -64,7 +64,7 @@ function event(season: Season, match: Match, venue: Venue | undefined, now: Date
     // Season included: match ids are unique within a season, not across them,
     // so `r1` alone would collide with every other season's first round and
     // calendars would treat them as the same event.
-    `UID:${season.id}-${match.id}@bristol-clifton-g`,
+    `UID:${season.id}-${match.id}@${season.team.id}`,
     `DTSTAMP:${stamp(now)}`,
     `DTSTART:${stamp(start)}`,
     `DTEND:${stamp(end)}`,

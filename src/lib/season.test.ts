@@ -9,13 +9,36 @@
  */
 import { describe, expect, it } from "vitest";
 import { assignBoards } from "@/lib/boards";
-import { seasonById } from "@/lib/data";
 import { selectedTeam } from "@/lib/messages";
 import { fieldedFor, roleFor, selectionFor, sheetOrder } from "@/lib/season";
 import type { Match } from "@/lib/schema";
+import { aMatch, aSeason, aSquad, aVenue, said } from "@/lib/testing";
 
-const season = seasonById.get("demo")!;
-const base = season.matches.find((match) => match.id === "r5")!;
+/**
+ * Built rather than read from a season on disk.
+ *
+ * Nine players reply, one of them withdraws after being picked, one is not
+ * selectable, and there are more volunteers than boards. That is every shape
+ * these functions have to deal with, held still, so recording a real reply
+ * cannot change what this file is testing.
+ */
+const base = aMatch({
+  id: "r1",
+  availability: [
+    said("p1", "yes"),
+    said("p2", "yes"),
+    said("p3", "yes"),
+    said("p4", "yes"),
+    said("p5", "yes"),
+    said("p6", "yes", { withdrawn: { at: "2026-03-08" } }),
+    said("p7", "reserve"),
+    said("p8", "reserve"),
+    said("p9", "unsure"),
+  ],
+});
+const venue = aVenue({ id: "our-venue", name: "Our Chess Club" });
+const venues = new Map([[venue.id, venue]]);
+const season = aSeason({ players: aSquad(9), matches: [base] });
 
 /** The same fixture, with a team written down on it. */
 const withLineup = (playerIds: string[], note?: string): Match => ({
@@ -118,7 +141,7 @@ describe("the group message follows the team that is actually being fielded", ()
     const standby = rule.standby[0]!.playerId;
     const shortlist = [...ruled.slice(0, 3), standby];
     const match = withLineup(shortlist, "Ada is away, so Hollis steps in.");
-    const message = selectedTeam(season, match, rule);
+    const message = selectedTeam(season, match, rule, venues);
 
     const fielded = fieldedFor(season, match, rule);
     expect(message).toContain(`Playing: ${names(fielded.players).join(", ")}.`);
@@ -127,7 +150,7 @@ describe("the group message follows the team that is actually being fielded", ()
 
   it("still names the rule's team when nothing was overridden", () => {
     const fielded = fieldedFor(season, base, rule);
-    expect(selectedTeam(season, base, rule)).toContain(`Playing: ${names(fielded.players).join(", ")}.`);
+    expect(selectedTeam(season, base, rule, venues)).toContain(`Playing: ${names(fielded.players).join(", ")}.`);
   });
 });
 

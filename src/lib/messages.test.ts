@@ -1,36 +1,122 @@
 import { describe, expect, it } from "vitest";
-import { playerName, seasonById } from "@/lib/data";
 import type { Match } from "@/lib/schema";
 import { selectionFor } from "@/lib/season";
 import { availabilityUpdate, callToAction, describeRound, matchResult, selectedTeam } from "@/lib/messages";
-
-// The prototype season, on purpose. These tests assert on the words a message
-// comes out with, which means asserting on who replied and what they said, and
-// in a live season that is whatever the captain last wrote down. A test that
-// reads the real roster's availability breaks every time somebody answers the
-// group chat, and it fails on the one commit that is hardest to argue with:
-// recording a reply that really was sent. The demo season is invented and is
-// only edited when the prototype itself changes.
-const season = seasonById.get("demo")!;
-const first = season.matches.find((match) => match.id === "r1")!;
-const away = season.matches.find((match) => match.id === "r3")!;
-/** Every reply group represented, and nine players yet to answer. */
-const mixed = season.matches.find((match) => match.id === "r6")!;
-/** Nobody has answered yet. */
-const silent = season.matches.find((match) => match.id === "r7")!;
-/** Settled, with more volunteers than boards, so somebody missed out. */
-const settled = season.matches.find((match) => match.id === "r5")!;
+import type { Game } from "@/lib/schema";
+import { aGame, aMatch, aPlayer, aSeason, aTeam, aVenue, said } from "@/lib/testing";
 
 /**
- * A fixture with the replies replaced, for a case that is about a shape of
- * availability no real match happens to have. The venue, date and opponent stay
- * real so the message still reads as one the captain would send.
+ * Built, not read from a season on disk.
+ *
+ * These tests assert on the exact words a message comes out with, which means
+ * asserting on who replied and what they said. Read from shipped data, they
+ * fail on the commit that is hardest to argue with: recording a reply that
+ * really was sent. Built here, the replies hold still and the assertions can be
+ * exact.
  */
+const ours = aVenue({
+  id: "our-venue",
+  name: "Our Chess Club",
+  address: "1 Some Road",
+  postcode: "AB1 2CD",
+  maps: "https://maps.example.invalid/ours",
+});
+const theirs = aVenue({ id: "their-venue", name: "Their Chess Club" });
+const venues = new Map([
+  [ours.id, ours],
+  [theirs.id, theirs],
+]);
+
+const squad = ["Ada", "Bruno", "Cass", "Dermot", "Elin", "Farid", "Gwen", "Hollis", "Imre"].map((name) =>
+  aPlayer({ id: name.toLowerCase(), name }),
+);
+
+const home = { home: true, venueId: ours.id, opponent: "Their Team B" };
+const awayAt = { home: false, venueId: theirs.id, opponent: "Their Team B" };
+
+const first = aMatch({ id: "r1", round: 1, date: "2026-03-10", ...home });
+const away = aMatch({ id: "r3", round: 3, date: "2026-04-20", ...awayAt });
+
+/** Every reply group represented, and four players yet to answer. */
+const mixed = aMatch({
+  id: "r6",
+  round: 6,
+  date: "2026-10-13",
+  ...home,
+  availability: [
+    said("ada", "yes"),
+    said("elin", "yes"),
+    said("gwen", "reserve"),
+    said("hollis", "unsure"),
+    said("imre", "no"),
+  ],
+});
+
+/** Nobody has answered yet. */
+const silent = aMatch({ id: "r7", round: 7, date: "2026-11-10", ...home });
+
+/** Settled, with more volunteers than boards, so somebody missed out. */
+const settled = aMatch({
+  id: "r5",
+  round: 5,
+  date: "2026-09-16",
+  ...awayAt,
+  settled: true,
+  availability: squad.slice(0, 6).map((player) => said(player.id, "yes")),
+});
+
+/** Played fixtures, one of each outcome the message has to describe. */
+const them = ["V. One", "W. Two", "X. Three", "Y. Four"].map((name) =>
+  aPlayer({ id: name.toLowerCase().replace(/[^a-z]+/g, "-"), name }),
+);
+const boards = (results: Game["result"][]) =>
+  results.map((result, index) =>
+    aGame({ board: index + 1, playerId: squad[index]!.id, opponent: them[index]!, result }),
+  );
+
+const won = aMatch({
+  id: "w1",
+  round: 1,
+  date: "2026-03-10",
+  ...home,
+  status: "played",
+  result: { ourScore: 2.5, theirScore: 1.5, games: boards(["win", "draw", "win", "loss"]) },
+});
+const lost = aMatch({
+  id: "w2",
+  round: 2,
+  date: "2026-03-24",
+  ...home,
+  status: "played",
+  result: { ourScore: 1, theirScore: 3, games: boards(["win", "loss", "loss", "loss"]) },
+});
+const awayWin = aMatch({
+  id: "w3",
+  round: 3,
+  date: "2026-04-20",
+  ...awayAt,
+  status: "played",
+  result: { ourScore: 2.5, theirScore: 1.5, games: boards(["win", "draw", "win", "loss"]) },
+});
+const defaulted = aMatch({
+  id: "w4",
+  round: 4,
+  date: "2026-05-12",
+  ...home,
+  status: "played",
+  result: { ourScore: 3, theirScore: 1, games: boards(["win", "default-win", "win", "loss"]) },
+});
+
+const season = aSeason({
+  id: "a-season",
+  team: aTeam({ id: "our-team", name: "Our Team A", homeVenueId: ours.id }),
+  players: [...squad, ...them],
+  matches: [first, away, mixed, silent, settled, won, lost, awayWin, defaulted],
+});
+
+/** A fixture with the replies replaced, for a shape no other fixture has. */
 function withAvailability(match: Match, yes: string[]): Match {
-  return {
-    ...match,
-    availability: yes.map((playerId) => ({ playerId, reply: "yes" as const, at: "2026-09-01", withdrawn: null })),
-  };
+  return { ...match, availability: yes.map((playerId) => said(playerId, "yes")) };
 }
 
 describe("describeRound", () => {
@@ -45,12 +131,12 @@ describe("describeRound", () => {
 });
 
 describe("callToAction", () => {
-  const message = callToAction(season, first);
+  const message = callToAction(season, first, venues);
 
   it("asks the question, then names the match", () => {
     expect(message.split("\n").filter(Boolean)).toEqual([
       "Who can play in the first fixture of the season?",
-      "Bristol & Clifton G v South Bristol D, Tuesday 10 March, 19:30, at home (https://maps.app.goo.gl/1gBZP8mgdUhoXYJH7).",
+      "Our Team A v Their Team B, Tuesday 10 March, 19:30, at home (https://maps.example.invalid/ours).",
     ]);
   });
 
@@ -62,13 +148,13 @@ describe("callToAction", () => {
 
   it("says where, with a map", () => {
     expect(message).toContain("at home");
-    expect(message).toContain("https://maps.app.goo.gl/");
+    expect(message).toContain("https://maps.example.invalid/ours");
   });
 
   it("names the away club rather than just saying away", () => {
-    const line = callToAction(season, away);
-    expect(line).toContain("away at Bristol Grendel Chess Club");
-    expect(line).toContain("Bristol Grendel C v Bristol & Clifton G");
+    const line = callToAction(season, away, venues);
+    expect(line).toContain("away at Their Chess Club");
+    expect(line).toContain("Their Team B v Our Team A");
   });
 
   it("does not spell out the four answers, which go out as a poll", () => {
@@ -82,33 +168,38 @@ describe("callToAction", () => {
 });
 
 describe("availabilityUpdate", () => {
-  const message = availabilityUpdate(season, first);
+  const message = availabilityUpdate(season, first, venues);
 
   it("names the fixture, so it cannot be read against the wrong match", () => {
-    expect(message.startsWith("Where we are for Bristol & Clifton G v South Bristol D, Tuesday 10 March")).toBe(true);
+    expect(message.startsWith("Where we are for Our Team A v Their Team B, Tuesday 10 March")).toBe(true);
   });
 
   it("carries no map, because it is a reply to the message that had one", () => {
-    expect(message).not.toContain("maps.app.goo.gl");
+    expect(message).not.toContain("maps.example.invalid");
   });
 
   it("says which side of the fixture we are on for an away match", () => {
-    expect(availabilityUpdate(season, away)).toContain("Bristol Grendel C v Bristol & Clifton G");
+    expect(availabilityUpdate(season, away, venues)).toContain("Their Team B v Our Team A");
   });
 
   it("groups the replies and sorts each group", () => {
-    const summary = availabilityUpdate(season, mixed);
-    expect(summary).toContain("Can play: Ada Mercer, Liam Ferrers.");
-    expect(summary).toContain("Can be a reserve: Gwen Tsai.");
-    expect(summary).toContain("Not sure yet: Keeley Monrove.");
-    expect(summary).toContain("Cannot play: Noor Abadi.");
+    const summary = availabilityUpdate(season, mixed, venues);
+    expect(summary).toContain("Can play: Ada, Elin.");
+    expect(summary).toContain("Can be a reserve: Gwen.");
+    expect(summary).toContain("Not sure yet: Hollis.");
+    expect(summary).toContain("Cannot play: Imre.");
   });
 
   it("names the people who have not replied at all", () => {
-    expect(availabilityUpdate(season, mixed)).toContain(
-      "Not heard from: Bruno Halliday, Cass Oyelaran, Dermot Kavanagh, Elin Pryce, Farid Nassar, Hollis Barr, " +
-        "Imre Solt, Jonah Kestrel, Mira Vance.",
-    );
+    // Everybody on the roster who is not in the replies, in one sorted list.
+    const summary = availabilityUpdate(season, mixed, venues);
+    const answered = new Set(mixed.availability.map((entry) => entry.playerId));
+    const silentOnes = season.players
+      .filter((player) => !answered.has(player.id))
+      .map((player) => player.name)
+      .sort();
+    expect(summary).toContain(`Not heard from: ${silentOnes.join(", ")}.`);
+    expect(silentOnes.length).toBeGreaterThan(1);
   });
 
   it("says plainly that nobody is picked", () => {
@@ -117,18 +208,18 @@ describe("availabilityUpdate", () => {
   });
 
   it("leaves out a group nobody is in", () => {
-    const summary = availabilityUpdate(season, silent);
+    const summary = availabilityUpdate(season, silent, venues);
     expect(summary).not.toContain("Can play:");
     expect(summary).toContain("Not heard from:");
   });
 });
 
 describe("selectedTeam", () => {
-  const message = selectedTeam(season, settled, selectionFor(season, settled));
+  const message = selectedTeam(season, settled, selectionFor(season, settled), venues);
 
   it("names the fixture, with a map, because people have to get there", () => {
-    expect(message.startsWith("Team for South Bristol E v Bristol & Clifton G, Wednesday 16 September")).toBe(true);
-    expect(message).toContain("maps.app.goo.gl");
+    expect(message.startsWith("Team for Their Team B v Our Team A, Wednesday 16 September")).toBe(true);
+    expect(message).toMatch(/https:\/\/\S+/);
   });
 
   it("reports the players and nothing else", () => {
@@ -146,7 +237,9 @@ describe("selectedTeam", () => {
   it("keeps the reserves in the rule's order and sorts the rest", () => {
     const reserves = /Reserves: ([^.]+)\./.exec(message)?.[1];
     const selection = selectionFor(season, settled);
-    expect(reserves).toBe(selection.reservePlayers.map((player) => playerName(season, player.playerId)).join(", "));
+    expect(reserves).toBe(
+      selection.reservePlayers.map((player) => season.players.find((p) => p.id === player.playerId)!.name).join(", "),
+    );
   });
 
   it("tells anybody who missed out that they move up next time", () => {
@@ -157,8 +250,8 @@ describe("selectedTeam", () => {
     // Four boards, four volunteers, nobody left over: there is nobody to
     // console and the line would be addressed at no one. Exactly four is a
     // shape a real fixture only holds until the fifth person replies.
-    const exact = withAvailability(settled, ["ada-mercer", "bruno-halliday", "elin-pryce", "farid-nassar"]);
-    const message = selectedTeam(season, exact, selectionFor(season, exact));
+    const exact = withAvailability(settled, ["ada", "bruno", "elin", "farid"]);
+    const message = selectedTeam(season, exact, selectionFor(season, exact), venues);
     // Asserted first, because a message naming nobody also lacks the line, and
     // a fixture that quietly emptied would pass this test without testing it.
     expect(/Playing: (?:[^,.]+, ){3}[^,.]+\./.test(message)).toBe(true);
@@ -168,9 +261,7 @@ describe("selectedTeam", () => {
 });
 
 describe("matchResult", () => {
-  const played = season.matches.find((match) => match.id === "r1")!;
-  const lost = season.matches.find((match) => match.id === "r2")!;
-  const awayWin = season.matches.find((match) => match.id === "r3")!;
+  const played = won;
 
   it("is nothing at all until there is a result", () => {
     const pending = season.matches.find((match) => match.status === "scheduled")!;
@@ -186,7 +277,7 @@ describe("matchResult", () => {
     // Ours is the away side here, so our score has to be the second number or
     // an away win reads as a defeat.
     const message = matchResult(season, awayWin)!;
-    expect(message).toContain("Bristol Grendel C 1½ - 2½ Bristol & Clifton G.");
+    expect(message).toContain("Their Team B 1½ - 2½ Our Team A.");
     expect(message.startsWith("A win:")).toBe(true);
   });
 
@@ -196,16 +287,15 @@ describe("matchResult", () => {
   });
 
   it("gives every board, ours first, in board order", () => {
-    const boards = matchResult(season, played)!
+    const rows = matchResult(season, played)!
       .split("\n")
       .filter((line) => /^\d\./.test(line));
-    expect(boards).toHaveLength(4);
-    expect(boards[0]).toBe("1. Ada Mercer 1 - 0 R. Whitlock");
-    expect(boards[1]).toBe("2. Bruno Halliday ½ - ½ P. Ndiaye");
+    expect(rows).toHaveLength(4);
+    expect(rows[0]).toBe("1. Ada 1 - 0 V. One");
+    expect(rows[1]).toBe("2. Bruno ½ - ½ W. Two");
   });
 
   it("marks a default rather than passing it off as a game", () => {
-    const defaulted = season.matches.find((match) => match.id === "r4")!;
     expect(matchResult(season, defaulted)).toContain("(default)");
   });
 });

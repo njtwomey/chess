@@ -1,12 +1,40 @@
 import { describe, expect, it } from "vitest";
-import { seasonById, venueById } from "@/lib/data";
 import { icsFilename, toIcs } from "@/lib/ics";
+import { aMatch, aSeason, aTeam, aVenue } from "@/lib/testing";
 
-// The prototype season. Its fixture list is invented and therefore stable;
-// the live one is edited whenever the league moves a date.
-const season = seasonById.get("demo")!;
+/**
+ * A season built for the calendar, not read from one on disk.
+ *
+ * Three fixtures cover what an ICS file has to get right: a date inside British
+ * Summer Time and one outside it, a home fixture and an away one, and a venue
+ * with a pasted map beside one with only a name to search for.
+ */
+const ours = aVenue({
+  id: "our-venue",
+  name: "Our Chess Club",
+  address: "1 Some Road, Somewhere",
+  postcode: "AB1 2CD",
+  maps: "https://maps.example.invalid/ours",
+});
+const theirs = aVenue({ id: "their-venue", name: "Their Chess Club" });
+const venues = new Map([
+  [ours.id, ours],
+  [theirs.id, theirs],
+]);
+
+const season = aSeason({
+  id: "a-season",
+  name: "Test Season",
+  team: aTeam({ id: "our-team", name: "Our Team A", homeVenueId: ours.id }),
+  matches: [
+    aMatch({ id: "r1", round: 1, opponent: "Their Team B", home: true, venueId: ours.id, date: "2026-04-20" }),
+    aMatch({ id: "r2", round: 2, opponent: "Their Team B", home: false, venueId: theirs.id, date: "2026-11-10" }),
+    aMatch({ id: "r3", round: 3, opponent: "Another Team C", home: true, venueId: ours.id, date: "2026-11-24" }),
+  ],
+});
+
 const NOW = new Date("2026-03-01T09:00:00Z");
-const calendar = toIcs(season, venueById, NOW);
+const calendar = toIcs(season, venues, NOW);
 const lines = calendar.split("\r\n");
 
 /** What a calendar client sees: folded lines joined back up. */
@@ -24,7 +52,7 @@ describe("the fixture calendar", () => {
   });
 
   it("has one event per fixture", () => {
-    expect(lines.filter((line) => line === "BEGIN:VEVENT")).toHaveLength(7);
+    expect(lines.filter((line) => line === "BEGIN:VEVENT")).toHaveLength(season.matches.length);
   });
 
   it("converts the 19:30 start through British Summer Time", () => {
@@ -38,19 +66,19 @@ describe("the fixture calendar", () => {
   });
 
   it("names the teams the way the league does, home side first", () => {
-    expect(calendar).toContain("SUMMARY:Bristol & Clifton G v South Bristol D");
-    expect(calendar).toContain("SUMMARY:UWE B v Bristol & Clifton G");
+    expect(calendar).toContain("SUMMARY:Our Team A v Their Team B");
+    expect(calendar).toContain("SUMMARY:Their Team B v Our Team A");
   });
 
   it("carries the venue, with the address when there is one", () => {
-    expect(unfolded).toContain("LOCATION:Bristol & Clifton Chess Club\\, 99 Oldfield Road\\, Hotwells\\, BS8 4QQ");
+    expect(unfolded).toContain("LOCATION:Our Chess Club\\, 1 Some Road\\, Somewhere\\, AB1 2CD");
   });
 
   it("carries a map for every event, whatever kind the venue has", () => {
     // Not asserting which kind: a pasted link is preferred and a name search is
     // the fallback, and which venues have which is data that changes.
     const maps = [...unfolded.matchAll(/Map: (\S+)/g)].map((match) => match[1]);
-    expect(maps).toHaveLength(7);
+    expect(maps).toHaveLength(season.matches.length);
     for (const url of maps) expect(url).toMatch(/^https:\/\//);
   });
 
@@ -64,11 +92,11 @@ describe("the fixture calendar", () => {
 
   it("gives every event a stable id, so a re-download updates rather than duplicates", () => {
     const uids = lines.filter((line) => line.startsWith("UID:"));
-    expect(new Set(uids).size).toBe(7);
-    expect(uids[0]).toBe("UID:demo-r1@bristol-clifton-g");
+    expect(new Set(uids).size).toBe(season.matches.length);
+    expect(uids[0]).toBe("UID:a-season-r1@our-team");
   });
 
   it("names the file after the team and season", () => {
-    expect(icsFilename(season)).toBe("bristol-clifton-g-demo-season.ics");
+    expect(icsFilename(season)).toBe("our-team-a-test-season.ics");
   });
 });

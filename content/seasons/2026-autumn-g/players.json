@@ -109,6 +109,12 @@
     "ecfCode": "380146K"
   },
   {
+    "id": "sonny",
+    "name": "Sonny",
+    "junior": true,
+    "ratings": []
+  },
+  {
     "id": "steve",
     "name": "Steve",
     "junior": false,

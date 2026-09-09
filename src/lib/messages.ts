@@ -11,12 +11,21 @@
  * cannot quietly disagree with the site. Plain text, because the destination is
  * WhatsApp.
  */
-import { playerName, venueById } from "@/lib/data";
+import { playerName } from "@/lib/data";
 import { mapsUrl } from "@/lib/links";
-import type { Game, Match, Season } from "@/lib/schema";
+import type { Game, Match, Season, Venue } from "@/lib/schema";
 import { fieldedFor, formatPoints, replyOf } from "@/lib/season";
 import type { Reply, Selection } from "@/lib/selection";
 import { formatLongDate } from "@/lib/time";
+
+/**
+ * Where the venues come from, rather than reaching for the loaded ones.
+ *
+ * A message is built from a season, and a season the caller made up needs its
+ * own venues: a function that reaches into `data.ts` can only ever describe the
+ * season that shipped.
+ */
+type Venues = ReadonlyMap<string, Venue>;
 
 const ORDINALS = [
   "first",
@@ -54,8 +63,8 @@ const sorted = (names: string[]) => [...names].sort().join(", ");
  * on the messages where somebody has to get themselves somewhere: on a progress
  * report it is a link nobody clicks, and four of them in a row is clutter.
  */
-function fixtureLine(season: Season, match: Match, withMap: boolean): string {
-  const venue = venueById.get(match.venueId);
+function fixtureLine(season: Season, match: Match, venues: Venues, withMap: boolean): string {
+  const venue = venues.get(match.venueId);
   const home = match.home ? season.team.name : match.opponent;
   const away = match.home ? match.opponent : season.team.name;
   const where = match.home ? "at home" : `away at ${venue?.name ?? "a venue still to be confirmed"}`;
@@ -71,8 +80,8 @@ function fixtureLine(season: Season, match: Match, withMap: boolean): string {
  * days" ages badly. No list of the four answers either: those go out as a poll,
  * so spelling them out would be a second, worse copy of the options.
  */
-export function callToAction(season: Season, match: Match): string {
-  return join([`Who can play in ${describeRound(match.round)}?`, "", fixtureLine(season, match, true)]);
+export function callToAction(season: Season, match: Match, venues: Venues): string {
+  return join([`Who can play in ${describeRound(match.round)}?`, "", fixtureLine(season, match, venues, true)]);
 }
 
 /**
@@ -82,7 +91,7 @@ export function callToAction(season: Season, match: Match): string {
  * of "can play" is most likely to be misread as a team sheet. Hence the last
  * line.
  */
-export function availabilityUpdate(season: Season, match: Match): string {
+export function availabilityUpdate(season: Season, match: Match, venues: Venues): string {
   const grouped = new Map<Reply | "none", string[]>();
   for (const player of season.players) {
     const reply = replyOf(match, player.id) ?? "none";
@@ -95,7 +104,7 @@ export function availabilityUpdate(season: Season, match: Match): string {
   };
 
   return join([
-    `Where we are for ${fixtureLine(season, match, false)}`,
+    `Where we are for ${fixtureLine(season, match, venues, false)}`,
     "",
     line("yes", "Can play"),
     line("reserve", "Can be a reserve"),
@@ -116,7 +125,7 @@ export function availabilityUpdate(season: Season, match: Match): string {
  * because that is the whole promise the rule makes and the one thing somebody
  * who was not picked wants to hear.
  */
-export function selectedTeam(season: Season, match: Match, selection: Selection): string {
+export function selectedTeam(season: Season, match: Match, selection: Selection, venues: Venues): string {
   // The team the captain is fielding, which is the rule's answer unless he has
   // written one down. A message naming four people who are not playing is the
   // worst thing this function could produce.
@@ -128,7 +137,7 @@ export function selectedTeam(season: Season, match: Match, selection: Selection)
   const missedOut = fielded.reserves.length > 0 || selection.standby.length > 0;
 
   return join([
-    `Team for ${fixtureLine(season, match, true)}`,
+    `Team for ${fixtureLine(season, match, venues, true)}`,
     "",
 
     // Board order, because that is what the message is for. Reserves keep their
