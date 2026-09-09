@@ -80,7 +80,12 @@
       "name": "Jade",
       "fullName": "Jade Redpath-Aislabie",
       "ratings": [],
-      "codes": []
+      "codes": [
+        {
+          "source": "lms",
+          "code": "140727"
+        }
+      ]
     },
     {
       "playerId": "john",
@@ -125,6 +130,10 @@
         {
           "source": "ecf",
           "code": "389043A"
+        },
+        {
+          "source": "lms",
+          "code": "140722"
         }
       ]
     },
@@ -133,7 +142,12 @@
       "name": "Niall",
       "fullName": "Niall Twomey",
       "ratings": [],
-      "codes": []
+      "codes": [
+        {
+          "source": "lms",
+          "code": "140723"
+        }
+      ]
     },
     {
       "playerId": "shaan-thomas",
@@ -183,7 +197,12 @@
       "name": "Theo",
       "fullName": "Theo Wright",
       "ratings": [],
-      "codes": []
+      "codes": [
+        {
+          "source": "lms",
+          "code": "140728"
+        }
+      ]
     },
     {
       "playerId": "thomas-booth",
