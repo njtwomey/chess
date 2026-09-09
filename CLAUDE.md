@@ -144,9 +144,14 @@ number. One ordering produces both the boards and the reserves, sorted by four k
 - **Explain a decision only where one was made.** The note under the selection table appears only
   when somebody who said `yes` missed out; otherwise it describes a contest nobody was in. The
   per-row reason column was removed: it explained pairs the rule never had to separate.
-- **An override is the captain's, and is not published.** Where a match carries a `lineup`, the
-  tables show the team he wrote down, in his order. What it changed is shown only when running
-  locally, because it names the player who lost their place and they have not been asked.
+- **An override is the captain's, and is not published.** Where a match carries a `lineup`, the board
+  order above the selection table is the team he wrote down, in his order. What it changed is shown
+  only when running locally, because it names the player who lost their place and they have not been
+  asked.
+- **The selection table is always in the rule's order**, whatever team was fielded, because that is
+  the one thing it exists to show. Who is playing is a column in it, not a reordering of it: leading
+  with the captain's four meant drawing a line to say where the boards stopped, and that line
+  contradicted the badges beside it every time he changed anything.
 
 `src/lib/selection.test.ts` is the most important file here after `selection.ts`: permutation
 invariance, seed stability, the overspill case, dropouts, and a fairness check over a thousand

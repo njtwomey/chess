@@ -42,8 +42,16 @@ export function ReplyBadge({ reply, className }: { reply: Reply | null; classNam
   );
 }
 
+/**
+ * The same four colours the replies use, because they mean the same things.
+ *
+ * Somebody who said "can play" and is playing reads as one green row rather
+ * than as a green answer and an amber verdict, and a reserve is blue on both
+ * sides of the table. The amber is the site's own accent and saying nothing
+ * with it here leaves it to mean "this is the thing you clicked".
+ */
 const ROLE_STYLE: Record<Role, string> = {
-  board: "bg-primary text-primary-foreground",
+  board: "bg-reply-yes-soft text-reply-yes",
   reserve: "bg-reply-reserve-soft text-reply-reserve",
   standby: "bg-muted text-muted-foreground",
   withdrawn: "bg-reply-no-soft text-reply-no",

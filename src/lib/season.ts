@@ -134,36 +134,6 @@ export function roleFor(fielded: Fielded, player: Ranked): Role {
   return fielded.roles.get(player.playerId) ?? "standby";
 }
 
-/**
- * The squad in the order a team sheet should read.
- *
- * With no team written down this is the rule's own order, dropouts included in
- * the places they held, which is what makes a promotion visible as a move. Once
- * a team is written down the sheet leads with it: a table whose first four rows
- * are not the four who are playing reads as a mistake, whatever the outcome
- * column says beside them. Everybody the captain did not name then follows in
- * the rule's order, dropouts among them, so the only thing that moves is the
- * team itself.
- */
-export function sheetOrder(selection: Selection, fielded: Fielded): Ranked[] {
-  if (!fielded.ordered) return [...selection.standing];
-
-  const named = fielded.players.length + fielded.reserves.length;
-  const place = new Map<string, number>();
-  fielded.players.forEach((player, index) => place.set(player.playerId, index));
-  fielded.reserves.forEach((player, index) => place.set(player.playerId, fielded.players.length + index));
-
-  // Everybody else sorts by where the rule already had them, offset past the
-  // named players. A finite key on purpose: Infinity for both sides of a
-  // comparison gives NaN, and a comparator that returns NaN is only saved by a
-  // detail of how sorting treats an invalid answer.
-  const key = (player: Ranked, index: number) => place.get(player.playerId) ?? named + index;
-  return selection.standing
-    .map((player, index) => ({ player, key: key(player, index) }))
-    .sort((a, b) => a.key - b.key)
-    .map((entry) => entry.player);
-}
-
 /** The team that will actually take the field, and how it differs from the rule. */
 export interface Fielded {
   /** Who plays, in board order. */

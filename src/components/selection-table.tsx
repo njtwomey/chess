@@ -5,7 +5,7 @@ import { ReplyBadge, RoleBadge } from "@/components/reply-badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { playerById, playerName } from "@/lib/data";
 import type { Season } from "@/lib/schema";
-import { replyOf, roleFor, sheetOrder, type Fielded } from "@/lib/season";
+import { replyOf, roleFor, type Fielded } from "@/lib/season";
 import { type Reply, type Selection } from "@/lib/selection";
 import { cn } from "@/lib/utils";
 import type { Match } from "@/lib/schema";
@@ -113,12 +113,19 @@ export function SelectionTable({
 
   if (!settled) return <AvailabilityTable season={season} match={match} selection={selection} />;
 
-  const rows = match.result ? [...selection.standing] : sheetOrder(selection, fielded);
+  // The rule's own order, always, because that is what this table is: what the
+  // rule produced from the replies. Leading with the captain's team instead
+  // reordered the one thing the section exists to show, and then had to draw a
+  // line after the fourth row to say where the boards stopped, which was a
+  // claim the badges beside it contradicted whenever he had changed anything.
+  //
+  // Who is actually playing is a column now. The team that took the field is
+  // above this in board order, and says so.
+  const rows = [...selection.standing];
 
   // Numbered down the page rather than read off the rule, so the column and the
-  // rows cannot disagree however they are ordered. On a played match the rows
-  // are the rule's own order, so the two are the same number. A dropout gets
-  // none: they are shown where they stood, not counted among those still in line.
+  // rows cannot disagree. A dropout gets none: they are shown where they stood,
+  // not counted among those still in line.
   let counted = 0;
 
   return (
@@ -165,7 +172,7 @@ export function SelectionTable({
               <TableHead>Player</TableHead>
               <TableHead>Replied</TableHead>
               <TableHead className="w-20 text-right">Games</TableHead>
-              <TableHead className="w-28">Outcome</TableHead>
+              <TableHead className="w-28">Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -175,14 +182,7 @@ export function SelectionTable({
               const promoted = selection.promoted.includes(player);
               const number = dropped ? null : (counted += 1);
               return (
-                <TableRow
-                  key={player.playerId}
-                  className={cn(
-                    role === "board" && "bg-accent/40",
-                    dropped && "text-muted-foreground",
-                    number === selection.boards && "border-b-primary/40 border-b-2",
-                  )}
-                >
+                <TableRow key={player.playerId} className={cn(dropped && "text-muted-foreground")}>
                   <TableCell className="tabular text-muted-foreground text-right text-xs">{number ?? "—"}</TableCell>
                   <TableCell className={cn(dropped && "line-through")}>
                     <PlayerOf season={season} id={player.playerId} />
