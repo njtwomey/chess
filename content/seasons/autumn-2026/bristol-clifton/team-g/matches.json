@@ -99,7 +99,7 @@
           "opponentId": "south-bristol/sean-hubble",
           "colour": "black",
           "result": "win",
-          "pgn": null
+          "pgn": "1. e4 c5 2. Nf3 Nc6 3. c3 e6 4. d4 d5 5. exd5 exd5 6. Be3 cxd4 7. Nxd4 Nf6 8. Bb5 Bd7 9. Nd2 a6 10. Nxc6 bxc6 11. Be2 Bd6 12. b4 h6 13. Nf3 O-O 14. O-O Ne4 15. Qc1 Be7 16. Bd3 Bf6 17. Bxe4 dxe4 18. Nd4 Rc8 19. Qa3 Ra8 20. Rfd1 Qc7 21. Qc1 Be5 22. Bxh6 Bxh2+ 23. Kh1 gxh6 24. Qxh6 Qf4 25. Qxh2 Qxf2 26. Rf1 Qe3 27. Rf6 Kg7 28. Raf1 Rh8 29. Rxf7+ Kg6 30. g3 Rxh2+ 31. Kxh2 Rh8+ 32. Kg2 Bh3+ 33. Kh1 Bxf1+ 0-1"
         },
         {
           "board": 2,
@@ -107,7 +107,7 @@
           "opponentId": "south-bristol/michael-chaffey",
           "colour": "white",
           "result": "loss",
-          "pgn": null
+          "pgn": "1. d4 e6 2. Bf4 d5 3. a3 c5 4. e3 Nc6 5. Nc3 Nf6 6. Nb5 e5 7. dxe5 a6 8. exf6 axb5 9. Bxb5 Qa5+ 10. c3 Qxb5 11. Rb1 Be6 12. Qd2 Ra6 13. h3 Na5 14. Qc2 g6 15. g4 h5 16. b3 hxg4 17. hxg4 Bxg4 18. e4 Rxf6 19. Ne2 Qxe2+ 20. Qxe2 Bxe2 21. Kxe2 Rxf4 22. Ke3 Rxe4+ 23. Kf3 Nc4 24. Rbd1 Re3+ 25. Kg4 Ne5+ 26. Kf4 Bh6+ 0-1"
         },
         {
           "board": 3,
@@ -115,7 +115,7 @@
           "opponentId": "south-bristol/ryszard-dudko",
           "colour": "black",
           "result": "loss",
-          "pgn": null
+          "pgn": "1. d4 e6 2. e3 d5 3. Nf3 Nf6 4. a3 Bd6 5. c4 Be7 6. Nc3 c6 7. Bd3 h6 8. O-O O-O 9. c5 Nbd7 10. b4 b6 11. Bb2 Rb8 12. Qe2 bxc5 13. dxc5 Qc7 14. Rac1 Re8 15. Bb1 a5 16. Na2 Ra8 17. Qc2 Ba6 18. Rfe1 Bd8 19. Nd2 Qb8 20. g3 e5 21. f4 e4 22. Qc3 a4 23. Kg2 Kf8 24. h3 Bc7 25. Qd4 Re6 26. Nc3 Bb5 27. Nxb5 Qxb5 28. g4 g5 29. fxg5 hxg5 30. Rf1 Be5 31. Qxe5 Nxe5 32. Bxe5 Kg7 33. Bd4 Rh8 34. Rf2 Rh6 35. Rcf1 Qb8 36. Rf5 Qd8 37. Rxg5+ Rg6 38. Rxg6+ Kxg6 39. Nf3 Qe8 40. Nh4+ Kg7 41. g5 Qe7 42. gxf6+ Kf8 43. fxe7+ Kxe7 44. Bc2 Kd7 45. Rxf7+ Re7 46. Rxe7+ Kxe7 *"
         },
         {
           "board": 4,
@@ -123,7 +123,7 @@
           "opponentId": "south-bristol/alessandro-coppola",
           "colour": "white",
           "result": "loss",
-          "pgn": null
+          "pgn": "1. e4 e5 2. Nf3 Nc6 3. Nc3 Nf6 4. Bc4 h6 5. d3 Bb4 6. O-O Bxc3 7. bxc3 d5 8. Bb3 dxe4 9. dxe4 Qxd1 10. Rxd1 Nxe4 11. Bb2 Bg4 12. Rd3 O-O 13. Re1 Nc5 14. Rde3 Nxb3 15. cxb3 Bxf3 16. Rxf3 Rad8 17. Bc1 e4 18. Rfe3 f5 19. h3 Ne5 20. f4 Nd3 21. Rd1 Nxf4 22. Rxd8 Rxd8 23. Rg3 Ne2+ 24. Kf2 Nxc1 25. a4 Nxb3 26. Ke3 Rd3+ 27. Kf4 Rxg3 28. Kxg3 Nc5 29. Kf4 g6 30. g3 Nxa4 31. g4 fxg4 32. hxg4 Nxc3 0-1"
         }
       ]
     }
