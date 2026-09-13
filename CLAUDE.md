@@ -107,6 +107,12 @@ plausible wrong address sends somebody to the wrong side of Bristol on a Tuesday
 
 ### Names, and what the site is allowed to know
 
+**An exported PGN names nobody.** `taggedPgn` reduces every name in the tags to initials, so a game
+pasted into lichess or chess.com reads `[Event "BC-G vs SB-D B4"]` and `[White "NT"]`. Those sites are
+public and an opponent copied off somebody else's scoresheet never agreed to appear on either. The
+stored movetext carries no names at all, and no inline comments: provenance lives in
+`games/<fixture>/<board>/extracted.pgn`, which is gitignored along with the photographs.
+
 The repository is public. A player is a **first name**, the league's own fuller form of it in
 `fullName`, a junior flag, a rating history, and the numbers the bodies that rate them know them by:
 `codes` is a list of `{ source, code }` over ECF, FIDE and the league's own site, and **every link to
@@ -233,10 +239,11 @@ length it takes.
 
 ## Skills
 
-| skill                 | e.g.                                                                |
-| --------------------- | ------------------------------------------------------------------- |
-| `record-availability` | "here's who replied", a pasted group-chat thread, settling the team |
-| `record-result`       | "we won 2.5-1.5", a scoresheet, a PGN                               |
-| `new-season`          | "set up next season", a pasted LMS fixture table                    |
-| `add-player`          | "X has joined", new ECF grades published                            |
-| `venue-details`       | a new opponent club, or a club that has moved                       |
+| skill                 | e.g.                                                                   |
+| --------------------- | ---------------------------------------------------------------------- |
+| `record-availability` | "here's who replied", a pasted group-chat thread, settling the team    |
+| `record-result`       | "we won 2.5-1.5", a team sheet, a score                                |
+| `transcribe-game`     | a photo of a scoresheet, "extract the moves", a PGN that will not load |
+| `new-season`          | "set up next season", a pasted LMS fixture table                       |
+| `add-player`          | "X has joined", new ECF grades published                               |
+| `venue-details`       | a new opponent club, or a club that has moved                          |

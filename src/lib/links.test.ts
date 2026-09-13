@@ -108,7 +108,7 @@ describe("exporting a PGN", () => {
   };
 
   /** Away, so the league writes the home side first: they are, we are not. */
-  const SIDES = { home: "Bristol Grendel C", away: "Bristol & Clifton G" };
+  const SIDES = { home: "Bristol Grendel C", away: "Bristol & Clifton G", venue: "Bristol Grendel Chess Club" };
   const pgnOf = (over: Partial<Game> = {}, us = "Ada Mercer") =>
     taggedPgn(match, { ...game, ...over }, us, "V. Okonjo", SIDES);
 
@@ -119,17 +119,30 @@ describe("exporting a PGN", () => {
     }
   });
 
-  it("names the away team second and dots the date", () => {
+  it("names nobody: initials, the home side first, and the board", () => {
+    // The file goes to lichess or chess.com, which are public, and it carries
+    // an opponent who never agreed to appear on either.
     const pgn = pgnOf();
-    expect(pgn).toContain('[Event "Bristol Grendel C v Bristol & Clifton G"]');
+    expect(pgn).toContain('[Event "BG-C vs BC-G B1"]');
+    expect(pgn).toContain('[Site "BGCC"]');
     expect(pgn).toContain('[Date "2026.04.20"]');
     expect(pgn).toContain('[Round "3.1"]');
+    expect(pgn).not.toMatch(/Okonjo|Mercer|Grendel|Clifton/);
   });
 
   it("puts our player on the right side of the board", () => {
     const pgn = pgnOf();
-    expect(pgn).toContain('[White "V. Okonjo"]');
-    expect(pgn).toContain('[Black "Ada Mercer"]');
+    expect(pgn).toContain('[White "VO"]');
+    expect(pgn).toContain('[Black "AM"]');
+  });
+
+  it("keeps a name that is already an initialism, rather than cutting it to one letter", () => {
+    const pgn = taggedPgn(match, game, "Ada Mercer", "V. Okonjo", {
+      home: "UWE A",
+      away: "Bristol & Clifton G",
+      venue: "UWE Chess Club",
+    });
+    expect(pgn).toContain('[Event "UWE-A vs BC-G B1"]');
   });
 
   it("writes the result from White's side, not ours", () => {

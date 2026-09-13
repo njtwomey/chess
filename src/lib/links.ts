@@ -64,15 +64,58 @@ export function chesscomUrl(pgn: string): string | null {
  * here should be a valid PGN, and the tags are the difference between a game
  * that keeps its context and a list of moves.
  */
+/**
+ * A name reduced to its initials, keeping anything already written as one.
+ *
+ * "Bristol & Clifton" becomes "BC" and "UWE" stays "UWE", because a lone "U"
+ * would be worse than the name it replaced. Two letters at least before a word
+ * counts as an initialism, or the "V." of "V. Okonjo" would survive whole and
+ * the rest would not. Ampersands and anything else with no letter in it drop
+ * out.
+ */
+function initials(name: string): string {
+  return name
+    .split(/\s+/)
+    .map((word) => word.replace(/[^a-z]/gi, ""))
+    .filter((word) => word.length > 0)
+    .map((word) => (word.length > 1 && word === word.toUpperCase() ? word : word[0]!.toUpperCase()))
+    .join("");
+}
+
+/**
+ * A team as a short code: "Bristol & Clifton G" becomes "BC-G".
+ *
+ * The last word of a team's name is the letter the league gives it, and it is
+ * the only part worth keeping whole: it is what tells two sides of one club
+ * apart.
+ */
+export function teamCode(name: string): string {
+  const words = name.split(/\s+/).filter((word) => /[a-z0-9]/i.test(word));
+  const letter = words.at(-1) ?? name;
+  const club = initials(words.slice(0, -1).join(" "));
+  return club ? `${club}-${letter.toUpperCase()}` : letter.toUpperCase();
+}
+
+/**
+ * An exported game names nobody.
+ *
+ * A PGN leaves here for lichess or chess.com, which are public, and it carries
+ * an opponent who never agreed to appear on either. Initials keep a game
+ * findable by whoever played it and identify nobody to anybody else, which is
+ * the most a scoresheet copied off somebody else's handwriting has any business
+ * publishing.
+ */
 export function taggedPgn(
   match: Match,
   game: Game,
   playerName: string,
   opponentName: string,
-  sides: { home: string; away: string },
+  where: { home: string; away: string; venue: string },
 ): string {
-  const white = game.colour === "white" ? playerName : opponentName;
-  const black = game.colour === "white" ? opponentName : playerName;
+  const us = initials(playerName);
+  const them = initials(opponentName);
+  const white = game.colour === "white" ? us : them;
+  const black = game.colour === "white" ? them : us;
   const scores: Record<Game["result"], string> = {
     win: "1-0",
     "default-win": "1-0",
@@ -86,8 +129,8 @@ export function taggedPgn(
   const result = game.colour === "white" ? ours : ours === "1-0" ? "0-1" : ours === "0-1" ? "1-0" : ours;
 
   const tags = [
-    ["Event", `${sides.home} v ${sides.away}`],
-    ["Site", "Bristol, England"],
+    ["Event", `${teamCode(where.home)} vs ${teamCode(where.away)} B${game.board}`],
+    ["Site", initials(where.venue)],
     ["Date", match.date.replace(/-/g, ".")],
     // Team chess numbers a round by match and board, which is what makes two
     // games from the same evening distinguishable in a database.
