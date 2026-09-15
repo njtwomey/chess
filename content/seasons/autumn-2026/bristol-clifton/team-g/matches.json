@@ -200,12 +200,12 @@
     "settled": true,
     "lineup": {
       "playerIds": [
-        "bristol-clifton/max-pester",
         "bristol-clifton/lorenzo-milleri",
+        "bristol-clifton/max-pester",
         "bristol-clifton/william-blatchford",
         "bristol-clifton/stephen-hinde"
       ],
-      "at": "2026-09-09"
+      "at": "2026-09-15"
     },
     "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155244",
     "result": null
