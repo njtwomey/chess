@@ -97,7 +97,20 @@
     "links": {
       "fixtures": null
     },
-    "players": []
+    "players": [
+      {
+        "playerId": "graham-strickland"
+      },
+      {
+        "playerId": "kristian-perrett"
+      },
+      {
+        "playerId": "martin-stickley"
+      },
+      {
+        "playerId": "siobhan-campbell"
+      }
+    ]
   },
   {
     "clubId": "south-bristol",

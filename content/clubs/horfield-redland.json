@@ -13,5 +13,34 @@
     "lon": -2.6124,
     "note": "Next to the United Reformed Church, off Whiteladies Road."
   },
-  "players": []
+  "players": [
+    {
+      "playerId": "graham-strickland",
+      "name": "Graham Strickland",
+      "fullName": null,
+      "ratings": [],
+      "codes": []
+    },
+    {
+      "playerId": "kristian-perrett",
+      "name": "Kristian Perrett",
+      "fullName": null,
+      "ratings": [],
+      "codes": []
+    },
+    {
+      "playerId": "martin-stickley",
+      "name": "Martin Stickley",
+      "fullName": null,
+      "ratings": [],
+      "codes": []
+    },
+    {
+      "playerId": "siobhan-campbell",
+      "name": "Siobhan Campbell",
+      "fullName": null,
+      "ratings": [],
+      "codes": []
+    }
+  ]
 }

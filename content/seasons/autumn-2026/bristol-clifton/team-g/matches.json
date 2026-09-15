@@ -134,7 +134,7 @@
     "home": true,
     "date": "2026-09-15",
     "time": "19:30",
-    "status": "scheduled",
+    "status": "played",
     "availability": [
       {
         "playerId": "bristol-clifton/niall-twomey",
@@ -208,7 +208,44 @@
       "at": "2026-09-15"
     },
     "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155244",
-    "result": null
+    "result": {
+      "ourScore": 3,
+      "theirScore": 1,
+      "games": [
+        {
+          "board": 1,
+          "playerId": "bristol-clifton/lorenzo-milleri",
+          "opponentId": "horfield-redland/graham-strickland",
+          "colour": "black",
+          "result": "win",
+          "pgn": null
+        },
+        {
+          "board": 2,
+          "playerId": "bristol-clifton/max-pester",
+          "opponentId": "horfield-redland/kristian-perrett",
+          "colour": "white",
+          "result": "win",
+          "pgn": "1. c4 g6 2. Nc3 c5 3. g3 Bg7 4. Bg2 e6 5. e3 Ne7 6. Nf3 O-O 7. O-O Nbc6 8. d4 cxd4 9. exd4 d5 10. b3 dxc4 11. bxc4 Na5 12. Rb1 Rb8 13. Bf4 Ra8 14. Be5 Bxe5 15. dxe5 Qxd1 16. Rfxd1 *"
+        },
+        {
+          "board": 3,
+          "playerId": "bristol-clifton/william-blatchford",
+          "opponentId": "horfield-redland/martin-stickley",
+          "colour": "black",
+          "result": "loss",
+          "pgn": "1. d4 f5 2. Bf4 Nf6 3. Nc3 e6 4. e3 Bb4 5. Nf3 O-O 6. Bc4 b6 7. O-O Bb7 8. Ne5 Re8 9. f3 d6 10. Nd3 Bxc3 11. bxc3 Kh8 12. Bg5 Nbd7 13. Nf4 Nf8 14. Nh5 h6 15. Bxf6 gxf6 16. Qe1 d5 17. Qg3 Qe7 18. Bd3 Nh7 19. f4 Qf7 20. Qh3 Rg8 21. Rf3 Rg4 22. Rg3 Rag8 23. Be2 Rxg3 24. Nxg3 Rg6 25. Bh5 Rxg3 26. hxg3 Qe7 27. Bg6 Qg7 28. Bxh7 Qxh7 29. Kf2 Qg7 30. Qh5 Qf8 31. Rh1 Kh7 32. g4 fxg4 33. Qxg4 Bc8 34. Kg3 e5 35. f5 e4 36. Qg6+ Kh8 37. Rxh6+ Qxh6 38. Qxh6+ Kg8 39. Qxf6 Ba6 40. Qd8+ Kg7 41. Qxc7+ Kh6 42. f6 Bd3 43. Qg7+ Kh5 44. Qg4+ Kh6 45. f7 Be2 46. f8=Q+ Kh7 47. Qfg7# 1-0"
+        },
+        {
+          "board": 4,
+          "playerId": "bristol-clifton/stephen-hinde",
+          "opponentId": "horfield-redland/siobhan-campbell",
+          "colour": "white",
+          "result": "win",
+          "pgn": "1. d4 d5 2. c4 e6 3. Bf4 Nf6 4. e3 c5 5. Nf3 Bd6 6. Bg3 Qb6 7. Qb3 Qc7 8. Nc3 a6 9. Bd3 h6 10. Ne5 Nc6 11. Nxc6 Qxc6 12. Bxd6 Qxd6 13. O-O O-O 14. Rfe1 Re8 15. Rad1 Ng4 16. h3 Qh2+ 17. Kf1 e5 18. Nxd5 e4 19. Bb1 Rb8 20. Nf4 Nf6 21. Ke2 g5 22. Rh1 Qxh1 23. Rxh1 gxf4 24. Qb6 Nd7 25. Qd6 Ra8 26. Qxf4 Kg7 27. Bxe4 Nf6 28. Bd5 Re7 29. dxc5 Ra7 30. Qb8 b5 31. Qxc8 Rec7 32. Qf5 Rxc5 33. b3 bxc4 34. bxc4 Ra5 35. Ra1 Rc7 36. Qf4 Re7 37. g4 Rc5 38. g5 Nxd5 39. Qd4 f6 40. gxf6 Kf7 41. fxe7 1-0"
+        }
+      ]
+    }
   },
   {
     "number": 3,
