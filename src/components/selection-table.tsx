@@ -5,7 +5,7 @@ import { ReplyBadge, RoleBadge } from "@/components/reply-badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { playerById, playerName } from "@/lib/data";
 import type { Season } from "@/lib/schema";
-import { replyOf, roleFor, type Fielded } from "@/lib/season";
+import { replyOf, roleFor, sheetOrder, type Fielded } from "@/lib/season";
 import { type Reply, type Selection } from "@/lib/selection";
 import { cn } from "@/lib/utils";
 import type { Match } from "@/lib/schema";
@@ -113,15 +113,15 @@ export function SelectionTable({
 
   if (!settled) return <AvailabilityTable season={season} match={match} selection={selection} />;
 
-  // The rule's own order, always, because that is what this table is: what the
-  // rule produced from the replies. Leading with the captain's team instead
-  // reordered the one thing the section exists to show, and then had to draw a
-  // line after the fourth row to say where the boards stopped, which was a
-  // claim the badges beside it contradicted whenever he had changed anything.
+  // The team first, in the order it plays, then the reserves, then everybody
+  // else where the rule had them. A table whose first four rows are not the
+  // four who played reads as a mistake however the status column is coloured.
   //
-  // Who is actually playing is a column now. The team that took the field is
-  // above this in board order, and says so.
-  const rows = [...selection.standing];
+  // What went wrong before was not this: it was a line drawn after the fourth
+  // row on a page where the reordering had been skipped, so the line and the
+  // badges beside it contradicted each other. There is no line now, and the
+  // status column says what each row is.
+  const rows = sheetOrder(selection, fielded);
 
   // Numbered down the page rather than read off the rule, so the column and the
   // rows cannot disagree. A dropout gets none: they are shown where they stood,
