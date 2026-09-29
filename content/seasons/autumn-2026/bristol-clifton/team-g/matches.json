@@ -218,7 +218,7 @@
           "opponentId": "horfield-redland/graham-strickland",
           "colour": "black",
           "result": "win",
-          "pgn": "1. e4 c6 2. Nc3 d5 3. d3 d4 4. Nce2 e5 5. Nf3 Bd6 6. Ng3 Nf6 7. Be2 O-O 8. Bg5 Nbd7 9. O-O h6 10. Bd2 Nb6 11. h3 Be6 12. Nh2 Rc8 13. Ng4 Nxg4 14. Bxg4 Qe7 15. Bf5 Nd7 16. Bg4 Nf6 17. Nf5 Bxf5 18. Bxf5 Rcd8 19. Bg4 Nxg4 20. Qxg4 Qf6 21. f4 exf4 22. Bxf4 Bxf4 23. Rxf4 Qe6 24. Qe2 Rd5 25. Qg4 f5 26. Qf3 Re5 27. Qf2 g5 28. Rxf5 Rexf5 29. exf5 Rxf5 30. Qxd4 Rf4 31. Qc3 Qe3+ { White stepped out of check on a square the scoresheet does not record. Play went on g4, hxg4, Rxg4 and the record stops there at move 33, both clocks under five minutes. The game continued, and Black won. } 0-1"
+          "pgn": "1. e4 c6 2. Nc3 d5 3. d3 d4 4. Nce2 e5 5. Nf3 Bd6 6. Ng3 Nf6 7. Be2 O-O 8. Bg5 Nbd7 9. O-O h6 10. Bd2 Nb6 11. h3 Be6 12. Nh2 Rc8 13. Ng4 Nxg4 14. Bxg4 Qe7 15. Bf5 Nd7 16. Bg4 Nf6 17. Nf5 Bxf5 18. Bxf5 Rcd8 19. Bg4 Nxg4 20. Qxg4 Qf6 21. f4 exf4 22. Bxf4 Bxf4 23. Rxf4 Qe6 24. Qe2 Rd5 25. Qg4 f5 26. Qf3 Re5 27. Qf2 g5 28. Rxf5 Rexf5 29. exf5 Rxf5 30. Qxd4 Rf4 31. Qc3 Qe3+ { The rest of the game was not recorded owing to clock time. } 0-1"
         },
         {
           "board": 2,
@@ -226,7 +226,7 @@
           "opponentId": "horfield-redland/kristian-perrett",
           "colour": "white",
           "result": "win",
-          "pgn": "1. c4 g6 2. Nc3 c5 3. g3 Bg7 4. Bg2 e6 5. e3 Ne7 6. Nf3 O-O 7. O-O Nbc6 8. d4 cxd4 9. exd4 d5 10. b3 dxc4 11. bxc4 Na5 12. Rb1 Rb8 13. Bf4 Ra8 14. Be5 Bxe5 15. dxe5 Qxd1 16. Rfxd1 *"
+          "pgn": "1. c4 g6 2. Nc3 c5 3. g3 Bg7 4. Bg2 e6 5. e3 Ne7 6. Nf3 O-O 7. O-O Nbc6 8. d4 cxd4 9. exd4 d5 10. b3 dxc4 11. bxc4 Na5 12. Rb1 Rb8 13. Bf4 Ra8 14. Be5 Bxe5 15. dxe5 Qxd1 16. Rfxd1 a6 17. Re1 *"
         },
         {
           "board": 3,
@@ -242,7 +242,7 @@
           "opponentId": "horfield-redland/siobhan-campbell",
           "colour": "white",
           "result": "win",
-          "pgn": "1. d4 d5 2. c4 e6 3. Bf4 Nf6 4. e3 c5 5. Nf3 Bd6 6. Bg3 Qb6 7. Qb3 Qc7 8. Nc3 a6 9. Bd3 h6 10. Ne5 Nc6 11. Nxc6 Qxc6 12. Bxd6 Qxd6 13. O-O O-O 14. Rfe1 Re8 15. Rad1 Ng4 16. h3 Qh2+ 17. Kf1 e5 18. Nxd5 e4 19. Bb1 Rb8 20. Nf4 Nf6 21. Ke2 g5 22. Rh1 Qxh1 23. Rxh1 gxf4 24. Qb6 Nd7 25. Qd6 Ra8 26. Qxf4 Kg7 27. Bxe4 Nf6 28. Bd5 Re7 29. dxc5 Ra7 30. Qb8 b5 31. Qxc8 Rec7 32. Qf5 Rxc5 33. b3 bxc4 34. bxc4 Ra5 35. Ra1 Rc7 36. Qf4 Re7 37. g4 Rc5 38. g5 Nxd5 39. Qd4 f6 40. gxf6 Kf7 41. fxe7 1-0"
+          "pgn": "1. d4 d5 2. c4 e6 3. Bf4 Nf6 4. e3 c5 5. Nf3 Bd6 6. Bg3 Qb6 7. Qb3 Qc7 8. Nc3 a6 9. Bd3 h6 10. Ne5 Nc6 11. Nxc6 Qxc6 12. Bxd6 Qxd6 13. O-O O-O 14. Rfe1 Re8 15. Rad1 Ng4 16. h3 Qh2+ 17. Kf1 e5 18. Nxd5 e4 19. Bb1 Rb8 20. Nf4 Nf6 21. Ke2 g5 22. Rh1 Qxh1 23. Rxh1 gxf4 24. Qb6 Nd7 25. Qd6 Ra8 26. Qxf4 Kg7 27. Bxe4 Nf6 28. Bd5 Re7 29. dxc5 Ra7 30. Qb8 b5 31. Qxc8 Rec7 32. Qf5 Rxc5 33. b3 bxc4 34. bxc4 Ra5 35. Ra1 Rc7 36. Qf4 Re7 37. g4 Rc5 38. g5 Nxd5 39. Qd4+ f6 40. gxf6+ Kf7 41. fxe7 1-0"
         }
       ]
     }
@@ -254,8 +254,76 @@
     "date": "2026-10-05",
     "time": "19:30",
     "status": "scheduled",
-    "availability": [],
-    "settled": false,
+    "availability": [
+      {
+        "playerId": "bristol-clifton/alex-zervudachi",
+        "reply": "yes",
+        "at": "2026-09-21"
+      },
+      {
+        "playerId": "bristol-clifton/niall-twomey",
+        "reply": "yes",
+        "at": "2026-09-21"
+      },
+      {
+        "playerId": "bristol-clifton/stephen-hinde",
+        "reply": "yes",
+        "at": "2026-09-21"
+      },
+      {
+        "playerId": "bristol-clifton/max-pester",
+        "reply": "yes",
+        "at": "2026-09-21"
+      },
+      {
+        "playerId": "bristol-clifton/lorenzo-milleri",
+        "reply": "yes",
+        "at": "2026-09-21"
+      },
+      {
+        "playerId": "bristol-clifton/theo-wright",
+        "reply": "yes",
+        "at": "2026-09-21"
+      },
+      {
+        "playerId": "bristol-clifton/william-blatchford",
+        "reply": "yes",
+        "at": "2026-09-21"
+      },
+      {
+        "playerId": "bristol-clifton/jade-redpath-aislabie",
+        "reply": "yes",
+        "at": "2026-09-23"
+      },
+      {
+        "playerId": "bristol-clifton/mukhtar-hasan",
+        "reply": "no"
+      },
+      {
+        "playerId": "bristol-clifton/alexandra-bicknell",
+        "reply": "no"
+      },
+      {
+        "playerId": "bristol-clifton/alfred-holton-stoppani",
+        "reply": "no"
+      },
+      {
+        "playerId": "bristol-clifton/thomas-booth",
+        "reply": "no"
+      }
+    ],
+    "settled": true,
+    "lineup": {
+      "playerIds": [
+        "bristol-clifton/alex-zervudachi",
+        "bristol-clifton/theo-wright",
+        "bristol-clifton/max-pester",
+        "bristol-clifton/jade-redpath-aislabie",
+        "bristol-clifton/niall-twomey",
+        "bristol-clifton/william-blatchford"
+      ],
+      "at": "2026-09-29"
+    },
     "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155279",
     "result": null
   },
