@@ -337,7 +337,8 @@ function Result({ season, match }: { season: Season; match: Match }) {
             <TableHead className="w-20">Colour</TableHead>
             <TableHead>{opponentTeam(season, match).name}</TableHead>
             <TableHead className="w-28">Result</TableHead>
-            <TableHead className="w-20 text-right">Game</TableHead>
+            <TableHead className="w-24">Analysis</TableHead>
+            <TableHead className="w-24 text-right">Game</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -378,11 +379,12 @@ function Result({ season, match }: { season: Season; match: Match }) {
                       {GAME_RESULT_LABEL[game.result]}
                     </span>
                   </TableCell>
+                  {/* Two columns: somewhere else's engine, and this game. */}
+                  <TableCell className="whitespace-nowrap">{game.pgn && <AnalysisIcons pgn={rowPgn} />}</TableCell>
                   <TableCell className="text-right whitespace-nowrap">
                     {game.pgn ? (
                       <span className="inline-flex items-center gap-1">
                         <CopyPgn pgn={rowPgn} />
-                        <AnalysisIcons pgn={rowPgn} />
                         <Button variant="ghost" size="sm" asChild>
                           <Link to={seasonPath(season.id, `${match.id}/${boardSlug(game)}`)}>View</Link>
                         </Button>

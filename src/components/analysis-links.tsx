@@ -37,21 +37,29 @@ export function AnalysisLinks({ pgn, className }: { pgn: string; className?: str
   );
 }
 
-/** Why the analysis board stops before the game does. */
-function ClippedNote({ className }: { className?: string }) {
+/**
+ * Why the analysis board stops before the game does.
+ *
+ * An icon rather than a word, because it sits in a row of icons and a game that
+ * fits says nothing at all. The tooltip has to carry the whole of it: that the
+ * link is short, why, and what to do instead, which is to take the PGN and give
+ * it to whichever engine you prefer.
+ */
+export function ClippedNote({ className }: { className?: string }) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <span
-          className={cn("text-muted-foreground inline-flex items-center gap-1 text-xs", className)}
+          aria-label="This link is shortened"
+          className={cn("text-muted-foreground inline-flex items-center p-1.5", className)}
           onClick={(event) => event.stopPropagation()}
         >
-          <Scissors className="size-3.5" />
-          <span className="hidden sm:inline">shortened</span>
+          <Scissors className="size-4" />
         </span>
       </TooltipTrigger>
-      <TooltipContent>
-        Too long for a link, so the last moves are missing there. Copy the PGN below for the whole game.
+      <TooltipContent className="max-w-64">
+        Shortened, because the game is too long for a link: these open without the last moves. Copy the PGN instead and
+        paste it into the engine of your choice.
       </TooltipContent>
     </Tooltip>
   );
@@ -72,7 +80,6 @@ export function AnalysisIcons({ pgn, className }: { pgn: string; className?: str
 
   return (
     <span className={cn("inline-flex items-center gap-1", className)}>
-      {targets.some((target) => target.clipped) && <ClippedNote />}
       {targets.map(({ name, url, Icon }) => (
         <Tooltip key={name}>
           <TooltipTrigger asChild>
@@ -91,6 +98,7 @@ export function AnalysisIcons({ pgn, className }: { pgn: string; className?: str
           <TooltipContent>{name}</TooltipContent>
         </Tooltip>
       ))}
+      {targets.some((target) => target.clipped) && <ClippedNote />}
     </span>
   );
 }

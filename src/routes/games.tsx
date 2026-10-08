@@ -44,7 +44,8 @@ export function Games() {
                 <TableHead className="w-20">Colour</TableHead>
                 <TableHead>Opponent</TableHead>
                 <TableHead className="w-24">Result</TableHead>
-                <TableHead className="w-28 text-right">Analyse</TableHead>
+                <TableHead className="w-24">Analysis</TableHead>
+                <TableHead className="w-24 text-right">Game</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -94,11 +95,15 @@ export function Games() {
                           {GAME_RESULT_LABEL[game.result]}
                         </span>
                       </TableCell>
+                      {/* Two columns, because they answer different questions.
+                          Analysis is somebody else's engine and depends on the
+                          game fitting in a link; the game itself is always here
+                          to copy or to open, and never grows past two controls. */}
+                      <TableCell className="whitespace-nowrap">{game.pgn && <AnalysisIcons pgn={rowPgn} />}</TableCell>
                       <TableCell className="text-right whitespace-nowrap">
                         {game.pgn ? (
                           <span className="inline-flex items-center gap-1">
                             <CopyPgn pgn={rowPgn} />
-                            <AnalysisIcons pgn={rowPgn} />
                             <Button variant="ghost" size="sm" asChild>
                               <Link to={seasonPath(season.id, `${match.id}/${boardSlug(game)}`)}>View</Link>
                             </Button>
