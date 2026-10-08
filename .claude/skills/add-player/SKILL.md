@@ -96,8 +96,12 @@ list.
 
 On the person, in `content/clubs/<club>.json`. Ascending by date, no duplicate
 dates; the loader checks both. Keeping the series is what lets a past match card
-show the rating that was true at the time, and what the trend arrow on the team
-page reads, and holding it once means two seasons cannot disagree about it.
+show the rating that was true at the time, and holding it once means two seasons
+cannot disagree about it.
+
+The site shows the latest and nothing else. It does **not** show the change
+since the last one: that is a number telling somebody they had a bad month, on
+the page where they look themselves up.
 
 ## A player turning 16
 

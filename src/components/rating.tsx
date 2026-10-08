@@ -20,20 +20,3 @@ export function RatingLabel({ rating, className }: { rating: Rating | null; clas
     </span>
   );
 }
-
-/** The direction of travel, when there is more than one rating to compare. */
-export function RatingTrend({ ratings }: { ratings: Rating[] }) {
-  const latest = ratings.at(-1);
-  const previous = ratings.at(-2);
-  if (!latest || !previous) return null;
-
-  const change = latest.rating - previous.rating;
-  if (change === 0) return null;
-
-  return (
-    <span className={cn("tabular ml-1.5 text-xs", change > 0 ? "text-reply-yes" : "text-reply-no")}>
-      {change > 0 ? "+" : ""}
-      {change}
-    </span>
-  );
-}

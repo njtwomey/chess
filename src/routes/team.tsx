@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Empty, Page, Section } from "@/components/page";
-import { RatingLabel, RatingTrend } from "@/components/rating";
+import { RatingLabel } from "@/components/rating";
 import { useSeason } from "@/components/season-context";
 import { compareValues, SortableHead, useSort } from "@/components/sortable-table";
 import { Badge } from "@/components/ui/badge";
@@ -121,7 +121,6 @@ export function Team() {
                   </TableCell>
                   <TableCell className="text-right whitespace-nowrap">
                     <RatingLabel rating={entry.rating} />
-                    <RatingTrend ratings={entry.player.ratings} />
                   </TableCell>
                   <TableCell className="tabular text-right">{entry.played}</TableCell>
                   <TableCell className="tabular text-right">{entry.points}</TableCell>
