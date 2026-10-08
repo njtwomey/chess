@@ -1,4 +1,4 @@
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Scissors } from "lucide-react";
 import { KnightIcon, PawnIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -8,30 +8,52 @@ import { cn } from "@/lib/utils";
 /**
  * Send this game somewhere that can analyse it properly.
  *
- * Both sites take a PGN in the query string, and both refuse a URL past a
- * couple of thousand characters. When a game is too long the button is dropped
- * rather than shown broken, and the PGN box below the board is the way through.
+ * Both sites take a PGN in the query string and both refuse a long one, so a
+ * long game goes without its tags and, past that, without its last few moves.
+ * The scissors say when that has happened: an analysis board quietly missing
+ * the end of the game is worse than one that says so, and the PGN below the
+ * board is always the whole thing.
  */
 export function AnalysisLinks({ pgn, className }: { pgn: string; className?: string }) {
   const targets = [
-    { name: "Lichess", url: lichessUrl(pgn), Icon: KnightIcon },
-    { name: "Chess.com", url: chesscomUrl(pgn), Icon: PawnIcon },
-  ].filter((target) => target.url !== null);
-
-  if (targets.length === 0) return null;
+    { name: "Lichess", ...lichessUrl(pgn), Icon: KnightIcon },
+    { name: "Chess.com", ...chesscomUrl(pgn), Icon: PawnIcon },
+  ];
+  const clipped = targets.some((target) => target.clipped);
 
   return (
     <div className={cn("flex flex-wrap items-center gap-2", className)}>
       {targets.map(({ name, url, Icon }) => (
         <Button key={name} variant="outline" size="sm" asChild>
-          <a href={url ?? undefined} target="_blank" rel="noreferrer">
+          <a href={url} target="_blank" rel="noreferrer">
             <Icon className="size-3.5" />
             {name}
             <ExternalLink className="size-3" />
           </a>
         </Button>
       ))}
+      {clipped && <ClippedNote />}
     </div>
+  );
+}
+
+/** Why the analysis board stops before the game does. */
+function ClippedNote({ className }: { className?: string }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span
+          className={cn("text-muted-foreground inline-flex items-center gap-1 text-xs", className)}
+          onClick={(event) => event.stopPropagation()}
+        >
+          <Scissors className="size-3.5" />
+          <span className="hidden sm:inline">shortened</span>
+        </span>
+      </TooltipTrigger>
+      <TooltipContent>
+        Too long for a link, so the last moves are missing there. Copy the PGN below for the whole game.
+      </TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -44,19 +66,18 @@ export function AnalysisLinks({ pgn, className }: { pgn: string; className?: str
  */
 export function AnalysisIcons({ pgn, className }: { pgn: string; className?: string }) {
   const targets = [
-    { name: "Open in Lichess", url: lichessUrl(pgn), Icon: KnightIcon },
-    { name: "Open in Chess.com", url: chesscomUrl(pgn), Icon: PawnIcon },
-  ].filter((target) => target.url !== null);
-
-  if (targets.length === 0) return null;
+    { name: "Open in Lichess", ...lichessUrl(pgn), Icon: KnightIcon },
+    { name: "Open in Chess.com", ...chesscomUrl(pgn), Icon: PawnIcon },
+  ];
 
   return (
     <span className={cn("inline-flex items-center gap-1", className)}>
+      {targets.some((target) => target.clipped) && <ClippedNote />}
       {targets.map(({ name, url, Icon }) => (
         <Tooltip key={name}>
           <TooltipTrigger asChild>
             <a
-              href={url ?? undefined}
+              href={url}
               target="_blank"
               rel="noreferrer"
               aria-label={name}

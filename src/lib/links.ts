@@ -34,26 +34,61 @@ export function mapsUrl(club: Club): string {
 }
 
 /**
- * Browsers and servers stop being reliable somewhere above 2000 characters, and
- * a truncated PGN would open an analysis board on the wrong position rather than
- * failing visibly. Past this length the UI offers the PGN box instead, which is
- * why that box is not an optional extra.
+ * What a URL will carry, measured rather than guessed.
+ *
+ * Lichess answers 200 up to about 2050 characters and 400 past it, which is a
+ * 2048-byte limit with the scheme and host on top. This leaves a margin under
+ * that: a link that 400s is worse than no link, which is the whole reason there
+ * is a cap at all.
  */
-const MAX_URL = 1800;
+const MAX_URL = 2000;
 
-function withPgn(base: string, parameter: string, pgn: string): string | null {
-  const url = `${base}?${parameter}=${encodeURIComponent(pgn.trim())}`;
-  return url.length > MAX_URL ? null : url;
+/** The result marker, which means nothing on a game that has been cut short. */
+const RESULT = /^(1-0|0-1|1\/2-1\/2|\*)$/;
+
+/**
+ * As much of a game as will fit, and whether anything was left behind.
+ *
+ * Three steps down. The whole thing with its tags, because knowing who played
+ * and when is worth the two hundred characters it costs. Then the moves alone,
+ * which is what gets a long game through: the tags are a fifth of the length
+ * and an analysis board does not need them. Then the moves cut at a whole move,
+ * so the board opens on the position the game reached rather than not opening.
+ *
+ * Something always fits, so this never returns nothing.
+ */
+function pack(base: string, parameter: string, tagged: string): { url: string; clipped: boolean } {
+  const link = (text: string) => `${base}?${parameter}=${encodeURIComponent(text.trim())}`;
+  const whole = link(tagged);
+  if (whole.length <= MAX_URL) return { url: whole, clipped: false };
+
+  const body = tagged.slice(tagged.lastIndexOf("]\n") + 2);
+  const bare = link(body);
+  if (bare.length <= MAX_URL) return { url: bare, clipped: false };
+
+  // Whole moves off the end, and the result marker with them: the game no
+  // longer reaches it. A trailing move number goes too, or the PGN is invalid.
+  const words = body
+    .trim()
+    .split(/\s+/)
+    .filter((word) => !RESULT.test(word));
+  for (let count = words.length - 1; count > 0; count -= 1) {
+    const kept = words.slice(0, count);
+    while (kept.length > 0 && /^\d+\.+$/.test(kept.at(-1) ?? "")) kept.pop();
+    const url = link(kept.join(" "));
+    if (url.length <= MAX_URL) return { url, clipped: true };
+  }
+  return { url: link(words[0] ?? ""), clipped: true };
 }
 
-/** Lichess's import page, prefilled. Null when the game is too long to fit in a URL. */
-export function lichessUrl(pgn: string): string | null {
-  return withPgn("https://lichess.org/paste", "pgn", pgn);
+/** Lichess's import page, prefilled with as much of the game as fits. */
+export function lichessUrl(pgn: string) {
+  return pack("https://lichess.org/paste", "pgn", pgn);
 }
 
-/** Chess.com's analysis board, prefilled. Null when the game is too long to fit in a URL. */
-export function chesscomUrl(pgn: string): string | null {
-  return withPgn("https://www.chess.com/analysis", "pgn", pgn);
+/** Chess.com's analysis board, the same way. */
+export function chesscomUrl(pgn: string) {
+  return pack("https://www.chess.com/analysis", "pgn", pgn);
 }
 
 /**
@@ -97,20 +132,28 @@ export function teamCode(name: string): string {
 }
 
 /**
- * An exported game names nobody.
+ * An exported game names nobody, and says only what sharing it needs.
  *
  * A PGN leaves here for lichess or chess.com, which are public, and it carries
  * an opponent who never agreed to appear on either. Initials keep a game
  * findable by whoever played it and identify nobody to anybody else, which is
  * the most a scoresheet copied off somebody else's handwriting has any business
  * publishing.
+ *
+ * Four tags, not the standard seven. This is a link somebody opens, not an
+ * archive: the archive is the working file under `games/`, which keeps the
+ * fuller form. Site and Round are things this site already shows around the
+ * board, and Date rides along inside Event rather than paying for a tag of its
+ * own. What is left is who played, what happened, and enough to tell one game
+ * from another. The saving is around 130 characters of URL, which on a long
+ * game is six or seven moves that would otherwise be cut off the end.
  */
 export function taggedPgn(
   match: Match,
   game: Game,
   playerName: string,
   opponentName: string,
-  where: { home: string; away: string; venue: string },
+  where: { home: string; away: string },
 ): string {
   const us = initials(playerName);
   const them = initials(opponentName);
@@ -128,13 +171,10 @@ export function taggedPgn(
   const ours = scores[game.result];
   const result = game.colour === "white" ? ours : ours === "1-0" ? "0-1" : ours === "0-1" ? "1-0" : ours;
 
+  // The board number is what tells two games of one evening apart, and the date
+  // is what tells one evening from another, so both ride in the event's name.
   const tags = [
-    ["Event", `${teamCode(where.home)} vs ${teamCode(where.away)} B${game.board}`],
-    ["Site", initials(where.venue)],
-    ["Date", match.date.replace(/-/g, ".")],
-    // Team chess numbers a round by match and board, which is what makes two
-    // games from the same evening distinguishable in a database.
-    ["Round", `${match.number}.${game.board}`],
+    ["Event", `${teamCode(where.home)} vs ${teamCode(where.away)} B${game.board}, ${match.date.replace(/-/g, ".")}`],
     ["White", white],
     ["Black", black],
     ["Result", result],

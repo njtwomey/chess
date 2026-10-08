@@ -379,7 +379,7 @@ function Result({ season, match }: { season: Season; match: Match }) {
                             game,
                             player?.fullName ?? player?.name ?? game.playerId,
                             opponent?.fullName ?? opponent?.name ?? game.opponentId,
-                            { ...sides(season, match), venue: venueFor(season, match).name },
+                            sides(season, match),
                           )}
                         />
                         <Button variant="ghost" size="sm" asChild>

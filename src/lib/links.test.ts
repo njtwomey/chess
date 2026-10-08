@@ -64,21 +64,46 @@ describe("analysis links", () => {
   const pgn = "1. e4 e5 2. Bc4 Nc6 3. Qh5 Nf6 4. Qxf7# 1-0";
 
   it("hands the game to lichess and to chess.com", () => {
-    expect(lichessUrl(pgn)).toContain("lichess.org/paste?pgn=");
-    expect(chesscomUrl(pgn)).toContain("chess.com/analysis?pgn=");
+    expect(lichessUrl(pgn).url).toContain("lichess.org/paste?pgn=");
+    expect(chesscomUrl(pgn).url).toContain("chess.com/analysis?pgn=");
+    expect(lichessUrl(pgn).clipped).toBe(false);
   });
 
   it("encodes the moves so the hashes and plus signs survive", () => {
-    expect(lichessUrl("1. e4 e5 2. Qh5 Nf6 3. Qxf7#")).toContain("%23");
-    expect(lichessUrl("1. e4 e5 2. Bc4 Bc5 3. Qh5 Qe7+")).toContain("%2B");
+    expect(lichessUrl("1. e4 e5 2. Qh5 Nf6 3. Qxf7#").url).toContain("%23");
+    expect(lichessUrl("1. e4 e5 2. Bc4 Bc5 3. Qh5 Qe7+").url).toContain("%2B");
   });
 
-  it("declines rather than truncating a game too long for a URL", () => {
+  it("drops the tags before it drops a move", () => {
+    // The tags are a fifth of a long game's length and an analysis board does
+    // not need them, so they go first and the moves all survive.
+    const body = Array.from({ length: 50 }, (_, index) => `${index * 2 + 1}. Nf3 Nf6 ${index * 2 + 2}. Ng1 Ng8`).join(
+      " ",
+    );
+    const long = `[Event "x"]\n[Site "y"]\n[Date "2026.01.01"]\n[Round "1.1"]\n[White "AB"]\n[Black "CD"]\n[Result "*"]\n\n${body}`;
+    const link = lichessUrl(long);
+    expect(link.url).not.toContain("Event");
+    expect(link.clipped).toBe(false);
+    expect(decodeURIComponent(link.url)).toContain("1. Nf3 Nf6");
+  });
+
+  it("cuts a game that is too long even without its tags, and says so", () => {
     const marathon = Array.from({ length: 400 }, (_, index) => `${index + 1}. Nf3 Nf6 ${index + 1}... Ng1 Ng8`).join(
       " ",
     );
-    expect(lichessUrl(marathon)).toBeNull();
-    expect(chesscomUrl(marathon)).toBeNull();
+    const link = lichessUrl(marathon);
+    expect(link.clipped).toBe(true);
+    expect(link.url.length).toBeLessThanOrEqual(2000);
+    // What survives is whole moves, never a dangling move number.
+    expect(decodeURIComponent(link.url)).not.toMatch(/\d+\.+$/);
+    expect(decodeURIComponent(link.url)).toContain("1. Nf3 Nf6");
+  });
+
+  it("keeps a short game whole, tags and all", () => {
+    const short = `[Event "x"]\n[White "AB"]\n[Black "CD"]\n[Result "1-0"]\n\n1. e4 e5 2. Nf3 Nc6 1-0`;
+    const link = lichessUrl(short);
+    expect(link.clipped).toBe(false);
+    expect(decodeURIComponent(link.url)).toContain("[Event ");
   });
 });
 
@@ -108,25 +133,23 @@ describe("exporting a PGN", () => {
   };
 
   /** Away, so the league writes the home side first: they are, we are not. */
-  const SIDES = { home: "Bristol Grendel C", away: "Bristol & Clifton G", venue: "Bristol Grendel Chess Club" };
+  const SIDES = { home: "Bristol Grendel C", away: "Bristol & Clifton G" };
   const pgnOf = (over: Partial<Game> = {}, us = "Ada Mercer") =>
     taggedPgn(match, { ...game, ...over }, us, "V. Okonjo", SIDES);
 
-  it("writes the seven required tags", () => {
+  it("writes four tags and no more", () => {
+    // Not the standard seven: this is a link somebody opens, not an archive,
+    // and every tag is characters taken off the end of a long game.
     const pgn = pgnOf();
-    for (const tag of ["Event", "Site", "Date", "Round", "White", "Black", "Result"]) {
-      expect(pgn).toContain(`[${tag} `);
-    }
+    for (const tag of ["Event", "White", "Black", "Result"]) expect(pgn).toContain(`[${tag} `);
+    for (const tag of ["Site", "Date", "Round"]) expect(pgn).not.toContain(`[${tag} `);
   });
 
-  it("names nobody: initials, the home side first, and the board", () => {
+  it("names nobody, and carries the date inside the event", () => {
     // The file goes to lichess or chess.com, which are public, and it carries
     // an opponent who never agreed to appear on either.
     const pgn = pgnOf();
-    expect(pgn).toContain('[Event "BG-C vs BC-G B1"]');
-    expect(pgn).toContain('[Site "BGCC"]');
-    expect(pgn).toContain('[Date "2026.04.20"]');
-    expect(pgn).toContain('[Round "3.1"]');
+    expect(pgn).toContain('[Event "BG-C vs BC-G B1, 2026.04.20"]');
     expect(pgn).not.toMatch(/Okonjo|Mercer|Grendel|Clifton/);
   });
 
@@ -137,12 +160,8 @@ describe("exporting a PGN", () => {
   });
 
   it("keeps a name that is already an initialism, rather than cutting it to one letter", () => {
-    const pgn = taggedPgn(match, game, "Ada Mercer", "V. Okonjo", {
-      home: "UWE A",
-      away: "Bristol & Clifton G",
-      venue: "UWE Chess Club",
-    });
-    expect(pgn).toContain('[Event "UWE-A vs BC-G B1"]');
+    const pgn = taggedPgn(match, game, "Ada Mercer", "V. Okonjo", { home: "UWE A", away: "Bristol & Clifton G" });
+    expect(pgn).toContain('[Event "UWE-A vs BC-G B1, 2026.04.20"]');
   });
 
   it("writes the result from White's side, not ours", () => {

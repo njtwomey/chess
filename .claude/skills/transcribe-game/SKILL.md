@@ -35,9 +35,13 @@ it. An incomplete transcription also takes `[Termination "unfinished
 transcription"]`, so the real result in the `Result` tag does not read as a
 contradiction of the `*` the moves end on.
 
-Its tags are the initialisms the site exports, not names. The file is gitignored
-and stays local, but a record that is safe wherever it ends up is worth more
-than one that depends on a `.gitignore` line.
+Its tags are initialisms, not names. The file is gitignored and stays local, but
+a record that is safe wherever it ends up is worth more than one that depends on
+a `.gitignore` line.
+
+**This file is the archive; the site's export is not.** Keep the full seven tags
+here, and the provenance. What the site builds for a link is cut to four, which
+is a different job: see `taggedPgn`.
 
 **`matches.json` gets the bare movetext and nothing else.** No inline `{}`
 comments: the site builds the tags itself, and it anonymises them, so the

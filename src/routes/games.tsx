@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { findMatch, playerById } from "@/lib/data";
 import { taggedPgn } from "@/lib/links";
 import { GAME_RESULT_LABEL, boardSlug } from "@/lib/schema";
-import { opponentOf, opponentTeam, orderedMatches, ratingOn, sides, venueFor } from "@/lib/season";
+import { opponentOf, opponentTeam, orderedMatches, ratingOn, sides } from "@/lib/season";
 import { formatShortDate } from "@/lib/time";
 
 import { cn } from "@/lib/utils";
@@ -96,7 +96,7 @@ export function Games() {
                                 game,
                                 player?.fullName ?? player?.name ?? game.playerId,
                                 opponent?.fullName ?? opponent?.name ?? game.opponentId,
-                                { ...sides(season, match), venue: venueFor(season, match).name },
+                                sides(season, match),
                               )}
                             />
                             <Button variant="ghost" size="sm" asChild>
@@ -136,10 +136,13 @@ export function GamePage({ seasonId, matchId, board }: { seasonId: string; match
   const name = player?.name ?? game.playerId;
   const opponent = opponentOf(season, match, game);
   const opponentName = opponent?.name ?? game.opponentId;
-  const pgn = taggedPgn(match, game, player?.fullName ?? name, opponent?.fullName ?? opponentName, {
-    ...sides(season, match),
-    venue: venueFor(season, match).name,
-  });
+  const pgn = taggedPgn(
+    match,
+    game,
+    player?.fullName ?? name,
+    opponent?.fullName ?? opponentName,
+    sides(season, match),
+  );
   const opponentRating = opponent ? ratingOn(opponent) : null;
   const white = game.colour === "white" ? name : opponentName;
   const black = game.colour === "white" ? opponentName : name;

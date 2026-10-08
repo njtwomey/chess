@@ -108,10 +108,15 @@ plausible wrong address sends somebody to the wrong side of Bristol on a Tuesday
 ### Names, and what the site is allowed to know
 
 **An exported PGN names nobody.** `taggedPgn` reduces every name in the tags to initials, so a game
-pasted into lichess or chess.com reads `[Event "BC-G vs SB-D B4"]` and `[White "NT"]`. Those sites are
-public and an opponent copied off somebody else's scoresheet never agreed to appear on either. The
-stored movetext carries no names at all, and no inline comments: provenance lives in
+pasted into lichess or chess.com reads `[Event "BC-G vs SB-D B4, 2026.09.08"]` and `[White "NT"]`.
+Those sites are public and an opponent copied off somebody else's scoresheet never agreed to appear
+on either. The stored movetext carries no names at all, and no inline comments: provenance lives in
 `games/<fixture>/<board>/extracted.pgn`, which is gitignored along with the photographs.
+
+**It is four tags, not the standard seven**, because it is a link somebody opens rather than an
+archive: the archive is the working file. Site and Round are what this site already shows around the
+board, and the date rides inside `Event`. Where a game is too long for a URL even so, the link drops
+the tags first and only then cuts whole moves off the end, with a mark on the page saying it has.
 
 The repository is public. A player is a **first name**, the league's own fuller form of it in
 `fullName`, a junior flag, a rating history, and the numbers the bodies that rate them know them by:
