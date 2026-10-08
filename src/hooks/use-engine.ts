@@ -12,11 +12,18 @@ export interface EngineOptions {
    * moves, which is why this is a setting rather than a constant.
    */
   depth: number;
-  /** How many alternative lines to report. One is enough most of the time. */
+  /**
+   * How many alternative lines to report.
+   *
+   * Three by default. One line tells you the engine's answer; three tell you
+   * whether there was a choice, which is the thing a club player is usually
+   * asking when they stop on a position. It costs search time rather than
+   * memory, and at this depth that is not time anybody notices.
+   */
   lines: number;
 }
 
-export const DEFAULT_ENGINE_OPTIONS: EngineOptions = { depth: 14, lines: 1 };
+export const DEFAULT_ENGINE_OPTIONS: EngineOptions = { depth: 14, lines: 3 };
 
 interface EngineState {
   /** Best line first. Empty until the first result arrives. */

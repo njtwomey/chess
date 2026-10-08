@@ -48,6 +48,21 @@ export function replay(pgn: string): Ply[] | null {
 }
 
 /** The 64 squares of a FEN, rank 8 first, as single letters or null. */
+/**
+ * How long a game ran, counted off the movetext rather than replayed.
+ *
+ * A table of games wants this beside each row and `replay` would parse every
+ * one of them to say it, which means chess.js in the bundle of every page that
+ * lists a game. Counting the move numbers is a regex and gives the same answer:
+ * one number per move White made, which is what anybody means by the length of
+ * a game.
+ */
+export function moveCount(pgn: string): number {
+  // Comments can hold a date, and a date holds digits and a full stop.
+  const movetext = pgn.replace(/\{[^}]*\}/g, " ");
+  return (movetext.match(/\b\d+\.(?!\.)/g) ?? []).length;
+}
+
 export function squares(fen: string): (string | null)[] {
   const board = fen.split(" ")[0] ?? "";
   const out: (string | null)[] = [];
