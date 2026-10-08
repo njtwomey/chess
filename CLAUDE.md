@@ -113,10 +113,12 @@ Those sites are public and an opponent copied off somebody else's scoresheet nev
 on either. The stored movetext carries no names at all, and no inline comments: provenance lives in
 `games/<fixture>/<board>/extracted.pgn`, which is gitignored along with the photographs.
 
-**It is four tags, not the standard seven**, because it is a link somebody opens rather than an
-archive: the archive is the working file. Site and Round are what this site already shows around the
-board, and the date rides inside `Event`. Where a game is too long for a URL even so, the link drops
-the tags first and only then cuts whole moves off the end, with a mark on the page saying it has.
+**Copying gives the seven standard tags; a link gives whatever fits.** `taggedPgn` builds the full
+roster, because a file that has been copied is out of our hands and the tags are what let it be
+filed and found again. `pack` then gives ground in order for a URL: the whole thing, then four tags
+with the date folded into `Event`, then the moves alone, then the moves cut at a whole move, with a
+mark on the page saying so. The cap is 2000 characters, measured: lichess answers 200 at 2050 and
+400 at 2060.
 
 The repository is public. A player is a **first name**, the league's own fuller form of it in
 `fullName`, a junior flag, a rating history, and the numbers the bodies that rate them know them by:

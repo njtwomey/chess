@@ -47,13 +47,35 @@ const MAX_URL = 2000;
 const RESULT = /^(1-0|0-1|1\/2-1\/2|\*)$/;
 
 /**
+ * The four tags a link needs, rebuilt from the full header.
+ *
+ * Site and Round are what this site already shows around the board, and the
+ * date rides inside the event rather than paying for a tag of its own. What is
+ * left is who played, what happened, and enough to tell one game from another.
+ */
+function shortHeader(tagged: string): string {
+  const tag = (name: string) => new RegExp(`\\[${name} "([^"]*)"\\]`).exec(tagged)?.[1] ?? "";
+  const date = tag("Date");
+  const event = date ? `${tag("Event")}, ${date}` : tag("Event");
+  return [
+    ["Event", event],
+    ["White", tag("White")],
+    ["Black", tag("Black")],
+    ["Result", tag("Result")],
+  ]
+    .map(([name, value]) => `[${name} "${value}"]`)
+    .join("\n");
+}
+
+/**
  * As much of a game as will fit, and whether anything was left behind.
  *
- * Three steps down. The whole thing with its tags, because knowing who played
- * and when is worth the two hundred characters it costs. Then the moves alone,
- * which is what gets a long game through: the tags are a fifth of the length
- * and an analysis board does not need them. Then the moves cut at a whole move,
- * so the board opens on the position the game reached rather than not opening.
+ * Four steps down, each giving up the least it can. The whole thing as written,
+ * because a copy of this is somebody's archive. Then the four tags a link
+ * actually needs. Then the moves alone, which is what gets a long game through:
+ * the header is a fifth of the length and an analysis board does not need it.
+ * Then the moves cut at a whole move, so the board opens on the position the
+ * game reached rather than not opening at all.
  *
  * Something always fits, so this never returns nothing.
  */
@@ -63,6 +85,9 @@ function pack(base: string, parameter: string, tagged: string): { url: string; c
   if (whole.length <= MAX_URL) return { url: whole, clipped: false };
 
   const body = tagged.slice(tagged.lastIndexOf("]\n") + 2);
+  const short = link(`${shortHeader(tagged)}\n\n${body.trim()}`);
+  if (short.length <= MAX_URL) return { url: short, clipped: false };
+
   const bare = link(body);
   if (bare.length <= MAX_URL) return { url: bare, clipped: false };
 
@@ -132,28 +157,26 @@ export function teamCode(name: string): string {
 }
 
 /**
- * An exported game names nobody, and says only what sharing it needs.
+ * A game as a file somebody keeps: the standard seven tags, and nobody's name.
  *
- * A PGN leaves here for lichess or chess.com, which are public, and it carries
- * an opponent who never agreed to appear on either. Initials keep a game
- * findable by whoever played it and identify nobody to anybody else, which is
- * the most a scoresheet copied off somebody else's handwriting has any business
- * publishing.
+ * This is what the copy buttons hand over, so it is the full roster rather than
+ * the trimmed header a link gets: a PGN that has been copied somewhere is out
+ * of this site's hands, and the tags are what let it be filed, sorted and found
+ * again. `pack` cuts it down when it has to fit in a URL, which is a different
+ * job with a different answer.
  *
- * Four tags, not the standard seven. This is a link somebody opens, not an
- * archive: the archive is the working file under `games/`, which keeps the
- * fuller form. Site and Round are things this site already shows around the
- * board, and Date rides along inside Event rather than paying for a tag of its
- * own. What is left is who played, what happened, and enough to tell one game
- * from another. The saving is around 130 characters of URL, which on a long
- * game is six or seven moves that would otherwise be cut off the end.
+ * Initials throughout, because the file goes to lichess or chess.com, which are
+ * public, and it carries an opponent who never agreed to appear on either. They
+ * keep a game findable by whoever played it and identify nobody to anybody
+ * else, which is the most a scoresheet copied off somebody else's handwriting
+ * has any business publishing.
  */
 export function taggedPgn(
   match: Match,
   game: Game,
   playerName: string,
   opponentName: string,
-  where: { home: string; away: string },
+  where: { home: string; away: string; venue: string },
 ): string {
   const us = initials(playerName);
   const them = initials(opponentName);
@@ -171,10 +194,13 @@ export function taggedPgn(
   const ours = scores[game.result];
   const result = game.colour === "white" ? ours : ours === "1-0" ? "0-1" : ours === "0-1" ? "1-0" : ours;
 
-  // The board number is what tells two games of one evening apart, and the date
-  // is what tells one evening from another, so both ride in the event's name.
   const tags = [
-    ["Event", `${teamCode(where.home)} vs ${teamCode(where.away)} B${game.board}, ${match.date.replace(/-/g, ".")}`],
+    ["Event", `${teamCode(where.home)} vs ${teamCode(where.away)} B${game.board}`],
+    ["Site", initials(where.venue)],
+    ["Date", match.date.replace(/-/g, ".")],
+    // Team chess numbers a round by match and board, which is what makes two
+    // games from the same evening distinguishable in a database.
+    ["Round", `${match.number}.${game.board}`],
     ["White", white],
     ["Black", black],
     ["Result", result],

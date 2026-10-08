@@ -6,6 +6,7 @@ import { seasonPath } from "@/components/season-context";
 import { Empty, Page, Section } from "@/components/page";
 import { CompetitionLink } from "@/components/competition-link";
 import { HomeAway } from "@/components/home-away";
+import { CopyPgn } from "@/components/pgn-panel";
 import { PlayerCell, PlayerLink } from "@/components/player-link";
 import { RatingLabel } from "@/components/rating";
 import { SelectionTable } from "@/components/selection-table";
@@ -345,6 +346,13 @@ function Result({ season, match }: { season: Season; match: Match }) {
             .map((game) => {
               const player = playerById(season, game.playerId);
               const opponent = opponentOf(season, match, game);
+              const rowPgn = taggedPgn(
+                match,
+                game,
+                player?.fullName ?? player?.name ?? game.playerId,
+                opponent?.fullName ?? opponent?.name ?? game.opponentId,
+                { ...sides(season, match), venue: venueFor(season, match).name },
+              );
               const won = game.result === "win" || game.result === "default-win";
               const drew = game.result === "draw";
               return (
@@ -373,15 +381,8 @@ function Result({ season, match }: { season: Season; match: Match }) {
                   <TableCell className="text-right whitespace-nowrap">
                     {game.pgn ? (
                       <span className="inline-flex items-center gap-1">
-                        <AnalysisIcons
-                          pgn={taggedPgn(
-                            match,
-                            game,
-                            player?.fullName ?? player?.name ?? game.playerId,
-                            opponent?.fullName ?? opponent?.name ?? game.opponentId,
-                            sides(season, match),
-                          )}
-                        />
+                        <CopyPgn pgn={rowPgn} />
+                        <AnalysisIcons pgn={rowPgn} />
                         <Button variant="ghost" size="sm" asChild>
                           <Link to={seasonPath(season.id, `${match.id}/${boardSlug(game)}`)}>View</Link>
                         </Button>

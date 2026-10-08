@@ -1,6 +1,8 @@
 import { Check, ClipboardCopy } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useCopy } from "@/hooks/use-copy";
+import { cn } from "@/lib/utils";
 
 /**
  * The PGN, in a box you can select from.
@@ -34,5 +36,43 @@ export function PgnPanel({ pgn, label = "PGN" }: { pgn: string; label?: string }
         aria-label={label}
       />
     </div>
+  );
+}
+
+/**
+ * The same thing as one icon, for a row in a table.
+ *
+ * Opening a game to copy it is two navigations to get at text that is already
+ * on the page, and the analysis links beside this one only help somebody who
+ * wants those two sites. What it hands over is the whole PGN with its tags: a
+ * file that has been copied is out of our hands, and the tags are what let it
+ * be filed and found again.
+ */
+export function CopyPgn({ pgn, className }: { pgn: string; className?: string }) {
+  const { copied, copy } = useCopy();
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          aria-label="Copy the PGN"
+          // The row is itself a link, so a click here must not also follow it.
+          onClick={(event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            void copy(pgn);
+          }}
+          className={cn(
+            "text-muted-foreground hover:text-primary hover:bg-accent rounded p-1.5 transition-colors",
+            copied && "text-reply-yes",
+            className,
+          )}
+        >
+          {copied ? <Check className="size-4" /> : <ClipboardCopy className="size-4" />}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>{copied ? "Copied" : "Copy the PGN"}</TooltipContent>
+    </Tooltip>
   );
 }

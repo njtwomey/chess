@@ -39,9 +39,9 @@ Its tags are initialisms, not names. The file is gitignored and stays local, but
 a record that is safe wherever it ends up is worth more than one that depends on
 a `.gitignore` line.
 
-**This file is the archive; the site's export is not.** Keep the full seven tags
-here, and the provenance. What the site builds for a link is cut to four, which
-is a different job: see `taggedPgn`.
+**This file keeps the provenance; the site cannot.** The seven tags are the same
+either way, because the copy buttons hand over the full roster, but the `{ ... }`
+comment explaining what was reread lives only here.
 
 **`matches.json` gets the bare movetext and nothing else.** No inline `{}`
 comments: the site builds the tags itself, and it anonymises them, so the
