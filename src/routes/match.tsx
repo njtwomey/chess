@@ -6,6 +6,8 @@ import { seasonPath } from "@/components/season-context";
 import { Empty, Page, Section } from "@/components/page";
 import { CompetitionLink } from "@/components/competition-link";
 import { HomeAway } from "@/components/home-away";
+import { ViewGame } from "@/components/view-game";
+import { moveCount } from "@/lib/pgn";
 import { CopyPgn } from "@/components/pgn-panel";
 import { PlayerCell, PlayerLink } from "@/components/player-link";
 import { RatingLabel } from "@/components/rating";
@@ -17,7 +19,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { assignBoards, expectedColour, formatClock, type BoardAssignment } from "@/lib/boards";
 import { findMatch, playerById } from "@/lib/data";
 import { addressLines, mapsUrl, taggedPgn } from "@/lib/links";
-import { moveCount } from "@/lib/pgn";
 import { GAME_RESULT_LABEL, boardSlug, type Match, type Player, type Season } from "@/lib/schema";
 import {
   fieldedFor,
@@ -338,9 +339,9 @@ function Result({ season, match }: { season: Season; match: Match }) {
             <TableHead className="w-20">Colour</TableHead>
             <TableHead>{opponentTeam(season, match).name}</TableHead>
             <TableHead className="w-28">Result</TableHead>
-            <TableHead className="w-24">Analysis</TableHead>
-            <TableHead className="w-14 text-center">PGN</TableHead>
-            <TableHead className="w-20 text-right">Moves</TableHead>
+            <TableHead className="w-32">Copy game</TableHead>
+            <TableHead className="w-24 text-center">View game</TableHead>
+            <TableHead className="w-24 text-right">Analysis</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -381,25 +382,20 @@ function Result({ season, match }: { season: Season; match: Match }) {
                       {GAME_RESULT_LABEL[game.result]}
                     </span>
                   </TableCell>
-                  {/* Two columns: somewhere else's engine, and this game. */}
-                  <TableCell className="whitespace-nowrap">{game.pgn && <AnalysisIcons pgn={rowPgn} />}</TableCell>
-                  <TableCell className="text-center whitespace-nowrap">
-                    {game.pgn && <CopyPgn pgn={rowPgn} />}
-                  </TableCell>
-                  <TableCell className="text-right whitespace-nowrap">
+                  {/* One question per column: the file, this site's own board,
+                      and somebody else's engine. */}
+                  <TableCell className="whitespace-nowrap">
                     {game.pgn ? (
-                      <Button variant="ghost" size="sm" asChild>
-                        <Link
-                          to={seasonPath(season.id, `${match.id}/${boardSlug(game)}`)}
-                          aria-label={`Play through all ${moveCount(game.pgn)} moves`}
-                          className="tabular"
-                        >
-                          {moveCount(game.pgn)}
-                        </Link>
-                      </Button>
+                      <CopyPgn pgn={rowPgn} moves={moveCount(game.pgn)} />
                     ) : (
                       <span className="text-muted-foreground text-xs">Not recorded</span>
                     )}
+                  </TableCell>
+                  <TableCell className="text-center whitespace-nowrap">
+                    {game.pgn && <ViewGame to={seasonPath(season.id, `${match.id}/${boardSlug(game)}`)} />}
+                  </TableCell>
+                  <TableCell className="text-right whitespace-nowrap">
+                    {game.pgn && <AnalysisIcons pgn={rowPgn} />}
                   </TableCell>
                 </TableRow>
               );

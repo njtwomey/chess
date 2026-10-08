@@ -80,6 +80,7 @@ export function AnalysisIcons({ pgn, className }: { pgn: string; className?: str
 
   return (
     <span className={cn("inline-flex items-center gap-1", className)}>
+      {targets.some((target) => target.clipped) && <ClippedNote />}
       {targets.map(({ name, url, Icon }) => (
         <Tooltip key={name}>
           <TooltipTrigger asChild>
@@ -98,7 +99,6 @@ export function AnalysisIcons({ pgn, className }: { pgn: string; className?: str
           <TooltipContent>{name}</TooltipContent>
         </Tooltip>
       ))}
-      {targets.some((target) => target.clipped) && <ClippedNote />}
     </span>
   );
 }
