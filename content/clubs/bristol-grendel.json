@@ -12,5 +12,52 @@
     "lat": 51.455629,
     "lon": -2.597346
   },
-  "players": []
+  "players": [
+    {
+      "playerId": "arlo-hopkinson",
+      "name": "Arlo Hopkinson",
+      "fullName": null,
+      "ratings": [],
+      "codes": []
+    },
+    {
+      "playerId": "edward-honey",
+      "name": "Edward Honey",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-10-05",
+          "rating": 1634,
+          "source": "ecf"
+        }
+      ],
+      "codes": []
+    },
+    {
+      "playerId": "gonzalo-lorenzo-blazquez",
+      "name": "Gonzalo Lorenzo Blazquez",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-10-05",
+          "rating": 1734,
+          "source": "ecf"
+        }
+      ],
+      "codes": []
+    },
+    {
+      "playerId": "jake-andrews",
+      "name": "Jake Andrews",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-10-05",
+          "rating": 1465,
+          "source": "ecf"
+        }
+      ],
+      "codes": []
+    }
+  ]
 }

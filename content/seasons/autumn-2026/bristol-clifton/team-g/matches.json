@@ -253,7 +253,7 @@
     "home": false,
     "date": "2026-10-05",
     "time": "19:30",
-    "status": "scheduled",
+    "status": "played",
     "availability": [
       {
         "playerId": "bristol-clifton/alex-zervudachi",
@@ -273,7 +273,10 @@
       {
         "playerId": "bristol-clifton/max-pester",
         "reply": "yes",
-        "at": "2026-09-21"
+        "at": "2026-09-21",
+        "withdrawn": {
+          "at": "2026-10-05"
+        }
       },
       {
         "playerId": "bristol-clifton/lorenzo-milleri",
@@ -325,7 +328,44 @@
       "at": "2026-09-29"
     },
     "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155279",
-    "result": null
+    "result": {
+      "ourScore": 2,
+      "theirScore": 2,
+      "games": [
+        {
+          "board": 1,
+          "playerId": "bristol-clifton/alex-zervudachi",
+          "opponentId": "bristol-grendel/edward-honey",
+          "colour": "white",
+          "result": "loss",
+          "pgn": "1. e4 e5 2. Nc3 Nc6 3. Bc4 Nf6 4. d3 Bc5 5. Bg5 d6 6. Qd2 h6 7. Bh4 g5 8. Bg3 Be6 9. Nd5 Bxd5 10. exd5 Nb4 11. Bb5+ c6 12. dxc6 bxc6 13. Ba4 Qa5 14. Bxc6+ Nxc6 15. c3 O-O 16. Ne2 Bb6 17. h4 e4 18. d4 Rad8 19. hxg5 hxg5 20. O-O-O Qd5 21. Rh6 Kg7 22. Rhh1 Rh8 23. Kb1 Rxh1 24. Rxh1 Rh8 25. Rf1 Nh5 26. Bh2 Qf5 27. Qe3 Na5 28. b3 Rhb8 29. Bxd6 Nc4 30. Be5+ Nxe5 0-1"
+        },
+        {
+          "board": 2,
+          "playerId": "bristol-clifton/theo-wright",
+          "opponentId": "bristol-grendel/gonzalo-lorenzo-blazquez",
+          "colour": "black",
+          "result": "win",
+          "pgn": "1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5 4. a4 d6 5. h3 Nf6 6. d3 h6 7. Be3 Bb6 8. Nc3 Be6 9. Bxe6 fxe6 10. O-O O-O 11. Qd2 Nd4 12. Bxd4 exd4 13. Ne2 c5 14. Nf4 Ba5 15. Qd1 Qe8 16. e5 dxe5 17. Nxe5 Rf7 18. Nxf7 Qxf7 19. Qe2 Re8 20. Qf3 Rf8 21. Ne2 Qc7 22. Qg3 Qf7 23. Nc1 Bc7 24. Qf3 b6 25. Na2 Qd7 26. Qe2 Qd6 27. g3 Nd5 28. Rae1 Rf6 29. Qg4 Kh7 30. Re4 Rg6 31. Qf3 Rf6 32. Qg4 Rg6 33. Qh4 Bd8 34. Qh5 Nf6 35. Qe5 Nxe4 36. Qxe4 e5 37. Re1 Bc7 38. h4 Kg8 39. Qa8+ Bb8 40. Re4 h5 41. Nc1 Rf6 42. Ne2 Rf8 43. Qb7 Qf6 44. Qd5+ Kh8 45. f4 g6 46. Kg2 exf4 47. gxf4 Qxh4 48. Qe6 Kg7 49. Qd7+ Rf7 50. Qc8 Bxf4 51. Re8 Qg5+ 52. Kf3 Be3+ 53. Ke4 Qf5+ 54. Qxf5 Rxf5 55. Re7+ Rf7 56. Re6 h4 57. c3 h3 58. Ng3 Rf4+ 59. Kd5 Rf3 60. Re7+ Kh6 61. Ne4 h2 62. Re8 Kg7 63. Re7+ Rf7 64. Rxf7+ Kxf7 65. Ng3 Bf4 66. Nh1 g5 67. Ke4 dxc3 68. bxc3 Ke6 69. c4 Bd2 70. Kf3 Kf5 71. Ng3+ Ke5 72. Nh1 Bf4 73. Nf2 Kd4 74. Kg2 Be3 75. Ng4 Kxd3 76. Ne5+ Kc3 77. Kxh2 Bd4 78. Nf3 Be3 79. Kg2 Kxc4 80. Kf1 Kb4 81. Ke2 Bf4 82. Kd3 Kxa4 83. Kc4 g4 84. Ne1 g3 85. Ng2 Bd6 86. Ne3 b5+ 87. Kd5 Bf4 88. Ng2 Bd2 89. Kxc5 b4 90. Kc4 Ka3 91. Kd3 b3 92. Kxd2 b2 93. Kc2 Ka2 94. Ne3 b1=Q+ 95. Kd2 Kb3 96. Ke2 Qb2+ 97. Kf3 a5 98. Kxg3 a4 99. Kf3 a3 100. Nd1 Qf6+ 101. Ke2 Qe5+ 102. Kd2 a2 103. Nf2 Qb2+ 104. Ke3 Qxf2+ 105. Kxf2 a1=Q 106. Ke3 Qc3+ 107. Ke4 Kc4 0-1"
+        },
+        {
+          "board": 3,
+          "playerId": "bristol-clifton/jade-redpath-aislabie",
+          "opponentId": "bristol-grendel/jake-andrews",
+          "colour": "white",
+          "result": "loss",
+          "pgn": "1. d4 d5 2. Bf4 Bf5 3. h3 e6 4. Nf3 Nf6 5. e3 Nbd7 6. Bb5 c6 7. Ba4 Ne4 8. Nc3 Qa5 9. Bb3 Nxc3 10. bxc3 Qxc3+ 11. Nd2 Bb4 12. e4 Bxe4 13. O-O Qxd4 14. Re1 Bxg2 15. Be3 Qe5 16. Kxg2 d4 17. Bf4 Qxf4 18. Re4 Qxd2 19. Qxd2 Bxd2 20. Rxd4 Bc3 21. Rad1 Bxd4 22. Rxd4 O-O-O 23. h4 b5 24. Rg4 Nc5 25. Rxg7 Rd7 26. c4 Nxb3 27. axb3 bxc4 28. bxc4 a5 29. Rg3 Ra7 30. Ra3 Kc7 31. Kf3 a4 32. Ke4 Rb8 33. Ke5 Rb3 34. Ra1 a3 35. Kd4 a2 36. c5 Rb1 37. Rxa2 Rxa2 38. f4 f6 39. Ke4 Ra3 40. f5 Rb4# 0-1"
+        },
+        {
+          "board": 4,
+          "playerId": "bristol-clifton/niall-twomey",
+          "opponentId": "bristol-grendel/arlo-hopkinson",
+          "colour": "black",
+          "result": "win",
+          "pgn": "1. d4 d5 2. c4 Nf6 3. Nc3 e6 4. a3 Bd6 5. cxd5 Nxd5 6. Nxd5 exd5 7. Nf3 Nc6 8. e3 Bg4 9. Bb5 O-O 10. Bxc6 bxc6 11. h3 Bh5 12. Bd2 a5 13. g4 Bg6 14. Ke2 Qf6 15. Rc1 Be4 16. Ne1 Bxh1 17. Rxc6 Qh4 18. b4 axb4 19. Bxb4 Bxb4 20. axb4 Ra2+ 21. Rc2 Rxc2+ 22. Qxc2 Qxh3 23. Qxc7 Qxg4+ 24. f3 Rc8 25. Qh2 Bxf3+ 26. Kf2 Be4 27. b5 Qf5+ 28. Kg1 Rc1 29. Qb8+ Rc8 30. Qg3 Qg6 0-1"
+        }
+      ]
+    }
   },
   {
     "number": 4,

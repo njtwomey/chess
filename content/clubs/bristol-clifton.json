@@ -63,6 +63,11 @@
           "date": "2026-08-31",
           "rating": 1840,
           "source": "ecf"
+        },
+        {
+          "date": "2026-10-05",
+          "rating": 1737,
+          "source": "ecf"
         }
       ],
       "codes": [
@@ -163,8 +168,18 @@
       "playerId": "jade-redpath-aislabie",
       "name": "Jade",
       "fullName": "Jade Redpath-Aislabie",
-      "ratings": [],
+      "ratings": [
+        {
+          "date": "2026-10-05",
+          "rating": 1451,
+          "source": "ecf"
+        }
+      ],
       "codes": [
+        {
+          "source": "ecf",
+          "code": "391826K"
+        },
         {
           "source": "lms",
           "code": "140727"
@@ -205,7 +220,12 @@
       "name": "Lorenzo",
       "fullName": "Lorenzo Milleri",
       "ratings": [],
-      "codes": []
+      "codes": [
+        {
+          "source": "ecf",
+          "code": "391829E"
+        }
+      ]
     },
     {
       "playerId": "mark-green",
@@ -219,7 +239,12 @@
       "name": "Max",
       "fullName": "Max Pester",
       "ratings": [],
-      "codes": []
+      "codes": [
+        {
+          "source": "ecf",
+          "code": "391124L"
+        }
+      ]
     },
     {
       "playerId": "mukhtar-hasan",
@@ -247,8 +272,18 @@
       "playerId": "niall-twomey",
       "name": "Niall",
       "fullName": "Niall Twomey",
-      "ratings": [],
+      "ratings": [
+        {
+          "date": "2026-10-05",
+          "rating": 1385,
+          "source": "ecf"
+        }
+      ],
       "codes": [
+        {
+          "source": "ecf",
+          "code": "391825H"
+        },
         {
           "source": "lms",
           "code": "140723"
@@ -320,8 +355,18 @@
       "playerId": "theo-wright",
       "name": "Theo",
       "fullName": "Theo Wright",
-      "ratings": [],
+      "ratings": [
+        {
+          "date": "2026-10-05",
+          "rating": 1864,
+          "source": "ecf"
+        }
+      ],
       "codes": [
+        {
+          "source": "ecf",
+          "code": "391827A"
+        },
         {
           "source": "lms",
           "code": "140728"
@@ -351,7 +396,12 @@
       "name": "Will",
       "fullName": "William Blatchford",
       "ratings": [],
-      "codes": []
+      "codes": [
+        {
+          "source": "ecf",
+          "code": "391828C"
+        }
+      ]
     }
   ]
 }

@@ -70,7 +70,20 @@
     "links": {
       "fixtures": null
     },
-    "players": []
+    "players": [
+      {
+        "playerId": "arlo-hopkinson"
+      },
+      {
+        "playerId": "edward-honey"
+      },
+      {
+        "playerId": "gonzalo-lorenzo-blazquez"
+      },
+      {
+        "playerId": "jake-andrews"
+      }
+    ]
   },
   {
     "clubId": "downend-fishponds",
