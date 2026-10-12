@@ -374,8 +374,61 @@
     "date": "2026-10-20",
     "time": "19:30",
     "status": "scheduled",
-    "availability": [],
-    "settled": false,
+    "availability": [
+      {
+        "playerId": "bristol-clifton/niall-twomey",
+        "reply": "yes",
+        "at": "2026-10-08"
+      },
+      {
+        "playerId": "bristol-clifton/william-blatchford",
+        "reply": "yes",
+        "at": "2026-10-12"
+      },
+      {
+        "playerId": "bristol-clifton/lorenzo-milleri",
+        "reply": "yes",
+        "at": "2026-10-08"
+      },
+      {
+        "playerId": "bristol-clifton/mukhtar-hasan",
+        "reply": "yes",
+        "at": "2026-10-08"
+      },
+      {
+        "playerId": "bristol-clifton/theo-wright",
+        "reply": "yes",
+        "at": "2026-10-08"
+      },
+      {
+        "playerId": "bristol-clifton/max-pester",
+        "reply": "yes",
+        "at": "2026-10-08"
+      },
+      {
+        "playerId": "bristol-clifton/stephen-hinde",
+        "reply": "yes",
+        "at": "2026-10-08"
+      },
+      {
+        "playerId": "bristol-clifton/alex-zervudachi",
+        "reply": "reserve"
+      },
+      {
+        "playerId": "bristol-clifton/alfred-holton-stoppani",
+        "reply": "no"
+      }
+    ],
+    "settled": true,
+    "lineup": {
+      "playerIds": [
+        "bristol-clifton/max-pester",
+        "bristol-clifton/william-blatchford",
+        "bristol-clifton/mukhtar-hasan",
+        "bristol-clifton/stephen-hinde"
+      ],
+      "at": "2026-10-12"
+    },
     "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155308",
     "result": null
   },
