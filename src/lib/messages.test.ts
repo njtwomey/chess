@@ -323,3 +323,27 @@ describe("matchResult", () => {
     expect(matchResult(season, defaulted)).toContain("(default)");
   });
 });
+
+/**
+ * A fixture played over more boards than the division's usual number.
+ *
+ * Every message says so, because everybody reading one has four boards in their
+ * head: it is why some of them are being asked at all, and why the team has six
+ * names on it.
+ */
+describe("a longer fixture", () => {
+  const longer = aMatch({ number: 8, date: "2026-12-01", ...home, boards: 6, settled: true });
+  const season = aSeason({ team: us, teams: [us, them], matches: [longer] });
+
+  it("says how many boards, in every message", () => {
+    const sentence = "6 boards this time rather than 4, scored pro rata.";
+    expect(callToAction(season, longer)).toContain(sentence);
+    expect(availabilityUpdate(season, longer)).toContain(sentence);
+    expect(selectedTeam(season, longer, selectionFor(season, longer))).toContain(sentence);
+  });
+
+  it("says nothing where the fixture is the usual length", () => {
+    const usual = aSeason({ team: us, teams: [us, them], matches: [first] });
+    expect(callToAction(usual, first)).not.toContain("boards this time");
+  });
+});

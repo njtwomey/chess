@@ -21,6 +21,7 @@ import { findMatch, playerById } from "@/lib/data";
 import { addressLines, mapsUrl, taggedPgn } from "@/lib/links";
 import { GAME_RESULT_LABEL, boardSlug, type Match, type Player, type Season } from "@/lib/schema";
 import {
+  boardsFor,
   fieldedFor,
   matchScore,
   opponentOf,
@@ -128,6 +129,18 @@ function Where({ season, match }: { season: Season; match: Match }) {
         </p>
       </div>
     </div>
+  );
+}
+
+/** Six boards rather than four, say, and what that does to the score. One line. */
+function BoardsNote({ season, match }: { season: Season; match: Match }) {
+  const boards = boardsFor(season, match);
+  if (boards === season.boards) return null;
+
+  return (
+    <p className="border-primary/30 bg-accent/40 mt-4 rounded-lg border-l-4 px-5 py-3 text-sm/6">
+      {boards} boards this time rather than {season.boards}, scored pro rata.
+    </p>
   );
 }
 
@@ -421,6 +434,7 @@ export function MatchPage({ seasonId, matchId }: { seasonId: string; matchId: st
   const selection = selectionFor(season, match);
   const settled = match.settled || match.result !== null;
   const fielded = fieldedFor(season, match, selection);
+  const boards = boardsFor(season, match);
 
   /**
    * The captain can always see the proposal locally.
@@ -451,6 +465,7 @@ export function MatchPage({ seasonId, matchId }: { seasonId: string; matchId: st
       lede={
         <>
           Fixture {match.number} · <CompetitionLink season={season} />
+          {boards !== season.boards && ` · ${boards} boards`}
         </>
       }
       actions={
@@ -463,6 +478,7 @@ export function MatchPage({ seasonId, matchId }: { seasonId: string; matchId: st
       }
     >
       <Where season={season} match={match} />
+      <BoardsNote season={season} match={match} />
 
       {score && (
         <div className="mt-4 flex items-center gap-3 rounded-lg border px-5 py-4">
@@ -538,7 +554,7 @@ export function MatchPage({ seasonId, matchId }: { seasonId: string; matchId: st
                 description={
                   fielded.ordered
                     ? "Written down by the captain, so this is the order as it stands."
-                    : "Now the four are settled, the league decides where they sit."
+                    : "Now the team is settled, the league decides where they sit."
                 }
                 className="mt-8"
               >

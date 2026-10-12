@@ -18,7 +18,7 @@
 import { playerName } from "@/lib/data";
 import { addressLines } from "@/lib/links";
 import { type Game, type Match, type Season } from "@/lib/schema";
-import { fieldedFor, formatPoints, opponentOf, replyOf, sides, venueFor } from "@/lib/season";
+import { boardsFor, fieldedFor, formatPoints, opponentOf, replyOf, sides, venueFor } from "@/lib/season";
 import type { Reply, Selection } from "@/lib/selection";
 import { formatLongDate } from "@/lib/time";
 
@@ -64,6 +64,11 @@ const sorted = (names: string[]) => [...names].sort().join(", ");
  *
  * Nothing at all where the address is not confirmed, because the venue's name
  * is already in the line and that is exactly what a search would have used.
+ *
+ * A fixture played over a different number of boards says so, in all three
+ * messages. Everybody reading one has the division's usual number in their
+ * head, and the difference is the whole reason some of them are being asked or
+ * are on the team at all.
  */
 function fixtureLine(season: Season, match: Match, withPlace: boolean): string {
   const venue = venueFor(season, match);
@@ -71,8 +76,11 @@ function fixtureLine(season: Season, match: Match, withPlace: boolean): string {
   const where = match.home ? "at home" : `away at ${venue.name}`;
   const place = addressLines(venue).join(", ");
   const at = withPlace && place ? ` (${place})` : "";
+  const boards = boardsFor(season, match);
+  const over =
+    boards === season.boards ? "" : ` ${boards} boards this time rather than ${season.boards}, scored pro rata.`;
 
-  return `${home} v ${away}, ${formatLongDate(match.date)}, ${match.time}, ${where}${at}.`;
+  return `${home} v ${away}, ${formatLongDate(match.date)}, ${match.time}, ${where}${at}.${over}`;
 }
 
 /**

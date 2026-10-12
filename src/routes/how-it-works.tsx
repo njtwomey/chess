@@ -2,6 +2,7 @@ import { Page, Section } from "@/components/page";
 import { ReplyBadge, RoleBadge } from "@/components/reply-badge";
 import { useSeason } from "@/components/season-context";
 import { formatClock } from "@/lib/boards";
+import { boardExceptions, boardsFor } from "@/lib/season";
 import { formatDated } from "@/lib/time";
 import { REPLIES, select, type Candidate } from "@/lib/selection";
 import { cn } from "@/lib/utils";
@@ -156,6 +157,19 @@ export function HowItWorks() {
           </strong>{" "}
           The reserves are in order, not a pool: reserve one fills the first vacancy. The whole list, from board one
           down, is settled in one go, and nothing is left to decide on the night.
+          {/* Only where it has actually happened. A sentence about the exception
+              is a distraction on a season that has none, and this page is read
+              by somebody trying to follow the rule for the first time. */}
+          {boardExceptions(season).length > 0 && (
+            <>
+              {" "}
+              Where two captains agree a longer match the list is simply longer, and more people get a game:{" "}
+              {boardExceptions(season)
+                .map((match) => `fixture ${match.number} is over ${boardsFor(season, match)} boards`)
+                .join(", ")}
+              .
+            </>
+          )}
         </p>
 
         <p className="border-primary/30 bg-accent/40 mt-4 rounded-lg border-l-4 px-5 py-4 text-sm/7">

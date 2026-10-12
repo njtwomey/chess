@@ -61,6 +61,31 @@ export function orderedMatches(season: Season): Match[] {
 }
 
 /**
+ * How many boards one fixture is played over.
+ *
+ * The season says what the division plays, and a match can say otherwise for
+ * one evening. Everything that counts places asks this rather than the season,
+ * because a six-board match is not a cosmetic difference: the rule fills every
+ * board there is, so two more people get a game that week and the reserves move
+ * accordingly.
+ */
+export function boardsFor(season: Season, match: Match): number {
+  return match.boards ?? season.boards;
+}
+
+/**
+ * The fixtures not played over the season's number of boards.
+ *
+ * So that the pages which state the shape of the season as a fact can say
+ * "except" rather than quietly being wrong about one evening in seven. A match
+ * that names the same number the season does is not an exception, which is why
+ * this compares the resolved number rather than testing for the field.
+ */
+export function boardExceptions(season: Season): Match[] {
+  return orderedMatches(season).filter((match) => boardsFor(season, match) !== season.boards);
+}
+
+/**
  * How many games each player had behind them when this match came round.
  *
  * Only matches *earlier* than this one count, which is what makes a past
@@ -114,7 +139,7 @@ export function selectionFor(season: Season, match: Match): Selection {
   return select({
     matchId: match.id,
     seed: season.seed,
-    boards: season.boards,
+    boards: boardsFor(season, match),
     reserves: season.reserves,
     candidates: candidatesFor(season, match),
   });
@@ -222,6 +247,7 @@ export interface Fielded {
  * somebody made rather than as an outcome the rule produced.
  */
 export function fieldedFor(season: Season, match: Match, selection: Selection): Fielded {
+  const boards = boardsFor(season, match);
   const byId = new Map(season.players.map((player) => [player.playerId, player]));
   const look = (ids: string[]): Player[] => ids.map((id) => byId.get(id)).filter((p) => p !== undefined);
 
@@ -255,7 +281,7 @@ export function fieldedFor(season: Season, match: Match, selection: Selection): 
   const out = shortlist.filter((id) => withdrawalOf(match, id) !== null);
   const standing = shortlist.filter((id) => !out.includes(id));
 
-  const playing = standing.slice(0, season.boards);
+  const playing = standing.slice(0, boards);
   const onBoard = new Set(playing);
   const picked = new Set(ruled);
 
@@ -263,7 +289,7 @@ export function fieldedFor(season: Season, match: Match, selection: Selection): 
   // is next, so the rule still supplies the reserves. Emptying them instead
   // would quietly tell the squad there were none, which is a different and
   // untrue statement.
-  const named = standing.slice(season.boards, season.boards + season.reserves);
+  const named = standing.slice(boards, boards + season.reserves);
   const reserves =
     named.length > 0
       ? named
@@ -283,7 +309,7 @@ export function fieldedFor(season: Season, match: Match, selection: Selection): 
     added: look(playing.filter((id) => !picked.has(id))),
     dropped: look(ruled.filter((id) => !onBoard.has(id))),
     withdrawn: look(out),
-    unfilled: Math.max(0, season.boards - playing.length),
+    unfilled: Math.max(0, boards - playing.length),
     note: match.lineup.note,
   };
 }
@@ -342,7 +368,9 @@ export function coverage(season: Season) {
   const played = season.matches.filter((match) => match.status === "played").length;
   return {
     players: stats.length,
-    slots: season.matches.length * season.boards,
+    // Summed rather than multiplied out, because a fixture can be played over
+    // more boards than the division's usual number and those are real games.
+    slots: season.matches.reduce((total, match) => total + boardsFor(season, match), 0),
     filled: counts.reduce((total, count) => total + count, 0),
     fewest: counts.length > 0 ? Math.min(...counts) : 0,
     most: counts.length > 0 ? Math.max(...counts) : 0,

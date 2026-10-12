@@ -10,7 +10,7 @@
 import { describe, expect, it } from "vitest";
 import { assignBoards } from "@/lib/boards";
 import { selectedTeam } from "@/lib/messages";
-import { fieldedFor, roleFor, selectionFor, sheetOrder } from "@/lib/season";
+import { boardExceptions, boardsFor, coverage, fieldedFor, roleFor, selectionFor, sheetOrder } from "@/lib/season";
 import type { Match } from "@/lib/schema";
 import { aMatch, aSeason, aSquad, ours, said, theirs } from "@/lib/testing";
 
@@ -314,5 +314,76 @@ describe("a played fixture reads the same way", () => {
     const fielded = fieldedFor(season, played, rule);
     const rows = sheetOrder(rule, fielded).map((player) => player.playerId);
     expect(rows.slice(0, shortlist.length)).toEqual(shortlist);
+  });
+});
+
+/**
+ * A fixture played over more boards than the division's usual number.
+ *
+ * Two captains can agree a longer match, and when they do it is not a cosmetic
+ * difference: the rule hands out every board there is, so a longer match means
+ * more people get a game. The thing that must not happen is the lengthening
+ * re-deciding anything, because the order was already settled and somebody has
+ * already been told where they stand.
+ *
+ * Its own squad, big enough that six boards still leaves two reserves behind
+ * them: on the nine-player fixture above there would be nobody left to be one,
+ * which is a true answer to a different question.
+ */
+describe("a fixture with its own number of boards", () => {
+  const replies = Array.from({ length: 10 }, (_, index) => said(ours(`q${index + 1}`), "yes"));
+  const squad = aSquad(10, (index) => ({ playerId: `q${index + 1}` }));
+  const four = aMatch({ number: 1, availability: replies });
+  const six = aMatch({ ...four, boards: 6 });
+  const shortSeason = aSeason({ players: squad, matches: [four] });
+  const longSeason = aSeason({ players: squad, matches: [six] });
+  const short = selectionFor(shortSeason, four);
+  const long = selectionFor(longSeason, six);
+  const ids = (players: { playerId: string }[]) => players.map((player) => player.playerId);
+
+  it("falls back to the season, and takes the match's where there is one", () => {
+    expect(boardsFor(shortSeason, four)).toBe(4);
+    expect(boardsFor(longSeason, six)).toBe(6);
+    // Set to what the season already says, which is not an exception.
+    expect(boardExceptions(aSeason({ matches: [aMatch({ boards: 4 })] }))).toEqual([]);
+    expect(boardExceptions(longSeason).map((match) => match.number)).toEqual([six.number]);
+  });
+
+  it("puts two more people on boards without reordering anybody", () => {
+    // The whole order, identical. Only the band each player falls in changes,
+    // which is what makes lengthening a match safe to do late.
+    expect(ids(long.order)).toEqual(ids(short.order));
+    expect(ids(long.boardPlayers)).toEqual(ids(short.order).slice(0, 6));
+    expect(ids(short.boardPlayers)).toEqual(ids(short.order).slice(0, 4));
+  });
+
+  it("moves the reserves down rather than leaving them where they were", () => {
+    expect(ids(long.reservePlayers)).toHaveLength(longSeason.reserves);
+    expect(ids(long.reservePlayers)).toEqual(ids(short.order).slice(6, 8));
+    // Both of the old reserves are on a board now, so nobody has been skipped.
+    expect(ids(short.reservePlayers).every((id) => ids(long.boardPlayers).includes(id))).toBe(true);
+  });
+
+  it("fields a shortlist that names all six, in the order written", () => {
+    const shortlist = ids(long.boardPlayers).toReversed();
+    const fielded = fieldedFor(longSeason, { ...six, settled: true, lineup: { playerIds: shortlist } }, long);
+
+    expect(ids(fielded.players)).toEqual(shortlist);
+    expect(fielded.unfilled).toBe(0);
+    // Same six as the rule, so this is an order rather than a change of team.
+    expect(fielded.added).toEqual([]);
+    expect(fielded.dropped).toEqual([]);
+    expect(ids(fielded.reserves)).toEqual(ids(long.reservePlayers));
+  });
+
+  it("reports the boards a four-name shortlist leaves empty", () => {
+    const shortlist = ids(long.boardPlayers).slice(0, 4);
+    const fielded = fieldedFor(longSeason, { ...six, settled: true, lineup: { playerIds: shortlist } }, long);
+    expect(fielded.unfilled).toBe(2);
+  });
+
+  it("counts the longer match's boards towards the season's games to go round", () => {
+    const mixed = aSeason({ players: squad, matches: [four, aMatch({ ...four, number: 2, boards: 6 })] });
+    expect(coverage(mixed).slots).toBe(10);
   });
 });

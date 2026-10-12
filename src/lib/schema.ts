@@ -429,6 +429,25 @@ export const MatchSchema = z.strictObject({
   date: DATE,
   time: TIME,
   status: z.enum(["scheduled", "played", "cancelled"]),
+  /**
+   * How many boards this fixture is played over, when it is not the season's.
+   *
+   * Normally null, meaning the season's number, because the division's match
+   * length is a property of the division. Two captains who are both short, or
+   * both flush, can agree a different one for a single evening, and when they
+   * do it changes who gets picked: the rule hands out as many boards as there
+   * are, so six boards is two more games going round that week.
+   *
+   * The league settles such a match pro rata, each game worth the usual number
+   * of boards over the number actually played, so a win on one of six boards is
+   * two thirds of a point in the table. That arithmetic is deliberately not
+   * here. This site records our own fixtures and spreads our own games; it does
+   * not keep the league table, and the one number it would need to weight is
+   * the score the league publishes on its own page, which `recordUrl` links to.
+   * Adding a conversion would mean carrying a second, scaled score that nothing
+   * on the site reads.
+   */
+  boards: z.number().int().min(1).max(12).nullable().default(null),
   availability: z.array(AvailabilitySchema).default([]),
   /**
    * Whether the board order has been settled and can be shown.

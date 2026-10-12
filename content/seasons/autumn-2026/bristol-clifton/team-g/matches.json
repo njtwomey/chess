@@ -374,6 +374,7 @@
     "date": "2026-10-20",
     "time": "19:30",
     "status": "scheduled",
+    "boards": 6,
     "availability": [
       {
         "playerId": "bristol-clifton/niall-twomey",
@@ -422,9 +423,11 @@
     "settled": true,
     "lineup": {
       "playerIds": [
+        "bristol-clifton/lorenzo-milleri",
         "bristol-clifton/max-pester",
         "bristol-clifton/william-blatchford",
         "bristol-clifton/mukhtar-hasan",
+        "bristol-clifton/niall-twomey",
         "bristol-clifton/stephen-hinde"
       ],
       "at": "2026-10-12"

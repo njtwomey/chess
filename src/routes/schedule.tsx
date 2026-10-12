@@ -5,12 +5,21 @@ import { CompetitionLink } from "@/components/competition-link";
 import { useSeason } from "@/components/season-context";
 import { Button } from "@/components/ui/button";
 import { icsFilename, toIcs } from "@/lib/ics";
-import { orderedMatches } from "@/lib/season";
+import { boardExceptions, boardsFor, orderedMatches } from "@/lib/season";
 import { today } from "@/lib/time";
+
+/** "a", "a and b", "a, b and c": a list read aloud rather than printed. */
+function listOut(parts: string[]): string {
+  if (parts.length < 2) return parts.join("");
+  return `${parts.slice(0, -1).join(", ")} and ${parts.at(-1)}`;
+}
 
 export function Schedule() {
   const { season } = useSeason();
   const matches = orderedMatches(season);
+  // The season's shape, stated as a fact, so an evening played over a different
+  // number of boards has to be named rather than averaged away.
+  const exceptions = boardExceptions(season);
   const now = today();
   const upcoming = matches.filter((match) => match.date >= now && match.status !== "played");
   const past = matches.filter((match) => !upcoming.includes(match)).reverse();
@@ -33,8 +42,10 @@ export function Schedule() {
       title="Schedule"
       lede={
         <>
-          {season.matches.length} fixtures, {season.boards} boards each, all starting at 19:30. Fixtures come from the{" "}
-          <CompetitionLink season={season} />.
+          {season.matches.length} fixtures, {season.boards} boards each
+          {exceptions.length > 0 &&
+            ` except ${listOut(exceptions.map((match) => `fixture ${match.number} over ${boardsFor(season, match)}`))}`}
+          , all starting at 19:30. Fixtures come from the <CompetitionLink season={season} />.
         </>
       }
       actions={

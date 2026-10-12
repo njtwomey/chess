@@ -44,7 +44,7 @@ import {
   type Season,
   type Team,
 } from "@/lib/schema";
-import { fieldedFor, opponentTeam, selectionFor, venueFor } from "@/lib/season";
+import { boardsFor, fieldedFor, opponentTeam, selectionFor, venueFor } from "@/lib/season";
 
 type RawFiles = Record<string, unknown>;
 
@@ -375,11 +375,12 @@ function checkSeason(season: Season): string[] {
         fielded.add(playerId);
       }
       // A shortlist is written in board order and runs on into the reserves, so
-      // the limit is the whole team sheet rather than the boards alone.
-      const room = season.boards + season.reserves;
-      if (match.lineup.playerIds.length > room) {
+      // the limit is the whole team sheet rather than the boards alone. The
+      // boards are this fixture's, which is not always the season's.
+      const boards = boardsFor(season, match);
+      if (match.lineup.playerIds.length > boards + season.reserves) {
         note(
-          `${at} names ${match.lineup.playerIds.length} players, above the season's ${season.boards} boards and ${season.reserves} reserves`,
+          `${at} names ${match.lineup.playerIds.length} players, above its ${boards} boards and ${season.reserves} reserves`,
         );
       }
       // A settled team that the site refuses to show is the state this field
@@ -426,8 +427,8 @@ function checkSeason(season: Season): string[] {
         }
         if (boards.has(game.board)) note(`${at} has two games on board ${game.board}`);
         if (played.has(game.playerId)) note(`${at} has "${game.playerId}" playing twice`);
-        if (game.board > season.boards)
-          note(`${at} has a game on board ${game.board}, above the season's ${season.boards}`);
+        if (game.board > boardsFor(season, match))
+          note(`${at} has a game on board ${game.board}, above the ${boardsFor(season, match)} it was played over`);
         boards.add(game.board);
         played.add(game.playerId);
       }

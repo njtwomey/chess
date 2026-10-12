@@ -187,6 +187,18 @@ position, no outcome and no reasoning.
 Clocks are 80+10, and 55+10 on a board with a player under 16 **on either side**, so an adult can
 find themselves playing the short clock.
 
+**How many boards is the season's number, unless one fixture says otherwise.** A match carries an
+optional `boards`, normally null, and everything that counts places asks `boardsFor(season, match)`
+rather than reading `season.boards`. Two captains who are both flush can agree a longer evening, and
+that is not cosmetic: the rule fills every board there is, so six boards is two more games going
+round that week and the reserves move down behind them. Lengthening a match re-decides nothing,
+because the rule's order is the same list either way and only the band each player falls in changes.
+
+The league settles such a fixture **pro rata**, so a win on one of six boards where four is standard
+is two thirds of a point. That arithmetic is deliberately absent: this site keeps no league table,
+and converting the score here would mean storing a second, scaled one that nothing reads. The match
+page says "scored pro rata" in one line and leaves it there.
+
 ## The site
 
 Every page names its subject in the path, and everything hangs off the season: `/season/<id>`,

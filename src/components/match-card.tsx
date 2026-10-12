@@ -5,7 +5,7 @@ import { HomeAway } from "@/components/home-away";
 import { Badge } from "@/components/ui/badge";
 import { addressLines, mapsUrl } from "@/lib/links";
 import { type Match, type Season } from "@/lib/schema";
-import { matchScore, opponentTeam, venueFor } from "@/lib/season";
+import { boardsFor, matchScore, opponentTeam, venueFor } from "@/lib/season";
 import { formatLongDate, formatShortDate, formatWeekday, relativeDay, today } from "@/lib/time";
 import { cn } from "@/lib/utils";
 
@@ -56,6 +56,10 @@ export function MatchCard({ season, match, className }: { season: Season; match:
   const score = matchScore(match);
   const now = today();
   const past = match.date < now;
+  // Badged on the card rather than only on the fixture page, because the number
+  // of boards is what decides whether somebody who was not going to get a game
+  // this week suddenly is, and the schedule is where they would look.
+  const boards = boardsFor(season, match);
 
   return (
     <Link
@@ -71,6 +75,7 @@ export function MatchCard({ season, match, className }: { season: Season; match:
           <div className="flex items-center gap-2">
             <span className="text-muted-foreground tabular text-xs">Fixture {match.number}</span>
             <HomeAway home={match.home} />
+            {boards !== season.boards && <Badge variant="outline">{boards} boards</Badge>}
             {match.status === "cancelled" && <Badge variant="outline">Cancelled</Badge>}
           </div>
           <p className="mt-1.5 font-medium">

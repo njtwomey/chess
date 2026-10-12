@@ -122,6 +122,7 @@ describe("exporting a PGN", () => {
     date: "2026-04-20",
     time: "19:30",
     status: "played",
+    boards: null,
     availability: [],
     settled: false,
     lineup: null,
