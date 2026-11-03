@@ -44,7 +44,7 @@ import {
   type Season,
   type Team,
 } from "@/lib/schema";
-import { boardsFor, fieldedFor, opponentTeam, selectionFor, venueFor } from "@/lib/season";
+import { boardsFor, fieldedFor, selectionFor, venueFor } from "@/lib/season";
 
 type RawFiles = Record<string, unknown>;
 
@@ -321,20 +321,13 @@ function checkSeason(season: Season): string[] {
     rosters.set(team.id, picked);
   }
 
-  // Two sides of one club cannot both field the same person in one season, and
-  // the ids no longer say which team somebody is in, so this is what catches it.
-  const seen = new Map<string, string>();
-  for (const team of season.teams) {
-    for (const player of team.players) {
-      const already = seen.get(player.playerId);
-      // Not the same team twice: that is the check above, and "in both G and G"
-      // reads as nonsense beside it.
-      if (already && already !== team.id) {
-        note(`"${player.playerId}" is in both "${already}" and "${team.id}"`);
-      }
-      seen.set(player.playerId, team.id);
-    }
-  }
+  // One person on two sides of a club used to be rejected here. It is not an
+  // error: South Bristol played Alessandro Coppola for their D in September and
+  // their E in October, and this site is a record of what happened rather than
+  // a ruling on whether it should have. A season file holds exactly one of our
+  // own teams, so the check could only ever fire on the opposition, where we
+  // are copying what the league published. The duplicate-within-one-team check
+  // above is the one that catches a typed-twice roster.
 
   const ours = rosters.get(season.team.id) ?? new Set<string>();
   const known = (id: string) => ours.has(id);
@@ -409,7 +402,6 @@ function checkSeason(season: Season): string[] {
 
     if (match.result) {
       const them = rosters.get(match.opponentTeamId) ?? new Set<string>();
-      const theirPlayers = new Map(opponentTeam(season, match).players.map((player) => [player.playerId, player]));
       const boards = new Set<number>();
       const played = new Set<string>();
       for (const game of match.result.games) {
@@ -418,13 +410,6 @@ function checkSeason(season: Season): string[] {
           note(`${at} plays board ${game.board} against "${game.opponentId}", who is not in "${match.opponentTeamId}"`);
         }
 
-        // A rating dated after the game was played was read off a later list
-        // than the one that was true on the night, and the match card would
-        // quote it as though it were.
-        const opponent = theirPlayers.get(game.opponentId);
-        if (opponent?.ratings.some((rating) => rating.date > match.date)) {
-          note(`${at} has a rating for "${opponent.name}" dated after the fixture was played`);
-        }
         if (boards.has(game.board)) note(`${at} has two games on board ${game.board}`);
         if (played.has(game.playerId)) note(`${at} has "${game.playerId}" playing twice`);
         if (game.board > boardsFor(season, match))

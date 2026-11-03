@@ -85,7 +85,9 @@ export function Games() {
                       <TableCell className="tabular text-right">{game.board}</TableCell>
                       <TableCell>{player ? <PlayerCell player={player} on={match.date} /> : game.playerId}</TableCell>
                       <TableCell className="text-muted-foreground text-sm capitalize">{game.colour}</TableCell>
-                      <TableCell>{opponent ? <PlayerCell player={opponent} /> : game.opponentId}</TableCell>
+                      <TableCell>
+                        {opponent ? <PlayerCell player={opponent} on={match.date} /> : game.opponentId}
+                      </TableCell>
                       <TableCell>
                         <span
                           className={cn(
@@ -146,7 +148,7 @@ export function GamePage({ seasonId, matchId, board }: { seasonId: string; match
     ...sides(season, match),
     venue: venueFor(season, match).name,
   });
-  const opponentRating = opponent ? ratingOn(opponent) : null;
+  const opponentRating = opponent ? ratingOn(opponent, match.date) : null;
   const white = game.colour === "white" ? name : opponentName;
   const black = game.colour === "white" ? opponentName : name;
 

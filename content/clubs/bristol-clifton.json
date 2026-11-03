@@ -195,6 +195,11 @@
           "date": "2026-08-31",
           "rating": 1557,
           "source": "ecf"
+        },
+        {
+          "date": "2026-10-28",
+          "rating": 1550,
+          "source": "ecf"
         }
       ],
       "codes": [
@@ -219,7 +224,13 @@
       "playerId": "lorenzo-milleri",
       "name": "Lorenzo",
       "fullName": "Lorenzo Milleri",
-      "ratings": [],
+      "ratings": [
+        {
+          "date": "2026-10-20",
+          "rating": 1814,
+          "source": "ecf"
+        }
+      ],
       "codes": [
         {
           "source": "ecf",
@@ -238,7 +249,13 @@
       "playerId": "max-pester",
       "name": "Max",
       "fullName": "Max Pester",
-      "ratings": [],
+      "ratings": [
+        {
+          "date": "2026-10-20",
+          "rating": 1664,
+          "source": "ecf"
+        }
+      ],
       "codes": [
         {
           "source": "ecf",
@@ -254,6 +271,11 @@
         {
           "date": "2026-08-31",
           "rating": 1284,
+          "source": "ecf"
+        },
+        {
+          "date": "2026-10-20",
+          "rating": 1220,
           "source": "ecf"
         }
       ],
@@ -324,6 +346,16 @@
           "date": "2026-08-31",
           "rating": 1214,
           "source": "ecf"
+        },
+        {
+          "date": "2026-10-20",
+          "rating": 1195,
+          "source": "ecf"
+        },
+        {
+          "date": "2026-10-28",
+          "rating": 1190,
+          "source": "ecf"
         }
       ],
       "codes": [
@@ -382,6 +414,11 @@
           "date": "2026-08-31",
           "rating": 1350,
           "source": "ecf"
+        },
+        {
+          "date": "2026-10-28",
+          "rating": 1306,
+          "source": "ecf"
         }
       ],
       "codes": [
@@ -395,7 +432,13 @@
       "playerId": "william-blatchford",
       "name": "Will",
       "fullName": "William Blatchford",
-      "ratings": [],
+      "ratings": [
+        {
+          "date": "2026-10-20",
+          "rating": 1359,
+          "source": "ecf"
+        }
+      ],
       "codes": [
         {
           "source": "ecf",

@@ -12,5 +12,78 @@
     "lat": 51.480931,
     "lon": -2.529006
   },
-  "players": []
+  "players": [
+    {
+      "playerId": "artem-kot",
+      "name": "Artem Kot",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-10-20",
+          "rating": 1416,
+          "source": "ecf"
+        }
+      ],
+      "codes": []
+    },
+    {
+      "playerId": "john-l-paines",
+      "name": "John L Paines",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-10-20",
+          "rating": 1383,
+          "source": "ecf"
+        }
+      ],
+      "codes": []
+    },
+    {
+      "playerId": "nicholas-woods",
+      "name": "Nicholas Woods",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-10-20",
+          "rating": 1227,
+          "source": "ecf"
+        }
+      ],
+      "codes": []
+    },
+    {
+      "playerId": "shaun-walsh",
+      "name": "Shaun Walsh",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-10-20",
+          "rating": 1308,
+          "source": "ecf"
+        }
+      ],
+      "codes": []
+    },
+    {
+      "playerId": "struan-dunbar",
+      "name": "Struan Dunbar",
+      "fullName": null,
+      "ratings": [],
+      "codes": []
+    },
+    {
+      "playerId": "yaksh-tripurari",
+      "name": "Yaksh Tripurari",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-10-20",
+          "rating": 1358,
+          "source": "ecf"
+        }
+      ],
+      "codes": []
+    }
+  ]
 }

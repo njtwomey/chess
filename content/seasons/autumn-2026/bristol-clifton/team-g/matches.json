@@ -373,7 +373,7 @@
     "home": true,
     "date": "2026-10-20",
     "time": "19:30",
-    "status": "scheduled",
+    "status": "played",
     "boards": 6,
     "availability": [
       {
@@ -433,7 +433,60 @@
       "at": "2026-10-12"
     },
     "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155308",
-    "result": null
+    "result": {
+      "ourScore": 2.5,
+      "theirScore": 3.5,
+      "games": [
+        {
+          "board": 1,
+          "playerId": "bristol-clifton/lorenzo-milleri",
+          "opponentId": "downend-fishponds/artem-kot",
+          "colour": "black",
+          "result": "loss",
+          "pgn": null
+        },
+        {
+          "board": 2,
+          "playerId": "bristol-clifton/max-pester",
+          "opponentId": "downend-fishponds/john-l-paines",
+          "colour": "white",
+          "result": "draw",
+          "pgn": null
+        },
+        {
+          "board": 3,
+          "playerId": "bristol-clifton/william-blatchford",
+          "opponentId": "downend-fishponds/shaun-walsh",
+          "colour": "black",
+          "result": "win",
+          "pgn": null
+        },
+        {
+          "board": 4,
+          "playerId": "bristol-clifton/mukhtar-hasan",
+          "opponentId": "downend-fishponds/yaksh-tripurari",
+          "colour": "white",
+          "result": "loss",
+          "pgn": null
+        },
+        {
+          "board": 5,
+          "playerId": "bristol-clifton/niall-twomey",
+          "opponentId": "downend-fishponds/nicholas-woods",
+          "colour": "black",
+          "result": "win",
+          "pgn": null
+        },
+        {
+          "board": 6,
+          "playerId": "bristol-clifton/stephen-hinde",
+          "opponentId": "downend-fishponds/struan-dunbar",
+          "colour": "white",
+          "result": "loss",
+          "pgn": null
+        }
+      ]
+    }
   },
   {
     "number": 5,
@@ -441,11 +494,56 @@
     "home": false,
     "date": "2026-10-28",
     "time": "19:30",
-    "status": "scheduled",
+    "status": "played",
     "availability": [],
-    "settled": false,
+    "settled": true,
     "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155328",
-    "result": null
+    "result": {
+      "ourScore": 3,
+      "theirScore": 1,
+      "games": [
+        {
+          "board": 1,
+          "playerId": "bristol-clifton/james-wotherspoon",
+          "opponentId": "south-bristol/rod-taylor",
+          "colour": "white",
+          "result": "win",
+          "pgn": null
+        },
+        {
+          "board": 2,
+          "playerId": "bristol-clifton/thomas-booth",
+          "opponentId": "south-bristol/piotr-kwiatowski",
+          "colour": "black",
+          "result": "win",
+          "pgn": null
+        },
+        {
+          "board": 3,
+          "playerId": "bristol-clifton/alfred-holton-stoppani",
+          "opponentId": "south-bristol/alessandro-coppola",
+          "colour": "white",
+          "result": "loss",
+          "pgn": null
+        },
+        {
+          "board": 4,
+          "playerId": "bristol-clifton/stephen-hinde",
+          "opponentId": "south-bristol/vicky-sherley-price",
+          "colour": "black",
+          "result": "win",
+          "pgn": null
+        }
+      ]
+    },
+    "lineup": {
+      "playerIds": [
+        "bristol-clifton/james-wotherspoon",
+        "bristol-clifton/thomas-booth",
+        "bristol-clifton/alfred-holton-stoppani",
+        "bristol-clifton/stephen-hinde"
+      ]
+    }
   },
   {
     "number": 6,

@@ -382,7 +382,7 @@ function Result({ season, match }: { season: Season; match: Match }) {
                     </span>
                   </TableCell>
                   <TableCell className="text-muted-foreground text-sm capitalize">{game.colour}</TableCell>
-                  <TableCell>{opponent ? <PlayerCell player={opponent} /> : game.opponentId}</TableCell>
+                  <TableCell>{opponent ? <PlayerCell player={opponent} on={match.date} /> : game.opponentId}</TableCell>
                   <TableCell>
                     <span
                       className={cn(

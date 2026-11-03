@@ -23,6 +23,11 @@
           "date": "2026-09-08",
           "rating": 1356,
           "source": "ecf"
+        },
+        {
+          "date": "2026-10-28",
+          "rating": 1357,
+          "source": "ecf"
         }
       ],
       "codes": [
@@ -49,6 +54,32 @@
           "code": "112300"
         }
       ]
+    },
+    {
+      "playerId": "piotr-kwiatowski",
+      "name": "Piotr Kwiatowski",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-10-28",
+          "rating": 1392,
+          "source": "ecf"
+        }
+      ],
+      "codes": []
+    },
+    {
+      "playerId": "rod-taylor",
+      "name": "Rod Taylor",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-10-28",
+          "rating": 1424,
+          "source": "ecf"
+        }
+      ],
+      "codes": []
     },
     {
       "playerId": "ryszard-dudko",
@@ -85,6 +116,19 @@
           "code": "121305"
         }
       ]
+    },
+    {
+      "playerId": "vicky-sherley-price",
+      "name": "Vicky Sherley-Price",
+      "fullName": null,
+      "ratings": [
+        {
+          "date": "2026-10-28",
+          "rating": 1314,
+          "source": "ecf"
+        }
+      ],
+      "codes": []
     }
   ]
 }

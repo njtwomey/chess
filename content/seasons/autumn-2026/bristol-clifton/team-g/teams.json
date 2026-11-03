@@ -24,6 +24,9 @@
         "playerId": "jade-redpath-aislabie"
       },
       {
+        "playerId": "james-wotherspoon"
+      },
+      {
         "playerId": "john"
       },
       {
@@ -92,7 +95,26 @@
     "links": {
       "fixtures": null
     },
-    "players": []
+    "players": [
+      {
+        "playerId": "artem-kot"
+      },
+      {
+        "playerId": "john-l-paines"
+      },
+      {
+        "playerId": "shaun-walsh"
+      },
+      {
+        "playerId": "yaksh-tripurari"
+      },
+      {
+        "playerId": "nicholas-woods"
+      },
+      {
+        "playerId": "struan-dunbar"
+      }
+    ]
   },
   {
     "clubId": "hanham-folk-centre",
@@ -154,7 +176,20 @@
     "links": {
       "fixtures": null
     },
-    "players": []
+    "players": [
+      {
+        "playerId": "rod-taylor"
+      },
+      {
+        "playerId": "piotr-kwiatowski"
+      },
+      {
+        "playerId": "alessandro-coppola"
+      },
+      {
+        "playerId": "vicky-sherley-price"
+      }
+    ]
   },
   {
     "clubId": "uwe",
