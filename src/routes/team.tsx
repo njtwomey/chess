@@ -115,7 +115,7 @@ export function Team() {
                     <PlayerLink player={entry.player} className="font-medium" />
                     {entry.player.role !== "member" && (
                       <Badge variant="secondary" className="ml-2 text-[0.65rem]">
-                        Captain
+                        {entry.player.role === "captain" ? "Captain" : "Guest"}
                       </Badge>
                     )}
                   </TableCell>

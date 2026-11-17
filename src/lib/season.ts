@@ -116,6 +116,20 @@ export function withdrawalOf(match: Match, playerId: string): { at?: string; not
 }
 
 /**
+ * The squad: everybody who is in the order, which is not quite everybody on the
+ * roster.
+ *
+ * A guest played for us once and is somebody else's squad member. They have to
+ * be on the roster, because every game names a player who is, but nobody is
+ * going to ask them next week: leaving them in would put a name in the "still
+ * to hear from" list that reads as a reply we are waiting on. They keep the
+ * game they played, which is why `statsFor` still counts them.
+ */
+export function squadOf(season: Season): Player[] {
+  return season.players.filter((player) => player.role !== "guest");
+}
+
+/**
  * The whole roster as candidates, not only the people who replied.
  *
  * Silence is treated as "not sure", which keeps it out of the selection while
@@ -124,7 +138,7 @@ export function withdrawalOf(match: Match, playerId: string): { at?: string; not
  */
 export function candidatesFor(season: Season, match: Match): Candidate[] {
   const played = gamesPlayedBefore(season, match);
-  return season.players.map((player) => {
+  return squadOf(season).map((player) => {
     const entry = match.availability.find((reply) => reply.playerId === player.playerId);
     return {
       playerId: player.playerId,

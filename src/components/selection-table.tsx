@@ -5,7 +5,7 @@ import { ReplyBadge, RoleBadge } from "@/components/reply-badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { playerById, playerName } from "@/lib/data";
 import type { Season } from "@/lib/schema";
-import { replyOf, roleFor, sheetOrder, type Fielded } from "@/lib/season";
+import { replyOf, roleFor, sheetOrder, squadOf, type Fielded } from "@/lib/season";
 import { type Reply, type Selection } from "@/lib/selection";
 import { cn } from "@/lib/utils";
 import type { Match } from "@/lib/schema";
@@ -46,7 +46,7 @@ function AvailabilityTable({ season, match, selection }: { season: Season; match
     [...selection.standing, ...selection.unavailable].map((player) => [player.playerId, player.gamesPlayed]),
   );
 
-  const rows = [...season.players].sort((a, b) => {
+  const rows = [...squadOf(season)].sort((a, b) => {
     const rank = (id: string) => REPLY_ORDER.indexOf(replyOf(match, id));
     return rank(a.playerId) - rank(b.playerId) || a.name.localeCompare(b.name);
   });
@@ -82,7 +82,7 @@ function AvailabilityTable({ season, match, selection }: { season: Season; match
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-muted-foreground max-w-md text-xs/5">
-          These are the replies so far, {replied} of {season.players.length}, and nothing more. Nobody has been picked
+          These are the replies so far, {replied} of {squadOf(season).length}, and nothing more. Nobody has been picked
           yet: the team is settled nearer the match, and this page will show it then.
         </p>
         <MessageButtons season={season} match={match} selection={selection} settled={false} />

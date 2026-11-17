@@ -10,9 +10,20 @@
 import { describe, expect, it } from "vitest";
 import { assignBoards } from "@/lib/boards";
 import { selectedTeam } from "@/lib/messages";
-import { boardExceptions, boardsFor, coverage, fieldedFor, roleFor, selectionFor, sheetOrder } from "@/lib/season";
+import {
+  boardExceptions,
+  boardsFor,
+  candidatesFor,
+  coverage,
+  fieldedFor,
+  roleFor,
+  selectionFor,
+  sheetOrder,
+  squadOf,
+  statsFor,
+} from "@/lib/season";
 import type { Match } from "@/lib/schema";
-import { aMatch, aSeason, aSquad, ours, said, theirs } from "@/lib/testing";
+import { aMatch, aPlayer, aSeason, aSquad, ours, said, theirs } from "@/lib/testing";
 
 /**
  * Built rather than read from a season on disk.
@@ -385,5 +396,71 @@ describe("a fixture with its own number of boards", () => {
   it("counts the longer match's boards towards the season's games to go round", () => {
     const mixed = aSeason({ players: squad, matches: [four, aMatch({ ...four, number: 2, boards: 6 })] });
     expect(coverage(mixed).slots).toBe(10);
+  });
+});
+
+/**
+ * A guest from another of the club's sides.
+ *
+ * Somebody turns out for G so a board is not left empty. They have to be on the
+ * roster, because every game names a player who is, and they keep the game they
+ * played. What they must not do is join the order: nobody is going to ask them
+ * next week, and a name sitting in "still to hear from" is a reply we are
+ * waiting on rather than a person who was never asked.
+ */
+describe("a guest who played to fill a board", () => {
+  const squad = [...aSquad(5), aPlayer({ playerId: "g1", name: "Guest", role: "guest" })];
+  const played = aMatch({
+    number: 1,
+    status: "played",
+    availability: [said(ours("p1"), "yes"), said(ours("p2"), "yes"), said(ours("p3"), "yes")],
+    settled: true,
+    lineup: { playerIds: [ours("p1"), ours("p2"), ours("p3"), ours("g1")] },
+    result: {
+      ourScore: 4,
+      theirScore: 0,
+      games: [ours("p1"), ours("p2"), ours("p3"), ours("g1")].map((playerId, index) => ({
+        board: index + 1,
+        playerId,
+        opponentId: theirs("them-1"),
+        colour: index % 2 === 0 ? ("black" as const) : ("white" as const),
+        result: "win" as const,
+        pgn: null,
+      })),
+    },
+  });
+  const guestSeason = aSeason({ players: squad, matches: [played, aMatch({ number: 2 })] });
+  const next = guestSeason.matches[1]!;
+
+  it("is kept out of the table, this week and every week after", () => {
+    for (const match of guestSeason.matches) {
+      const selection = selectionFor(guestSeason, match);
+      // Both halves of what the match page lists: who is in the order, and who
+      // is not selectable. A guest belongs in neither.
+      const listed = [...selection.standing, ...selection.unavailable].map((player) => player.playerId);
+      expect(listed).not.toContain(ours("g1"));
+      expect(listed).toHaveLength(5);
+    }
+  });
+
+  it("still takes the board the captain wrote them down for", () => {
+    const selection = selectionFor(guestSeason, played);
+    const fielded = fieldedFor(guestSeason, played, selection);
+    expect(fielded.players.map((player) => player.playerId)).toContain(ours("g1"));
+  });
+
+  it("is off the squad, although still on the roster", () => {
+    expect(guestSeason.players.map((player) => player.playerId)).toContain(ours("g1"));
+    expect(squadOf(guestSeason).map((player) => player.playerId)).not.toContain(ours("g1"));
+  });
+
+  it("keeps the game they played, and it counts against everybody else's", () => {
+    expect(statsFor(guestSeason).find((entry) => entry.player.playerId === ours("g1"))?.played).toBe(1);
+    // The three squad players who played are a game ahead of those who did
+    // not, and the guest is not among the people the counts are compared over.
+    const counts = candidatesFor(guestSeason, next);
+    expect(counts.find((player) => player.playerId === ours("p1"))?.gamesPlayed).toBe(1);
+    expect(counts.find((player) => player.playerId === ours("p4"))?.gamesPlayed).toBe(0);
+    expect(counts.map((player) => player.playerId)).not.toContain(ours("g1"));
   });
 });

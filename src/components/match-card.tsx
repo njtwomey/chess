@@ -5,7 +5,7 @@ import { HomeAway } from "@/components/home-away";
 import { Badge } from "@/components/ui/badge";
 import { addressLines, mapsUrl } from "@/lib/links";
 import { type Match, type Season } from "@/lib/schema";
-import { boardsFor, matchScore, opponentTeam, venueFor } from "@/lib/season";
+import { boardsFor, matchScore, opponentTeam, squadOf, venueFor } from "@/lib/season";
 import { formatLongDate, formatShortDate, formatWeekday, relativeDay, today } from "@/lib/time";
 import { cn } from "@/lib/utils";
 
@@ -110,7 +110,7 @@ export function MatchCard({ season, match, className }: { season: Season; match:
         ) : (
           <span className="text-muted-foreground text-xs">
             {match.availability.length > 0
-              ? `${match.availability.length} of ${season.players.length} replied`
+              ? `${match.availability.length} of ${squadOf(season).length} replied`
               : past
                 ? "No result recorded"
                 : "Availability not asked yet"}

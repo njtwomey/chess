@@ -258,11 +258,20 @@ export const SquadMemberSchema = z.strictObject({
   /** Into the club's own list of people, bare. */
   playerId: ID,
   /**
-   * Captain, or not. There is no separate co-captain: the club runs with more
-   * than one and they do the same job, so a second word would be a distinction
-   * without a difference.
+   * Captain, squad member, or a guest from another of the club's sides.
+   *
+   * There is no separate co-captain: the club runs with more than one and they
+   * do the same job, so a second word would be a distinction without a
+   * difference.
+   *
+   * A guest is here because they played, not because they are in the squad.
+   * Somebody from the club's F turning out for G so a board is not left empty
+   * has to be on the roster, since every game names a player who is, but they
+   * are not in the order: nobody is going to ask them next week, and listing
+   * them as still to hear from would say we were waiting on somebody who was
+   * never asked. They keep the game they played, because they played it.
    */
-  role: z.enum(["captain", "member"]).default("member"),
+  role: z.enum(["captain", "member", "guest"]).default("member"),
   /**
    * Under the league's junior age on the season's cut-off date, which shortens
    * the clock on their board.

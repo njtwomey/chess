@@ -166,6 +166,18 @@ number. One ordering produces both the boards and the reserves, sorted by four k
   with the captain's four meant drawing a line to say where the boards stopped, and that line
   contradicted the badges beside it every time he changed anything.
 
+**A guest is on the roster and not in the order.** When a side is short it borrows from another of
+the club's teams: James Wotherspoon is a Clifton F player who filled a board for G. He has to be on
+the roster, because every game names a player who is, so he carries `role: "guest"` and `squadOf`
+leaves him out. Everything that asks who is available asks the squad; `statsFor` asks the roster,
+because he played the game and the result is his. Listing him as still to hear from would say we
+were waiting on somebody nobody is going to ask.
+
+**One person can turn out for two sides of a club in a season**, theirs as well as ours, and the
+loader used to reject it. Alessandro Coppola played us for South Bristol D in September and their E
+in October: same man, same rating history, different division. This is a record of what happened,
+not a ruling on whether it should have.
+
 `src/lib/selection.test.ts` is the most important file here after `selection.ts`: permutation
 invariance, seed stability, the overspill case, dropouts, and a fairness check over a thousand
 matches. Extend it before changing behaviour.
