@@ -23,6 +23,11 @@
           "date": "2026-08-31",
           "rating": 1602,
           "source": "ecf"
+        },
+        {
+          "date": "2026-11-17",
+          "rating": 1695,
+          "source": "ecf"
         }
       ],
       "codes": [
@@ -68,6 +73,11 @@
           "date": "2026-10-05",
           "rating": 1737,
           "source": "ecf"
+        },
+        {
+          "date": "2026-11-17",
+          "rating": 1653,
+          "source": "ecf"
         }
       ],
       "codes": [
@@ -108,6 +118,11 @@
           "date": "2026-08-31",
           "rating": 1382,
           "source": "ecf"
+        },
+        {
+          "date": "2026-11-17",
+          "rating": 1371,
+          "source": "ecf"
         }
       ],
       "codes": [
@@ -125,6 +140,11 @@
         {
           "date": "2026-08-31",
           "rating": 1429,
+          "source": "ecf"
+        },
+        {
+          "date": "2026-11-17",
+          "rating": 1430,
           "source": "ecf"
         }
       ],
@@ -173,6 +193,11 @@
           "date": "2026-10-05",
           "rating": 1451,
           "source": "ecf"
+        },
+        {
+          "date": "2026-11-17",
+          "rating": 1311,
+          "source": "ecf"
         }
       ],
       "codes": [
@@ -199,6 +224,11 @@
         {
           "date": "2026-10-28",
           "rating": 1550,
+          "source": "ecf"
+        },
+        {
+          "date": "2026-11-17",
+          "rating": 1556,
           "source": "ecf"
         }
       ],
@@ -229,6 +259,11 @@
           "date": "2026-10-20",
           "rating": 1814,
           "source": "ecf"
+        },
+        {
+          "date": "2026-11-17",
+          "rating": 1580,
+          "source": "ecf"
         }
       ],
       "codes": [
@@ -254,6 +289,11 @@
           "date": "2026-10-20",
           "rating": 1664,
           "source": "ecf"
+        },
+        {
+          "date": "2026-11-17",
+          "rating": 1567,
+          "source": "ecf"
         }
       ],
       "codes": [
@@ -277,6 +317,11 @@
           "date": "2026-10-20",
           "rating": 1220,
           "source": "ecf"
+        },
+        {
+          "date": "2026-11-17",
+          "rating": 1161,
+          "source": "ecf"
         }
       ],
       "codes": [
@@ -298,6 +343,11 @@
         {
           "date": "2026-10-05",
           "rating": 1385,
+          "source": "ecf"
+        },
+        {
+          "date": "2026-11-17",
+          "rating": 1641,
           "source": "ecf"
         }
       ],
@@ -356,6 +406,11 @@
           "date": "2026-10-28",
           "rating": 1190,
           "source": "ecf"
+        },
+        {
+          "date": "2026-11-17",
+          "rating": 1204,
+          "source": "ecf"
         }
       ],
       "codes": [
@@ -392,6 +447,11 @@
           "date": "2026-10-05",
           "rating": 1864,
           "source": "ecf"
+        },
+        {
+          "date": "2026-11-17",
+          "rating": 1965,
+          "source": "ecf"
         }
       ],
       "codes": [
@@ -419,6 +479,11 @@
           "date": "2026-10-28",
           "rating": 1306,
           "source": "ecf"
+        },
+        {
+          "date": "2026-11-17",
+          "rating": 1318,
+          "source": "ecf"
         }
       ],
       "codes": [
@@ -436,6 +501,11 @@
         {
           "date": "2026-10-20",
           "rating": 1359,
+          "source": "ecf"
+        },
+        {
+          "date": "2026-11-17",
+          "rating": 1480,
           "source": "ecf"
         }
       ],
