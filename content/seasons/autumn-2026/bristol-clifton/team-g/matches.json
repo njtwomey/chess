@@ -552,8 +552,59 @@
     "date": "2026-12-02",
     "time": "19:30",
     "status": "scheduled",
-    "availability": [],
-    "settled": false,
+    "availability": [
+      {
+        "playerId": "bristol-clifton/niall-twomey",
+        "reply": "yes",
+        "at": "2026-11-03"
+      },
+      {
+        "playerId": "bristol-clifton/alfred-holton-stoppani",
+        "reply": "yes",
+        "at": "2026-11-04"
+      },
+      {
+        "playerId": "bristol-clifton/mukhtar-hasan",
+        "reply": "yes",
+        "at": "2026-11-03"
+      },
+      {
+        "playerId": "bristol-clifton/stephen-hinde",
+        "reply": "yes",
+        "at": "2026-11-03"
+      },
+      {
+        "playerId": "bristol-clifton/alex-zervudachi",
+        "reply": "yes",
+        "at": "2026-11-03"
+      },
+      {
+        "playerId": "bristol-clifton/theo-wright",
+        "reply": "no",
+        "at": "2026-11-03"
+      },
+      {
+        "playerId": "bristol-clifton/mark-green",
+        "reply": "no",
+        "at": "2026-11-03"
+      },
+      {
+        "playerId": "bristol-clifton/max-pester",
+        "reply": "no",
+        "at": "2026-11-03"
+      },
+      {
+        "playerId": "bristol-clifton/lorenzo-milleri",
+        "reply": "no",
+        "at": "2026-11-03"
+      },
+      {
+        "playerId": "bristol-clifton/alexandra-bicknell",
+        "reply": "no",
+        "at": "2026-11-03"
+      }
+    ],
+    "settled": true,
     "recordUrl": "https://lms.englishchess.org.uk/lms/fixture/155394",
     "result": null
   },
